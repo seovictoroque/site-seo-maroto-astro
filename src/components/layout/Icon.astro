@@ -38,11 +38,28 @@ if (!source) {
 }
 
 const solid = set === 'social' || set === 'linkedin';
-const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': 'true' };
+
+/**
+ * Icone com rotulo e imagem para a tecnologia assistiva; sem rotulo e
+ * decoracao e sai do fluxo de leitura. Os dois atributos vao escritos um a
+ * um, e nao espalhados de um objeto, porque o spread de uma uniao nao satisfaz
+ * o tipo SVGAttributes e o astro check reclama.
+ */
+const role = label ? 'img' : undefined;
+const ariaLabel = label ?? undefined;
+const ariaHidden = label ? undefined : 'true';
 ---
 
 {solid ? (
-  <svg viewBox="0 0 24 24" fill="currentColor" class={klass} {...a11y} set:html={source} />
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    class={klass}
+    role={role}
+    aria-label={ariaLabel}
+    aria-hidden={ariaHidden}
+    set:html={source}
+  />
 ) : (
   <svg
     viewBox="0 0 24 24"
@@ -52,7 +69,9 @@ const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': 'tr
     stroke-linecap="round"
     stroke-linejoin="round"
     class={klass}
-    {...a11y}
+    role={role}
+    aria-label={ariaLabel}
+    aria-hidden={ariaHidden}
     set:html={source}
   />
 )}

@@ -12,6 +12,10 @@
     "check": "astro check",
     "astro": "astro"
   },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.5",
+    "typescript": "^6.0.3"
+  },
   "dependencies": {
     "@astrojs/mdx": "^7.0.8",
     "@astrojs/rss": "^4.0.19",
