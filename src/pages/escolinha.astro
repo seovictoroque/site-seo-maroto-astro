@@ -1,0 +1,533 @@
+---
+/**
+ * ESCOLINHA, o SEO Roadmap v3.
+ *
+ * Hero, roteiro em 12 etapas com conectores pontilhados, FAQ e bloco de
+ * comunidade. E a pagina que serve de referencia viva do design system em
+ * modo escuro.
+ *
+ * DOIS CONSERTOS EM RELACAO AO HTML DE ORIGEM
+ * 1. La o <nav> do header estava DENTRO do <main>, o que e marcacao invalida
+ *    do ponto de vista semantico: navegacao do site nao e conteudo principal
+ *    da pagina. Aqui o header vem do layout, fora do main.
+ * 2. O FAQPage do JSON-LD era um bloco escrito a mao, separado do FAQ
+ *    visivel. Agora os dois saem da mesma lista `faq` abaixo, entao nao tem
+ *    como divergirem.
+ *
+ * A pagina usa o tema escuro e tem primitivos proprios (.eyebrow,
+ * .section-head) com valores diferentes dos do blog. Por isso ela NAO carrega
+ * blog-primitives.css.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { faqNode, breadcrumbNode } from '../lib/schema';
+
+const faq = [
+  {
+    "question": "O que é SEO?",
+    "answer": "SEO (Search Engine Optimization) é o conjunto de práticas para melhorar a visibilidade orgânica de um site nos mecanismos de busca, tornando-o mais fácil de rastrear, entender e rankear."
+  },
+  {
+    "question": "Quanto tempo leva para aprender SEO?",
+    "answer": "Os fundamentos você pega em algumas semanas. Ficar bom leva meses de prática em projeto real, porque quase tudo em SEO depende de contexto: nicho, concorrência, autoridade do domínio e o tempo que o Google leva para reagir às mudanças. O roteiro acima existe justamente para você avançar por etapas, sem pular base."
+  },
+  {
+    "question": "Preciso saber programar para trabalhar com SEO?",
+    "answer": "Não. Dá para ter uma carreira sólida em SEO sem escrever uma linha de código. Mas entender HTML, como o navegador renderiza uma página e o básico de JavaScript muda o jogo no SEO técnico, principalmente na hora de conversar com o time de desenvolvimento sem ficar refém de tradução."
+  },
+  {
+    "question": "SEO ainda funciona com a chegada da busca por IA?",
+    "answer": "Funciona, só mudou de forma. AI Overviews, ChatGPT e Perplexity continuam precisando de conteúdo rastreável, bem estruturado e confiável para citar alguém. É por isso que a etapa 9 do roteiro trata de GEO e AEO: a base técnica é a mesma, o que muda é onde a sua página aparece e como você mede isso."
+  },
+  {
+    "question": "O roteiro é gratuito mesmo?",
+    "answer": "É. Todo o conteúdo da Escolinha e as ferramentas do site são gratuitos e de código aberto. Sem funil escondido, sem curso de cinco mil reais esperando no final."
+  },
+  {
+    "question": "Por onde eu começo se estou do zero absoluto?",
+    "answer": "Comece pela etapa 1, Fundamentos de SEO, e configure o Search Console em um site seu, nem que seja um blog de teste. SEO só entra na cabeça quando você tem dados próprios para olhar. Depois é seguir o roteiro na ordem, marcando o progresso."
+  }
+];
+
+const crumbs = [{ label: 'Home', href: '/' }, { label: 'Escolinha' }];
+---
+
+<BaseLayout
+  title="Roadmap de SEO: do zero ao avançado em 12 etapas | SEO Maroto"
+  description="O roteiro completo para aprender SEO em 12 etapas, dos fundamentos ao GEO/AEO, com o que estudar e o que fazer em cada uma. Gratuito e sem cadastro."
+  path="/escolinha"
+  ogDescription="O roteiro completo para aprender SEO em 12 etapas, dos fundamentos ao GEO/AEO. Gratuito e sem cadastro."
+  schema={[faqNode('/escolinha', faq), breadcrumbNode(crumbs)]}
+>
+<div class="bg-field"></div>
+<main id="conteudo">
+<div class="eyebrow-wrap">
+  <span class="eyebrow">Roteiro gratuito e de código aberto</span>
+</div>
+
+<div class="hero">
+  <h1 class="hero-title">O roteiro completo para se tornar<br><em>profissional de SEO</em></h1>
+  <p class="hero-sub">12 etapas, do fundamento técnico até GEO/AEO, para você acompanhar seu progresso do zero ao avançado.</p>
+  <div class="hero-meta"><span><b>12</b> etapas</span><span><b>60+</b> itens de ação</span><span><b>0%</b> concluído</span></div>
+  <div class="progress-wrap">
+    <div class="progress-top"><span>Seu progresso</span><span>0 / 12 etapas</span></div>
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+  </div>
+</div>
+
+<div class="about">
+  <p>O Guia de SEO com Recursos e Ferramentas Gratuitas. Comece a aprender SEO ou aprofunde seus conhecimentos em SEO para aumentar o tráfego orgânico do seu site, entendendo todos os aspectos do processo de otimização <a href="#">para mecanismos de busca</a> e tornando-se um especialista em SEO com a SEO Maroto.</p>
+  <p>O seomaroto.com.br é um roteiro completo, apresentando as principais áreas e fases de SEO, juntamente com guias confiáveis, dicas, perguntas frequentes e <a href="#">ferramentas gratuitas para aprender sobre cada uma delas</a>, incluindo aquelas relacionadas à Busca com IA.</p>
+  <p>Desde conceitos fundamentais de SEO, como pesquisa de palavras-chave e <a href="#">construção de links</a>, até otimização <a href="#">de conteúdo</a>, SEO técnico, métricas de SEO para monitorar, como estabelecer uma estratégia de SEO e o que fazer quando ocorre uma atualização do algoritmo de busca, dicas e conselhos de especialistas sobre cada tópico principal e muito mais, aqui você encontrará um roteiro completo para aprender todos os aspectos de SEO com posts de blog, guias, cursos online, recursos e ferramentas gratuitos, confiáveis e abrangentes, desenvolvidos pela comunidade.</p>
+</div>
+
+<div class="section-head">
+  <h2>O roteiro</h2>
+  <p>Clique em cada etapa para expandir os itens de ação e marcar seu progresso.</p>
+</div>
+
+<div class="canvas">
+
+  <div class="flow">
+    <div class="spine-line"></div>
+
+    <div class="row">
+      <div class="col-left">
+        <a class="node wide" href="#">Configurar Search Console</a>
+        <a class="node wide" href="#">Configurar Google Analytics 4</a>
+        <a class="node wide" href="#">Instalar extensões essenciais</a>
+      </div>
+      <div class="conn"></div>
+      <a class="label boxed" href="#">1. Fundamentos de SEO</a>
+      <div class="conn"></div>
+      <div class="col-right">
+        <a class="node wide" href="#">O que é SEO?</a>
+        <a class="node wide" href="#">Como o Google rastreia e indexa</a>
+        <a class="node wide" href="#">On-page vs off-page vs técnico</a>
+        <a class="node wide" href="#">O que é uma SERP e intenção de busca</a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-left">
+        <a class="node wide" href="#">Auditoria técnica inicial</a>
+        <a class="node wide" href="#">Análise de concorrentes</a>
+      </div>
+      <div class="conn"></div>
+      <a class="label boxed" href="#">2. Execute um processo de SEO</a>
+      <div class="conn"></div>
+      <div class="col-right">
+        <a class="node wide" href="#">Definição de metas de SEO</a>
+        <a class="node wide" href="#">Priorização de tarefas (ICE/PIE)</a>
+        <a class="node wide" href="#">Backlog e sprints de SEO</a>
+        <a class="node wide" href="#">Handoff com devs e conteúdo</a>
+      </div>
+    </div>
+
+    <div class="full-row">
+      <a class="label boxed" href="#" style="margin:0 auto 16px;">3. SEO no seu CMS</a>
+      <div class="triple-cluster">
+        <div class="cluster">
+          <div class="cluster-title">WordPress</div>
+          <div class="cluster-list">
+            <a class="node" href="#">Rank Math / Yoast</a>
+            <a class="node" href="#">Estrutura de permalinks</a>
+          </div>
+        </div>
+        <div class="cluster">
+          <div class="cluster-title">Shopify & E-commerce</div>
+          <div class="cluster-list">
+            <a class="node" href="#">SEO de páginas de produto</a>
+            <a class="node" href="#">Estrutura de categorias</a>
+          </div>
+        </div>
+        <div class="cluster">
+          <div class="cluster-title">Headless & Custom</div>
+          <div class="cluster-list">
+            <a class="node" href="#">Rendering (SSR/SSG)</a>
+            <a class="node" href="#">SEO em Next.js / React</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="full-row">
+      <a class="label boxed" href="#" style="margin:0 auto 16px;">4. Aprofunde seus conhecimentos de SEO</a>
+      <div class="triple-cluster">
+        <div class="cluster">
+          <div class="cluster-title">Technical SEO avançado</div>
+          <div class="cluster-list">
+            <a class="node" href="#">Dados estruturados (Schema)</a>
+            <a class="node" href="#">Core Web Vitals</a>
+            <a class="node" href="#">Crawl budget</a>
+            <a class="node" href="#">Log file analysis</a>
+          </div>
+        </div>
+        <div class="cluster">
+          <div class="cluster-title">Otimização de conteúdo avançada</div>
+          <div class="cluster-list">
+            <a class="node" href="#">Topic clusters e pillar pages</a>
+            <a class="node" href="#">E-E-A-T</a>
+            <a class="node" href="#">Content gap analysis</a>
+            <a class="node" href="#">Atualização de conteúdo</a>
+          </div>
+        </div>
+        <div class="cluster">
+          <div class="cluster-title">Construção de links avançada</div>
+          <div class="cluster-list">
+            <a class="node" href="#">Digital PR</a>
+            <a class="node" href="#">Link building white-hat</a>
+            <a class="node" href="#">Análise de perfil de backlinks</a>
+            <a class="node" href="#">Linkagem interna estratégica</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-left">
+        <a class="node wide" href="#">Enterprise SEO</a>
+        <a class="node wide" href="#">Programmatic SEO</a>
+      </div>
+      <div class="conn"></div>
+      <a class="label boxed" href="#">5. Especialista em SEO</a>
+      <div class="conn"></div>
+      <div class="col-right">
+        <a class="node wide" href="#">Relatórios executivos</a>
+        <a class="node wide" href="#">Gestão de squads de SEO</a>
+        <a class="node wide" href="#">SEO internacional (hreflang)</a>
+        <a class="node wide" href="#">JavaScript SEO</a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-left"></div>
+      <div class="conn none"></div>
+      <a class="label boxed" href="#">6. Auditoria técnica de SEO</a>
+      <div class="conn"></div>
+      <div class="col-right">
+        <a class="node wide" href="#">Screaming Frog / Sitebulb</a>
+        <a class="node wide" href="#">Crawl comparativo (antes/depois)</a>
+        <a class="node wide" href="#">Erros 4xx / 5xx e redirects</a>
+        <a class="node wide" href="#">Duplicidade de conteúdo</a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-left"></div>
+      <div class="conn none"></div>
+      <a class="label boxed" href="#">7. SEO em outros mecanismos de busca</a>
+      <div class="conn"></div>
+      <div class="col-right">
+        <a class="node wide" href="#">YouTube SEO</a>
+        <a class="node wide" href="#">Amazon SEO (A9)</a>
+        <a class="node wide" href="#">App Store Optimization</a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-left">
+        <a class="node wide" href="#">Google Business Profile</a>
+        <a class="node wide" href="#">Consistência de NAP</a>
+      </div>
+      <div class="conn"></div>
+      <a class="label boxed" href="#">8. SEO local</a>
+      <div class="conn"></div>
+      <div class="col-right">
+        <a class="node wide" href="#">Citações locais</a>
+        <a class="node wide" href="#">Gestão de avaliações</a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-left">
+        <a class="node rust wide" href="#">Generative Engine Optimization</a>
+        <a class="node rust wide" href="#">Answer Engine Optimization</a>
+      </div>
+      <div class="conn"></div>
+      <a class="label boxed" href="#">9. Otimização para IA (GEO/AEO)</a>
+      <div class="conn"></div>
+      <div class="col-right">
+        <a class="node rust wide" href="#">llms.txt e AI crawlers</a>
+        <a class="node rust wide" href="#">Monitoramento de citações em IA</a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-left"></div>
+      <div class="conn none"></div>
+      <a class="label boxed" href="#">10. Complemente seu SEO</a>
+      <div class="conn"></div>
+      <div class="col-right">
+        <a class="node wide" href="#">CRO (Otimização de conversão)</a>
+        <a class="node wide" href="#">UX Writing</a>
+        <a class="node wide" href="#">Analytics avançado</a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-left" style="width:100%;">
+        <div class="cluster" style="width:290px;">
+          <div class="cluster-title">Stack gratuito</div>
+          <div class="cluster-grid">
+            <a class="node" href="#">Search Console</a>
+            <a class="node" href="#">Keyword Planner</a>
+            <a class="node" href="#">Screaming Frog (free)</a>
+            <a class="node" href="#">GA4</a>
+          </div>
+        </div>
+      </div>
+      <div class="conn"></div>
+      <a class="label boxed" href="#">11. Ferramentas de SEO gratuitas</a>
+      <div class="conn none"></div>
+      <div class="col-right"></div>
+    </div>
+
+    <div class="row">
+      <div class="col-left">
+        <a class="node wide" href="#">Testes de SEO (split-tests)</a>
+        <a class="node wide" href="#">Acompanhar updates de algoritmo</a>
+      </div>
+      <div class="conn"></div>
+      <a class="label boxed" href="#">12. Trends, testes e soluções de problemas</a>
+      <div class="conn"></div>
+      <div class="col-right">
+        <a class="node wide" href="#">Diagnóstico de quedas de tráfego</a>
+        <a class="node wide" href="#">Comunidades e fóruns de SEO</a>
+      </div>
+    </div>
+
+    <div class="dotted-down"></div>
+    <div class="keep-learning">
+      <p>Continue aprendendo com estes roadmaps</p>
+      <div class="links">
+        <a href="#">Content Writer</a>
+        <a href="#">Digital Marketing</a>
+        <a href="#">Frontend</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<section class="faq" id="perguntas-frequentes" aria-labelledby="faq-title">
+  <h2 id="faq-title">Perguntas frequentes</h2>
+  <div class="faq-list">
+    <div class="faq-item" data-open="true">
+      <button class="faq-q" type="button" id="faq-q0" aria-expanded="true" aria-controls="faq-a0">O que é SEO?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div class="faq-a" id="faq-a0" role="region" aria-labelledby="faq-q0">
+        <div class="faq-a-inner">
+        <p>SEO (Search Engine Optimization) é o conjunto de práticas para melhorar a visibilidade orgânica de um site nos mecanismos de busca, tornando-o mais fácil de rastrear, entender e rankear.</p>
+        </div>
+      </div>
+    </div>
+    <div class="faq-item" data-open="false">
+      <button class="faq-q" type="button" id="faq-q1" aria-expanded="false" aria-controls="faq-a1">Quanto tempo leva para aprender SEO?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div class="faq-a" id="faq-a1" role="region" aria-labelledby="faq-q1">
+        <div class="faq-a-inner">
+        <p>Os fundamentos você pega em algumas semanas. Ficar bom leva meses de prática em projeto real, porque quase tudo em SEO depende de contexto: nicho, concorrência, autoridade do domínio e o tempo que o Google leva para reagir às mudanças. O roteiro acima existe justamente para você avançar por etapas, sem pular base.</p>
+        </div>
+      </div>
+    </div>
+    <div class="faq-item" data-open="false">
+      <button class="faq-q" type="button" id="faq-q2" aria-expanded="false" aria-controls="faq-a2">Preciso saber programar para trabalhar com SEO?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div class="faq-a" id="faq-a2" role="region" aria-labelledby="faq-q2">
+        <div class="faq-a-inner">
+        <p>Não. Dá para ter uma carreira sólida em SEO sem escrever uma linha de código. Mas entender HTML, como o navegador renderiza uma página e o básico de JavaScript muda o jogo no SEO técnico, principalmente na hora de conversar com o time de desenvolvimento sem ficar refém de tradução.</p>
+        </div>
+      </div>
+    </div>
+    <div class="faq-item" data-open="false">
+      <button class="faq-q" type="button" id="faq-q3" aria-expanded="false" aria-controls="faq-a3">SEO ainda funciona com a chegada da busca por IA?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div class="faq-a" id="faq-a3" role="region" aria-labelledby="faq-q3">
+        <div class="faq-a-inner">
+        <p>Funciona, só mudou de forma. AI Overviews, ChatGPT e Perplexity continuam precisando de conteúdo rastreável, bem estruturado e confiável para citar alguém. É por isso que a etapa 9 do roteiro trata de GEO e AEO: a base técnica é a mesma, o que muda é onde a sua página aparece e como você mede isso.</p>
+        </div>
+      </div>
+    </div>
+    <div class="faq-item" data-open="false">
+      <button class="faq-q" type="button" id="faq-q4" aria-expanded="false" aria-controls="faq-a4">O roteiro é gratuito mesmo?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div class="faq-a" id="faq-a4" role="region" aria-labelledby="faq-q4">
+        <div class="faq-a-inner">
+        <p>É. Todo o conteúdo da Escolinha e as ferramentas do site são gratuitos e de código aberto. Sem funil escondido, sem curso de cinco mil reais esperando no final.</p>
+        </div>
+      </div>
+    </div>
+    <div class="faq-item" data-open="false">
+      <button class="faq-q" type="button" id="faq-q5" aria-expanded="false" aria-controls="faq-a5">Por onde eu começo se estou do zero absoluto?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div class="faq-a" id="faq-a5" role="region" aria-labelledby="faq-q5">
+        <div class="faq-a-inner">
+        <p>Comece pela etapa 1, Fundamentos de SEO, e configure o Search Console em um site seu, nem que seja um blog de teste. SEO só entra na cabeça quando você tem dados próprios para olhar. Depois é seguir o roteiro na ordem, marcando o progresso.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* O FAQPage do JSON-LD saiu daqui: agora e montado a partir da mesma
+    lista `faq` do frontmatter que a pagina renderiza. */}
+
+<div class="community">
+  <h2>Junte-se à comunidade</h2>
+  <p>O SEO Roadmap é mantido pela comunidade e visitado por milhares de profissionais todos os meses.</p>
+  <div class="stats">
+    <div class="stat">
+      <div class="num">28K</div>
+      <div class="lbl">GitHub Stars</div>
+      <a class="cta" href="#" aria-label="★ Star no GitHub">★ Star</a>
+    </div>
+    <div class="stat">
+      <div class="num">12.4K</div>
+      <div class="lbl">Seguidores no X</div>
+      <a class="cta" href="#" aria-label="Seguir no X (Twitter)">Seguir</a>
+    </div>
+    <div class="stat">
+      <div class="num">8.2K</div>
+      <div class="lbl">Assinantes da newsletter</div>
+      <a class="cta" href="#" aria-label="Assinar no Substack">Assinar</a>
+    </div>
+    <div class="stat">
+      <div class="num">9.3K</div>
+      <div class="lbl">Comunidade Reddit</div>
+      <a class="cta" href="#" aria-label="Ver mais votados no Reddit">Ver mais votados</a>
+    </div>
+  </div>
+</div>
+
+</main>
+</BaseLayout>
+
+<script>
+  import { initLequePontilhado } from '../scripts/leque-pontilhado';
+  import { initFaqAccordion } from '../scripts/faq-accordion';
+  initLequePontilhado();
+  initFaqAccordion('.faq');
+</script>
+
+<style is:global>
+.bg-field{
+  position: fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(217,164,65,0.07), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 10%, rgba(193,87,58,0.05), transparent 60%);
+}
+main{ position:relative; z-index:1; flex:1; }
+.eyebrow-wrap{ text-align:center; padding:70px 32px 0; }
+.eyebrow{ display:inline-flex; align-items:center; gap:8px; font-size:12.5px; color: var(--text-secondary); font-family: var(--mono); border:1px solid var(--border); border-radius:20px; padding:6px 14px 6px 12px; }
+.eyebrow::before{ content:''; width:5px; height:5px; border-radius:50%; background: var(--accent); }
+.hero{ text-align:center; padding:22px 32px 0; }
+h1.hero-title{ font-family: var(--serif); font-weight:400; font-style:italic; font-size: clamp(34px,5.4vw,50px); line-height:1.12; max-width:720px; margin:0 auto 22px; }
+h1.hero-title em{ font-style:italic; color: var(--accent); }
+.hero-sub{ font-size:14.5px; color: var(--text-secondary); max-width:560px; margin:0 auto 6px; }
+.hero-meta{ display:flex; justify-content:center; gap:26px; margin-top:24px; font-family: var(--mono); font-size:12.5px; color: var(--text-muted); }
+.hero-meta b{ color: var(--accent); }
+
+.progress-wrap{ max-width:680px; margin:30px auto 0; background: var(--bg-elev); border:1px solid var(--border); border-radius:12px; padding:16px 20px; }
+.progress-top{ display:flex; justify-content:space-between; font-size:12.5px; color: var(--text-secondary); margin-bottom:10px; font-family: var(--mono); }
+.progress-bar{ height:5px; background: rgba(216,182,138,0.08); border-radius:3px; overflow:hidden; }
+.progress-fill{ height:100%; width:0%; background: var(--accent); border-radius:3px; }
+
+.about{ max-width:760px; margin:0 auto; padding:64px 32px 0; }
+.about p{ font-size:14.5px; color: var(--text-secondary); line-height:1.75; margin-bottom:16px; }
+.about a{ color: var(--accent); text-decoration:underline; text-underline-offset:2px; }
+.about a:hover{ color: var(--text-primary); }
+.about .tagline{ font-family: var(--serif); font-style:italic; font-size:20px; color: var(--text-primary); margin-top:8px; }
+
+.section-head{ text-align:center; padding:64px 32px 0; margin-bottom:6px; }
+.section-head h2{ font-family: var(--serif); font-weight:400; font-style:italic; font-size: clamp(26px,4vw,34px); margin-bottom:10px; }
+.section-head p{ color: var(--text-secondary); font-size:14px; max-width:440px; margin:0 auto; }
+
+.canvas{ max-width:1120px; margin:0 auto; padding:34px 20px 60px; position:relative; }
+.top-boxes{ display:flex; justify-content:space-between; gap:20px; margin-bottom:36px; }
+.info-box{ flex:1; background: var(--bg-elev); border:1px solid var(--border); border-radius:12px; padding:16px 20px; font-size:13px; color: var(--text-secondary); }
+.info-box button{ margin-top:10px; background: var(--bg-elev-2); border:1px solid var(--border); padding:7px 14px; border-radius:8px; font-size:12.5px; color: var(--text-primary); font-family: var(--mono); }
+
+.spine-title{ text-align:center; font-family: var(--serif); font-style:italic; font-weight:400; font-size:30px; margin-bottom:30px; }
+
+.flow{ position:relative; }
+.spine-line{ position:absolute; left:50%; top:0; bottom:0; width:2px; background: var(--accent); transform: translateX(-50%); z-index:0; opacity:0.45; }
+
+.row{ display:grid; grid-template-columns: 1fr 32px 220px 32px 1fr; align-items:center; gap:0; position:relative; z-index:1; margin-bottom:28px; }
+.col-left, .col-right{ display:flex; flex-direction:column; gap:9px; }
+.col-left{ align-items:flex-end; }
+.col-right{ align-items:flex-start; }
+.conn{ background:none; width:100%; }
+.conn.none{ background:none; }
+
+.fan{ position:absolute; left:0; top:0; width:100%; height:100%; pointer-events:none; z-index:0; overflow:visible; }
+.fan path{ fill:none; stroke: var(--accent); stroke-width:2; stroke-linecap:round; stroke-dasharray:2 5; opacity:0.62; }
+
+.node{ position:relative; z-index:1; display:block; cursor:pointer; border:1px solid var(--border-strong); border-radius:8px; padding:9px 16px; font-size:13.5px; font-weight:500; background: var(--bg-elev); color: var(--text-primary); white-space:nowrap; transition: background .16s ease, border-color .16s ease, color .16s ease; }
+.node:hover{ background: var(--bg-elev-2); border-color: rgba(216,182,138,0.34); color: var(--accent); }
+.node:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.node.wide{ white-space:normal; text-align:center; max-width:250px; }
+.node.accent{ background: var(--accent); color:#2B1704; border-color: var(--accent); font-weight:600; }
+.node.rust{ background: rgba(193,87,58,0.14); border-color: var(--rust); color: var(--rust); }
+.node.rust:hover{ background: rgba(193,87,58,0.24); border-color: var(--rust); color:#DD7A5C; }
+
+.label{ position:relative; z-index:2; display:block; cursor:pointer; transition: background .16s ease, box-shadow .16s ease, border-color .16s ease; text-align:center; font-size:14px; font-weight:600; line-height:1.35; padding:11px 18px; border-radius:8px; font-family: var(--sans); }
+.label.plain{ background:none; border:none; color: var(--text-primary); }
+.label.boxed{ background: var(--accent); color:#2B1704; border:1px solid var(--accent); box-shadow: 0 4px 18px rgba(217,164,65,0.18); }
+.label.boxed:hover{ background:#E6B75E; border-color:#E6B75E; box-shadow: 0 6px 26px rgba(217,164,65,0.34); }
+.label:focus-visible{ outline:2px solid var(--text-primary); outline-offset:3px; }
+
+.cluster{ position:relative; z-index:2; background: var(--bg-elev); border:1px solid var(--border); border-radius:12px; padding:14px; width:100%; }
+.cluster-title{ font-size:11.5px; font-weight:700; text-align:center; margin-bottom:12px; color: var(--rust); text-transform:uppercase; letter-spacing:0.06em; font-family: var(--mono); }
+.cluster-grid{ display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+.cluster .node{ text-align:center; white-space:normal; }
+
+.cluster-list{ display:flex; flex-direction:column; gap:9px; }
+.full-row{ display:grid; grid-template-columns:1fr; gap:22px; position:relative; z-index:1; margin-bottom:28px; }
+.triple-cluster{ display:flex; gap:18px; }
+.triple-cluster .cluster{ flex:1; }
+
+.keep-learning{ position:relative; z-index:2; background: var(--bg-elev); border:1px solid var(--border); border-radius:14px; padding:22px 28px; text-align:center; margin: 34px auto 0; max-width:520px; }
+.keep-learning p{ font-size:13.5px; color: var(--text-secondary); margin-bottom:14px; }
+.keep-learning .links{ display:flex; justify-content:center; gap:10px; }
+.keep-learning a{ background: rgba(193,87,58,0.15); border:1px solid var(--rust); color: var(--rust); padding:8px 18px; border-radius:8px; font-size:13px; font-weight:500; }
+
+.dotted-down{ width:2px; height:36px; background: var(--accent); margin:0 auto; opacity:0.45; }
+
+/* FAQ ==================================================================== */
+.faq{ max-width:900px; margin:0 auto; padding:86px 28px 34px; }
+.faq h2{ font-family: var(--serif); font-style:italic; font-weight:400; font-size: clamp(28px,4vw,36px); text-align:center; margin-bottom:44px; }
+.faq-list{ border-top:1px solid var(--border); }
+.faq-item{ border-bottom:1px solid var(--border); }
+.faq-q{ width:100%; display:flex; align-items:center; justify-content:space-between; gap:20px; background:none; border:none; cursor:pointer; text-align:left; padding:20px 2px; font-family: var(--sans); font-size:15px; font-weight:600; line-height:1.45; color: var(--text-primary); transition: color .15s ease; }
+.faq-q:hover{ color: var(--accent); }
+.faq-q:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:6px; }
+.faq-q svg{ width:18px; height:18px; flex-shrink:0; color: var(--text-muted); transition: transform .28s ease, color .15s ease; }
+.faq-item[data-open="true"] .faq-q svg{ transform: rotate(180deg); color: var(--accent); }
+.faq-a-inner{ min-height:0; overflow:hidden; }
+.faq-a-inner p{ font-size:14.5px; line-height:1.75; color: var(--text-secondary); padding:0 40px 22px 2px; margin:0; }
+.faq-a-inner p + p{ padding-top:14px; }
+.faq.js .faq-a{ display:grid; grid-template-rows:0fr; transition: grid-template-rows .3s ease; }
+.faq.js .faq-item[data-open="true"] .faq-a{ grid-template-rows:1fr; }
+
+
+@media (max-width:560px){
+  .faq{ padding:64px 20px 0; }
+  .faq-q{ font-size:14.5px; padding:18px 2px; }
+  .faq-a-inner p{ padding-right:8px; }
+}
+
+.community{ text-align:center; padding:80px 20px; }
+.community h2{ font-family: var(--serif); font-style:italic; font-weight:400; font-size:34px; margin-bottom:12px; }
+.community p{ color: var(--text-secondary); font-size:14.5px; margin-bottom:40px; }
+.stats{ display:flex; justify-content:center; align-items:flex-start; gap:32px 42px; flex-wrap:wrap; }
+.stat .num{ font-family: var(--serif); font-style:italic; font-size:42px; line-height:1.1; color: var(--accent); }
+.stat .lbl{ font-size:13px; color: var(--text-secondary); margin-bottom:14px; font-family: var(--mono); }
+.stat .cta{ display:inline-block; background: var(--bg-elev); border:1px solid var(--border); border-radius:8px; padding:8px 16px; font-size:12.5px; color: var(--text-primary); transition: color .15s ease, border-color .15s ease, background .15s ease; }
+.stat .cta:hover{ color: var(--accent); border-color: var(--border-strong); background: var(--bg-elev-2); }
+.stat .cta:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+
+@media (max-width:880px){
+  .row{ grid-template-columns:1fr; gap:10px; }
+  .conn{ display:none; }
+  .col-left, .col-right{ align-items:stretch; }
+  .node.wide{ max-width:none; }
+  .spine-line{ display:none; }
+  .fan{ display:none; }
+  .triple-cluster{ flex-direction:column; }
+  .stats{ gap:30px; }
+}
+</style>

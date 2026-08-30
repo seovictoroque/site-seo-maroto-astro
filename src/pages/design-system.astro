@@ -1,0 +1,853 @@
+---
+/**
+ * DESIGN SYSTEM, documentacao viva.
+ *
+ * Referencia INTERNA, isolada de proposito:
+ * - nasce noindex, nofollow e fica fora do sitemap
+ * - nao usa o header nem o footer do site (prop `bare` do BaseLayout), porque
+ *   tem a propria barra de topo e o proprio menu lateral
+ * - nao carrega blog-primitives.css
+ *
+ * Fonte da verdade visual do projeto. Os tokens documentados aqui sao os
+ * mesmos de src/styles/global.css. Se mudar la, mude aqui.
+ *
+ * DETALHE DE SINTAXE: as chaves dentro dos blocos <pre> estao escritas como
+ * &#123; e &#125;. Em .astro a chave crua abre expressao JSX, entao um
+ * exemplo de JSON no meio do texto quebraria o build.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Design System, SEO Maroto"
+  description="Documentação viva do design system do SEO Maroto: tokens de cor, tipografia, forma, layout, componentes, logo, favicon e acessibilidade."
+  path="/design-system"
+  noindex
+  bare
+>
+<div class="bg-field" aria-hidden="true"></div>
+<header class="ds-top">
+  <div class="brand">
+    <img src="/img/icon-seomaroto.png" alt="Ícone do SEO Maroto">
+    <div>SEO Maroto<small>design system</small></div>
+  </div>
+  <div class="ver">v1.0 · paleta âmbar</div>
+</header>
+
+<div class="shell">
+
+  <nav class="sidenav" aria-label="Seções do design system">
+    <h4>Navegação</h4>
+    <a href="#marca" class="on">Marca e tom</a>
+    <a href="#logo">Logo e ícone</a>
+    <a href="#favicon">Favicon e head</a>
+    <a href="#cor">Cor</a>
+    <a href="#tipografia">Tipografia</a>
+    <a href="#forma">Forma e movimento</a>
+    <a href="#layout">Layout e grid</a>
+    <a href="#componentes">Componentes</a>
+    <a href="#acessibilidade">Acessibilidade</a>
+    <a href="#codigo">Bloco de tokens</a>
+  </nav>
+
+  <main class="content">
+
+    <span class="eyebrow">referência interna, não publicar</span>
+    <h1 class="ds-title">Tudo que faz o SEO Maroto <em>parecer o SEO Maroto</em></h1>
+    <p class="lede">Esta página documenta cada decisão visual do site: tokens de cor com hexadecimal e contraste medido, as três famílias tipográficas, raios, sombras, transições, breakpoints, uso de logo e favicon, e o inventário de componentes do projeto.</p>
+    <p class="lede">A fonte da verdade é o bloco <code class="tk">:root</code> de <code class="tk">src/styles/global.css</code>, que agora existe uma vez só no projeto inteiro. Quando o token mudar lá, atualize aqui no mesmo commit.</p>
+
+    <!-- 01 MARCA ========================================================== -->
+    <section id="marca">
+      <h2><span class="num">01</span>Marca e tom</h2>
+      <p class="sec-sub">O visual só funciona se o texto acompanhar. Estas regras valem para post, microcopy de botão, alt de imagem e assunto de e-mail.</p>
+
+      <div class="card">
+        <p><strong>Posicionamento:</strong> SEO sem enrolação, sem guru e sem firula. Não é blog genérico de marketing digital, é laboratório independente de SEO. Conteúdo prático, opinião honesta, experimento real, ferramenta que funciona.</p>
+        <p><strong>Voz:</strong> direta, brasileira, informal, inteligente, levemente sarcástica. Técnica quando precisa ser, sem simplificar demais para quem já é avançado. Fala como quem já errou e testou, não como quem vende curso.</p>
+      </div>
+
+      <h3 class="blk">Regra inegociável</h3>
+      <div class="note warn">
+        <span class="lbl">nunca</span><b>Zero travessão.</b> Em nenhuma hipótese, nem para pausa, nem para aposto, nem para explicação. Troque por vírgula, ponto, dois-pontos ou reformule a frase. Antes de entregar qualquer texto, faça uma busca pelo caractere e limpe.
+      </div>
+
+      <h3 class="blk">O que evitar</h3>
+      <div class="do-dont">
+        <div class="do">
+          <h5>Faz</h5>
+          <ul>
+            <li>Título com opinião e especificidade</li>
+            <li>Número real, print real, dado do projeto</li>
+            <li>Humor na personalidade e no microcopy</li>
+            <li>Admitir o que não funcionou</li>
+          </ul>
+        </div>
+        <div class="dont">
+          <h5>Não faz</h5>
+          <ul>
+            <li>Visual corporativo genérico e stock photo</li>
+            <li>Gradiente exagerado e degradê de agência</li>
+            <li>"10 dicas infalíveis", clickbait, promessa vazia</li>
+            <li>Texto de IA sem opinião nem exemplo</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 LOGO =========================================================== -->
+    <section id="logo">
+      <h2><span class="num">02</span>Logo e ícone</h2>
+      <p class="sec-sub">Ilustração estilo anime de um personagem investigando com lupa, expressão de surpresa. A paleta inteira do site nasceu dela: o âmbar veio do brilho na lente, o creme do colarinho, o terracota do fundo de madeira.</p>
+
+      <div class="logo-grid">
+        <div class="logo-card">
+          <img src="/img/icon-seomaroto.png" width="150" height="150" style="border-radius:14px" alt="Ícone SEO Maroto, fundo esfumado">
+          <b>icon-seomaroto.png</b>
+          <em>1024 × 1024, RGBA<br>fundo esfumado neutro<br>uso: header, footer, favicon</em>
+        </div>
+        <div class="logo-card">
+          <img src="img/logo-seomaroto.png" width="150" height="150" style="border-radius:14px" alt="Logo SEO Maroto, fundo de madeira">
+          <b>logo-seomaroto.png</b>
+          <em>1024 × 1024, RGB<br>fundo de madeira, mais quente<br>uso: peça de marca, OG image, README</em>
+        </div>
+      </div>
+
+      <h3 class="blk">Tamanhos em uso</h3>
+      <div class="demo-box">
+        <div class="size-row">
+          <figure><img src="/img/icon-seomaroto.png" width="40" height="40" style="border-radius:10px" alt=""><figcaption>40px · r10<br>header</figcaption></figure>
+          <figure><img src="/img/icon-seomaroto.png" width="60" height="60" style="border-radius:14px" alt=""><figcaption>60px · r14<br>footer</figcaption></figure>
+          <figure><img src="/img/icon-seomaroto.png" width="96" height="96" style="border-radius:16px" alt=""><figcaption>96px<br>peças maiores</figcaption></figure>
+        </div>
+      </div>
+
+      <h3 class="blk">Regras de uso</h3>
+      <div class="do-dont">
+        <div class="do">
+          <h5>Faz</h5>
+          <ul>
+            <li>Cantos arredondados, 10px no header, 14px no footer</li>
+            <li><code class="tk">object-fit:cover</code> sempre, para não distorcer</li>
+            <li>Somente em ponto de identificação: nav, favicon, assinatura</li>
+            <li><code class="tk">alt</code> descritivo quando o link não tem texto</li>
+          </ul>
+        </div>
+        <div class="dont">
+          <h5>Não faz</h5>
+          <ul>
+            <li>Recolorir, aplicar filtro ou converter para monocromático</li>
+            <li>Usar como textura repetida ou marca d'água de fundo</li>
+            <li>Girar, espelhar ou recortar só o rosto</li>
+            <li>Colocar sobre fundo claro sem o container escuro</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 FAVICON ======================================================== -->
+    <section id="favicon">
+      <h2><span class="num">03</span>Favicon e head</h2>
+      <p class="sec-sub">O pacote vive em <code class="tk">img/favicon-io/</code>. Todos os arquivos carregam o sufixo <code class="tk">_seomaroto</code>, com uma inconsistência que vale lembrar: os dois <code class="tk">android-chrome</code> usam underline simples, o resto usa duplo. O bloco abaixo já está aplicado em todas as páginas HTML do projeto.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Arquivo</th><th>Dimensão</th><th>Onde é usado</th></tr></thead>
+          <tbody>
+            <tr><td class="tk">favicon__seomaroto.ico</td><td class="val">multi</td><td>fallback de navegador antigo, raiz do site</td></tr>
+            <tr><td class="tk">favicon-16x16__seomaroto.png</td><td class="val">16 × 16</td><td>aba do navegador</td></tr>
+            <tr><td class="tk">favicon-32x32__seomaroto.png</td><td class="val">32 × 32</td><td>aba em tela retina, atalho de desktop</td></tr>
+            <tr><td class="tk">apple-touch-icon__seomaroto.png</td><td class="val">180 × 180</td><td>iOS, tela de início</td></tr>
+            <tr><td class="tk">android-chrome-192x192_seomaroto.png</td><td class="val">192 × 192</td><td>Android, ícone do app</td></tr>
+            <tr><td class="tk">android-chrome-512x512_seomaroto.png</td><td class="val">512 × 512</td><td>splash screen do PWA</td></tr>
+            <tr><td class="tk">site.webmanifest</td><td class="val">json</td><td>metadados de instalação</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note" style="margin-top:14px">
+        <span class="lbl">resolvido</span>O <b>site.webmanifest</b> vinha do gerador com <code class="tk">name</code> vazio, cores em <code class="tk">#ffffff</code> e ícones apontando para a raiz sem o sufixo <code class="tk">_seomaroto</code>, o que causava flash branco na abertura do PWA. Reescrito em 29/08/2026 com o conteúdo abaixo.
+      </div>
+
+      <h3 class="blk">Head correto</h3>
+      <div class="codeblock">
+        <div class="head"><span>head, todas as páginas</span><button class="copy" type="button" data-copy="#c-head">copiar</button></div>
+<pre id="c-head"><code>&lt;link rel="icon" href="/img/favicon-io/favicon__seomaroto.ico" sizes="any"&gt;
+&lt;link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-io/favicon-32x32__seomaroto.png"&gt;
+&lt;link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-io/favicon-16x16__seomaroto.png"&gt;
+&lt;link rel="apple-touch-icon" sizes="180x180" href="/img/favicon-io/apple-touch-icon__seomaroto.png"&gt;
+&lt;link rel="manifest" href="/img/favicon-io/site.webmanifest"&gt;
+&lt;meta name="theme-color" content="#0D0904"&gt;</code></pre>
+      </div>
+
+      <h3 class="blk">Manifest corrigido</h3>
+      <div class="codeblock">
+        <div class="head"><span>img/favicon-io/site.webmanifest</span><button class="copy" type="button" data-copy="#c-man">copiar</button></div>
+<pre id="c-man"><code>&#123;
+  "name": "SEO Maroto",
+  "short_name": "SEO Maroto",
+  "description": "Laboratorio independente de SEO: blog tecnico, estudos de caso, trilhas de estudo e ferramentas gratuitas.",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#0D0904",
+  "background_color": "#0D0904",
+  "icons": [
+    &#123;
+      "src": "/img/favicon-io/android-chrome-192x192_seomaroto.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    &#125;,
+    &#123;
+      "src": "/img/favicon-io/android-chrome-512x512_seomaroto.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    &#125;,
+    &#123;
+      "src": "/img/favicon-io/android-chrome-512x512_seomaroto.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    &#125;
+  ]
+&#125;</code></pre>
+      </div>
+    </section>
+
+    <!-- 04 COR ============================================================ -->
+    <section id="cor">
+      <h2><span class="num">04</span>Cor</h2>
+      <p class="sec-sub">Modo escuro em base marrom, não azulada. Onze tokens no <code class="tk">:root</code>, mais um punhado de valores auxiliares que aparecem inline nos componentes. Clique em qualquer swatch para copiar o hexadecimal.</p>
+
+      <h3 class="blk">Superfícies</h3>
+      <div class="swatches">
+        <button class="sw" data-hex="#0D0904" type="button"><div class="chip" style="background:#0D0904"><span>copiar</span></div><div class="meta"><b>--bg</b><i>#0D0904</i><em>Fundo da página, base de todo o site</em></div></button>
+        <button class="sw" data-hex="#1C130B" type="button"><div class="chip" style="background:#1C130B"><span>copiar</span></div><div class="meta"><b>--bg-elev</b><i>#1C130B</i><em>Cards, dropdowns, painéis, primeira elevação</em></div></button>
+        <button class="sw" data-hex="#251A0F" type="button"><div class="chip" style="background:#251A0F"><span>copiar</span></div><div class="meta"><b>--bg-elev-2</b><i>#251A0F</i><em>Elemento sobre card, hover de item de menu</em></div></button>
+      </div>
+
+      <h3 class="blk">Texto</h3>
+      <div class="swatches">
+        <button class="sw" data-hex="#F0E4CF" type="button"><div class="chip" style="background:#F0E4CF"><span style="color:#0D0904">copiar</span></div><div class="meta"><b>--text-primary</b><i>#F0E4CF</i><em>Título e corpo. Creme do colarinho da logo</em></div></button>
+        <button class="sw" data-hex="#B39A78" type="button"><div class="chip" style="background:#B39A78"><span style="color:#0D0904">copiar</span></div><div class="meta"><b>--text-secondary</b><i>#B39A78</i><em>Texto de apoio, parágrafo secundário, link de menu</em></div></button>
+        <button class="sw" data-hex="#6E5A42" type="button"><div class="chip" style="background:#6E5A42"><span>copiar</span></div><div class="meta"><b>--text-muted</b><i>#6E5A42</i><em>Metadado, legenda, label mono. Uso decorativo</em></div></button>
+      </div>
+
+      <h3 class="blk">Acentos</h3>
+      <div class="swatches">
+        <button class="sw" data-hex="#D9A441" type="button"><div class="chip" style="background:#D9A441"><span style="color:#2B1704">copiar</span></div><div class="meta"><b>--accent</b><i>#D9A441</i><em>Cor de marca. CTA, estado ativo, destaque, número</em></div></button>
+        <button class="sw" data-hex="#9C7226" type="button"><div class="chip" style="background:#9C7226"><span>copiar</span></div><div class="meta"><b>--accent-dim</b><i>#9C7226</i><em>Acento apagado, estado desabilitado, borda sutil</em></div></button>
+        <button class="sw" data-hex="#C1573A" type="button"><div class="chip" style="background:#C1573A"><span>copiar</span></div><div class="meta"><b>--rust</b><i>#C1573A</i><em>Reservado para IA, GEO e AEO. Também alerta</em></div></button>
+      </div>
+
+      <div class="note" style="margin-top:14px">
+        <span class="lbl">semântica</span>O <b>rust</b> não é decoração. Ele marca conteúdo de IA, GEO e AEO no site inteiro: título de cluster, node de trilha GEO, bloco "continue aprendendo". Se a peça não fala de busca com IA, ela usa accent.
+      </div>
+
+      <h3 class="blk">Bordas e overlays</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Token ou valor</th><th>Valor</th><th>Onde aparece</th></tr></thead>
+          <tbody>
+            <tr><td class="tk">--border</td><td class="val">rgba(216,182,138,0.10)</td><td>borda padrão de card, tabela, divisor</td></tr>
+            <tr><td class="tk">--border-strong</td><td class="val">rgba(216,182,138,0.22)</td><td>dropdown, node, borda de destaque</td></tr>
+            <tr><td class="tk">hover de node</td><td class="val">rgba(216,182,138,0.34)</td><td>borda do node em hover</td></tr>
+            <tr><td class="tk">hover de link nav</td><td class="val">rgba(216,182,138,0.06)</td><td>fundo de item de nav em hover</td></tr>
+            <tr><td class="tk">hover de icon-btn</td><td class="val">rgba(216,182,138,0.07)</td><td>fundo do botão de ícone social</td></tr>
+            <tr><td class="tk">trilho de progresso</td><td class="val">rgba(216,182,138,0.08)</td><td>fundo da barra de progresso</td></tr>
+            <tr><td class="tk">nav sticky</td><td class="val">rgba(13,9,4,0.88) + blur(10px)</td><td>fundo translúcido do header fixo</td></tr>
+            <tr><td class="tk">rust translúcido</td><td class="val">rgba(193,87,58,0.14) → 0.24</td><td>node rust em repouso e em hover</td></tr>
+            <tr><td class="tk">tinta sobre accent</td><td class="val">#2B1704</td><td>texto em botão de fundo âmbar sólido</td></tr>
+            <tr><td class="tk">accent hover</td><td class="val">#E6B75E</td><td>botão âmbar em hover</td></tr>
+            <tr><td class="tk">rust hover</td><td class="val">#DD7A5C</td><td>texto do node rust em hover</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="blk">Campo de fundo</h3>
+      <p class="sec-sub" style="margin-bottom:14px">Duas manchas radiais fixas, atrás de tudo, com <code class="tk">pointer-events:none</code>. Dão profundidade sem virar gradiente de agência.</p>
+      <div class="codeblock">
+        <div class="head"><span>.bg-field</span><button class="copy" type="button" data-copy="#c-field">copiar</button></div>
+<pre id="c-field"><code>.bg-field&#123;
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(217,164,65,0.07), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 10%, rgba(193,87,58,0.05), transparent 60%);
+&#125;</code></pre>
+      </div>
+
+      <h3 class="blk">Contraste medido, WCAG 2.1</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Cor</th><th>sobre --bg</th><th>sobre --bg-elev</th><th>Veredito</th></tr></thead>
+          <tbody>
+            <tr><td class="tk">--text-primary</td><td class="val">15.79</td><td class="val">14.56</td><td>AAA em qualquer tamanho</td></tr>
+            <tr><td class="tk">--text-secondary</td><td class="val">7.38</td><td class="val">6.81</td><td>AAA em corpo de texto</td></tr>
+            <tr><td class="tk">--accent</td><td class="val">8.83</td><td class="val">8.14</td><td>AAA, seguro para link e CTA</td></tr>
+            <tr><td class="tk">--accent-dim</td><td class="val">4.58</td><td class="val">4.23</td><td>AA no fundo base, falha sobre card</td></tr>
+            <tr><td class="tk">--rust</td><td class="val">4.43</td><td class="val">4.09</td><td>abaixo de AA para corpo, ok em texto grande e borda</td></tr>
+            <tr><td class="tk">--text-muted</td><td class="val">3.03</td><td class="val">2.79</td><td>falha AA, só para decoração e label mono grande</td></tr>
+            <tr><td class="tk">#2B1704 sobre accent</td><td class="val">7.61</td><td class="val" style="color:var(--text-muted)">·</td><td>AAA, tinta correta para botão sólido</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note warn" style="margin-top:12px">
+        <span class="lbl">atenção</span><b>--text-muted não passa em AA.</b> Ele existe para metadado curto, label mono e legenda, nunca para parágrafo. Se a informação importa para o leitor, use <code class="tk">--text-secondary</code>. Mesma lógica para <b>--rust</b> em bloco de texto corrido, prefira ele em borda, ícone, título curto ou fundo translúcido com texto claro.
+      </div>
+    </section>
+
+    <!-- 05 TIPOGRAFIA ===================================================== -->
+    <section id="tipografia">
+      <h2><span class="num">05</span>Tipografia</h2>
+      <p class="sec-sub">Três famílias, cada uma com um trabalho. Serifada itálica assina, sans conduz, mono etiqueta. Todas vêm do Google Fonts com <code class="tk">display=swap</code>.</p>
+
+      <div class="type-row">
+        <div class="spec">--serif · Instrument Serif · itálico 400 · fallback Georgia, serif</div>
+        <div class="t-serif">Investiga primeiro, opina depois</div>
+        <p class="card" style="background:none;border:none;padding:14px 0 0;font-size:13px;color:var(--text-secondary);line-height:1.7">Título de hero, h2 de seção, número de métrica e frase de assinatura. Sempre itálico, sempre peso 400. Nunca em corpo de texto, nunca em botão.</p>
+      </div>
+
+      <div class="type-row">
+        <div class="spec">--sans · Space Grotesk · 400 500 600 700 · fallback -apple-system, sans-serif</div>
+        <div class="t-sans">Corpo, navegação, botão, formulário e tudo que se lê rápido.</div>
+        <p class="card" style="background:none;border:none;padding:14px 0 0;font-size:13px;color:var(--text-secondary);line-height:1.7">Padrão do <code class="tk">*</code>, herdado por todos os elementos. 400 no corpo, 500 em node, 600 em label e pergunta de FAQ, 700 em título de cluster.</p>
+      </div>
+
+      <div class="type-row">
+        <div class="spec">--mono · JetBrains Mono · 400 500 · fallback monospace</div>
+        <div class="t-mono">12 etapas · 4 min de leitura · atualizado em 29/08</div>
+        <p class="card" style="background:none;border:none;padding:14px 0 0;font-size:13px;color:var(--text-secondary);line-height:1.7">Metadado, timestamp, badge de categoria, título de coluna do footer, código inline, legenda de métrica e pill de submenu. Em label uppercase, usa <code class="tk">letter-spacing</code> entre 0.06em e 0.12em.</p>
+      </div>
+
+      <h3 class="blk">Import</h3>
+      <div class="codeblock">
+        <div class="head"><span>head, antes do style</span><button class="copy" type="button" data-copy="#c-fonts">copiar</button></div>
+<pre id="c-fonts"><code>&lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt;
+&lt;link rel="preconnect" href="https://fonts.gstatic.com" crossorigin&gt;
+&lt;link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Space+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"&gt;</code></pre>
+      </div>
+
+      <h3 class="blk">Escala em uso</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Papel</th><th>Tamanho</th><th>Família e peso</th><th>Line-height</th></tr></thead>
+          <tbody>
+            <tr><td>Hero h1</td><td class="val">clamp(34px, 5.4vw, 50px)</td><td>serif itálico 400</td><td class="val">1.12</td></tr>
+            <tr><td>Métrica grande</td><td class="val">42px</td><td>serif itálico 400, cor accent</td><td class="val">1.1</td></tr>
+            <tr><td>h2 de seção</td><td class="val">clamp(26px, 4vw, 34px)</td><td>serif itálico 400</td><td class="val">herdado</td></tr>
+            <tr><td>h2 de FAQ</td><td class="val">clamp(28px, 4vw, 36px)</td><td>serif itálico 400</td><td class="val">herdado</td></tr>
+            <tr><td>Título de espinha</td><td class="val">30px</td><td>serif itálico 400</td><td class="val">herdado</td></tr>
+            <tr><td>Tagline e assinatura</td><td class="val">20px</td><td>serif itálico 400</td><td class="val">herdado</td></tr>
+            <tr><td>Marca no header</td><td class="val">19px</td><td>serif itálico 400</td><td class="val">herdado</td></tr>
+            <tr><td>Pergunta de FAQ</td><td class="val">15px</td><td>sans 600</td><td class="val">1.45</td></tr>
+            <tr><td>Link do menu mobile</td><td class="val">15px</td><td>sans 400</td><td class="val">herdado</td></tr>
+            <tr><td>Corpo de texto</td><td class="val">14.5px</td><td>sans 400</td><td class="val">1.75</td></tr>
+            <tr><td>Label de etapa</td><td class="val">14px</td><td>sans 600</td><td class="val">1.35</td></tr>
+            <tr><td>Nav e corpo denso</td><td class="val">14px</td><td>sans 400</td><td class="val">herdado</td></tr>
+            <tr><td>Node de trilha</td><td class="val">13.5px</td><td>sans 500</td><td class="val">herdado</td></tr>
+            <tr><td>Link de nav e footer</td><td class="val">13.5px</td><td>sans 400</td><td class="val">herdado</td></tr>
+            <tr><td>Item de dropdown</td><td class="val">13px</td><td>sans 400</td><td class="val">herdado</td></tr>
+            <tr><td>Metadado e eyebrow</td><td class="val">12.5px</td><td>mono 400</td><td class="val">herdado</td></tr>
+            <tr><td>Barra inferior do footer</td><td class="val">12px</td><td>mono 400</td><td class="val">herdado</td></tr>
+            <tr><td>Pill de submenu mobile</td><td class="val">12px</td><td>mono 400</td><td class="val">herdado</td></tr>
+            <tr><td>Título de cluster</td><td class="val">11.5px</td><td>mono 700 uppercase, 0.06em</td><td class="val">herdado</td></tr>
+            <tr><td>Título de coluna do footer</td><td class="val">11px</td><td>mono 500 uppercase, 0.11em</td><td class="val">herdado</td></tr>
+            <tr><td>Descrição no dropdown</td><td class="val">11px</td><td>mono 400</td><td class="val">herdado</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 06 FORMA ========================================================== -->
+    <section id="forma">
+      <h2><span class="num">06</span>Forma e movimento</h2>
+      <p class="sec-sub">Nenhum destes valores está em variável ainda. Estão documentados aqui até virarem tokens no <code class="tk">tokens.css</code> previsto no roadmap.</p>
+
+      <h3 class="blk">Raio de canto</h3>
+      <div class="demo-box">
+        <div class="scale">
+          <figure><div class="box" style="width:56px;height:56px;border-radius:2px"></div><figcaption>2px<br>sublinhado ativo</figcaption></figure>
+          <figure><div class="box" style="width:56px;height:56px;border-radius:3px"></div><figcaption>3px<br>barra de progresso</figcaption></figure>
+          <figure><div class="box" style="width:56px;height:56px;border-radius:6px"></div><figcaption>6px<br>código inline</figcaption></figure>
+          <figure><div class="box" style="width:56px;height:56px;border-radius:8px"></div><figcaption>8px<br>node, botão, link nav</figcaption></figure>
+          <figure><div class="box" style="width:56px;height:56px;border-radius:9px"></div><figcaption>9px<br>icon-btn</figcaption></figure>
+          <figure><div class="box" style="width:56px;height:56px;border-radius:10px"></div><figcaption>10px<br>logo no header</figcaption></figure>
+          <figure><div class="box" style="width:56px;height:56px;border-radius:12px"></div><figcaption>12px<br>card, dropdown</figcaption></figure>
+          <figure><div class="box" style="width:56px;height:56px;border-radius:14px"></div><figcaption>14px<br>card grande, logo footer</figcaption></figure>
+          <figure><div class="box" style="width:56px;height:56px;border-radius:20px"></div><figcaption>20px<br>pill e eyebrow</figcaption></figure>
+        </div>
+      </div>
+
+      <h3 class="blk">Sombra</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Onde</th><th>Valor</th></tr></thead>
+          <tbody>
+            <tr><td>Dropdown e toast</td><td class="val">0 18px 44px rgba(0,0,0,0.55)</td></tr>
+            <tr><td>Botão âmbar, repouso</td><td class="val">0 4px 18px rgba(217,164,65,0.18)</td></tr>
+            <tr><td>Botão âmbar, hover</td><td class="val">0 6px 26px rgba(217,164,65,0.34)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note" style="margin-top:12px"><span class="lbl">regra</span>Card não tem sombra. Elevação em superfície plana vem da cor, <code class="tk">--bg-elev</code> sobre <code class="tk">--bg</code>. Sombra fica reservada para o que flutua de verdade: dropdown, toast e botão de ação principal.</div>
+
+      <h3 class="blk">Transição</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Duração</th><th>Propriedades</th><th>Onde</th></tr></thead>
+          <tbody>
+            <tr><td class="val">.15s ease</td><td class="val">color, background, border-color</td><td>link, icon-btn, item de footer</td></tr>
+            <tr><td class="val">.16s ease</td><td class="val">background, border-color, color, box-shadow, opacity, transform</td><td>node, label, dropdown, swatch</td></tr>
+            <tr><td class="val">.18s ease</td><td class="val">opacity, transform, visibility</td><td>toast</td></tr>
+            <tr><td class="val">.28s ease</td><td class="val">transform</td><td>rotação da seta do FAQ</td></tr>
+            <tr><td class="val">.3s ease</td><td class="val">grid-template-rows</td><td>abertura da resposta do FAQ</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="blk">Camadas, z-index</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Valor</th><th>Elemento</th></tr></thead>
+          <tbody>
+            <tr><td class="val">90</td><td>toast de confirmação</td></tr>
+            <tr><td class="val">50</td><td>nav sticky</td></tr>
+            <tr><td class="val">49</td><td>menu mobile em tela cheia</td></tr>
+            <tr><td class="val">2</td><td>label, cluster, bloco em cima do fluxo</td></tr>
+            <tr><td class="val">1</td><td>main, linha de fluxo, node</td></tr>
+            <tr><td class="val">0</td><td>campo de fundo, leque de conectores</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 07 LAYOUT ========================================================= -->
+    <section id="layout">
+      <h2><span class="num">07</span>Layout e grid</h2>
+
+      <h3 class="blk">Larguras máximas</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Contexto</th><th>max-width</th><th>Padding lateral</th></tr></thead>
+          <tbody>
+            <tr><td>Footer</td><td class="val">1220px</td><td class="val">28px</td></tr>
+            <tr><td>Canvas de fluxo</td><td class="val">1120px</td><td class="val">20px</td></tr>
+            <tr><td>FAQ</td><td class="val">900px</td><td class="val">28px</td></tr>
+            <tr><td>Texto corrido</td><td class="val">760px</td><td class="val">32px</td></tr>
+            <tr><td>Título de hero</td><td class="val">720px</td><td class="val" style="color:var(--text-muted)">·</td></tr>
+            <tr><td>Barra de progresso</td><td class="val">680px</td><td class="val" style="color:var(--text-muted)">·</td></tr>
+            <tr><td>Mega menu</td><td class="val">600px</td><td class="val" style="color:var(--text-muted)">·</td></tr>
+            <tr><td>Subtítulo de hero</td><td class="val">560px</td><td class="val" style="color:var(--text-muted)">·</td></tr>
+            <tr><td>Bloco de CTA final</td><td class="val">520px</td><td class="val" style="color:var(--text-muted)">·</td></tr>
+            <tr><td>Descrição de seção</td><td class="val">440px</td><td class="val" style="color:var(--text-muted)">·</td></tr>
+            <tr><td>Dropdown simples</td><td class="val">250px min</td><td class="val" style="color:var(--text-muted)">·</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="blk">Breakpoints</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Limite</th><th>O que muda</th></tr></thead>
+          <tbody>
+            <tr><td class="val">acima de 1300px</td><td>nav desktop completo, menu mobile forçado a display none</td></tr>
+            <tr><td class="val">1300px</td><td>nav vira hambúrguer, ícones sociais reduzem para três</td></tr>
+            <tr><td class="val">1040px</td><td>footer de cinco para quatro colunas, marca ocupa linha inteira</td></tr>
+            <tr><td class="val">880px</td><td>fluxo da trilha empilha, espinha e conectores somem, cluster triplo vira coluna</td></tr>
+            <tr><td class="val">720px</td><td>footer de quatro para duas colunas</td></tr>
+            <tr><td class="val">560px</td><td>padding do nav cai para 18px, ícones sociais só no painel mobile, FAQ compacta</td></tr>
+            <tr><td class="val">520px</td><td>footer em coluna única, barra inferior empilha</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="blk">Ritmo vertical</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Espaço</th><th>Valor</th><th>Uso</th></tr></thead>
+          <tbody>
+            <tr><td>Topo de seção grande</td><td class="val">86px</td><td>FAQ</td></tr>
+            <tr><td>Topo de seção padrão</td><td class="val">64px a 80px</td><td>sobre, cabeçalho de seção, comunidade</td></tr>
+            <tr><td>Topo de hero</td><td class="val">70px</td><td>eyebrow acima do título</td></tr>
+            <tr><td>Entre linhas de fluxo</td><td class="val">28px</td><td>row da trilha</td></tr>
+            <tr><td>Entre colunas do footer</td><td class="val">40px</td><td>desktop, cai para 26px no mobile</td></tr>
+            <tr><td>Entre itens de lista</td><td class="val">13px</td><td>coluna de links do footer</td></tr>
+            <tr><td>Entre nodes</td><td class="val">9px</td><td>coluna e grid de cluster</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note" style="margin-top:14px"><span class="lbl">rodapé</span>Para o footer nunca subir em página curta, o body precisa de <code class="tk">min-height:100vh; display:flex; flex-direction:column;</code> e o main de <code class="tk">flex:1</code>. O footer usa <code class="tk">margin-top:auto</code>.</div>
+    </section>
+
+    <!-- 08 COMPONENTES ==================================================== -->
+    <section id="componentes">
+      <h2><span class="num">08</span>Componentes</h2>
+      <p class="sec-sub">Inventário do que já existe em HTML no repositório, com a classe de origem. Os exemplos abaixo são estáticos, servem para conferir cor e proporção.</p>
+
+      <h3 class="blk">Node, três variações</h3>
+      <div class="demo-box">
+        <span class="node">Neutro, padrão</span>
+        <span class="node accent">Accent, etapa principal</span>
+        <span class="node rust">Rust, conteúdo de IA e GEO</span>
+      </div>
+      <p class="demo-cap">.node · .node.accent · .node.rust · raio 8px · sans 500 em 13.5px</p>
+
+      <h3 class="blk">Label de etapa e pill</h3>
+      <div class="demo-box">
+        <span class="label-boxed">Etapa em destaque</span>
+        <span class="pill">/ferramentas/seo-audit</span>
+        <span class="pill">trilha técnica</span>
+      </div>
+      <p class="demo-cap">.label.boxed com sombra âmbar · .m-sub a como pill mono de 20px de raio</p>
+
+      <h3 class="blk">Cluster</h3>
+      <div class="demo-box">
+        <div class="cluster-demo">
+          <div class="ct">Buscas com IA</div>
+          <div class="cg">
+            <span class="node">AEO</span>
+            <span class="node">GEO</span>
+            <span class="node">Entidades</span>
+            <span class="node">Citação</span>
+          </div>
+        </div>
+      </div>
+      <p class="demo-cap">.cluster · título mono 700 uppercase na cor rust · grid de duas colunas com gap 9px</p>
+
+      <h3 class="blk">Conector de fluxo</h3>
+      <div class="demo-box col">
+        <div class="dots"></div>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-top:6px">Espinha vertical de 2px na cor accent com <code class="tk">opacity:0.45</code>, e leque em SVG com <code class="tk">stroke-dasharray:2 5</code>, <code class="tk">stroke-linecap:round</code> e <code class="tk">opacity:0.62</code>. Abaixo de 880px os dois somem e o fluxo empilha.</p>
+      </div>
+
+      <h3 class="blk">Barra de progresso e métrica</h3>
+      <div class="demo-box" style="gap:40px">
+        <div class="prog">
+          <div class="top"><span>Progresso na trilha</span><span>8 de 13</span></div>
+          <div class="bar"><div class="fill"></div></div>
+        </div>
+        <div class="stat-demo">
+          <div class="num">2.4k</div>
+          <div class="lbl">pessoas na newsletter</div>
+        </div>
+      </div>
+      <p class="demo-cap">.progress-bar altura 5px, raio 3px · .stat .num serif itálico 42px na cor accent</p>
+
+      <h3 class="blk">Eyebrow e botões de ícone</h3>
+      <div class="demo-box">
+        <span class="eyebrow">atualizado em agosto</span>
+        <span class="icon-btn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12z"/></svg></span>
+        <span class="icon-btn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644z"/></svg></span>
+        <span class="icon-btn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></span>
+      </div>
+      <p class="demo-cap">Ícone de nav em traço 1.8 e 16px · ícone social em glifo sólido oficial e 19px · botão 34px com raio 9px</p>
+
+      <h3 class="blk">Inventário completo</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Componente</th><th>Classe</th><th>Arquivo</th></tr></thead>
+          <tbody>
+            <tr><td>Nav sticky com blur</td><td class="tk">nav</td><td class="tk">src/components/layout/Header.astro</td></tr>
+            <tr><td>Dropdown simples</td><td class="tk">.dropdown-menu</td><td class="tk">src/components/layout/Header.astro</td></tr>
+            <tr><td>Mega menu de duas colunas</td><td class="tk">.dropdown-menu.mega</td><td class="tk">src/components/layout/Header.astro</td></tr>
+            <tr><td>Estado ativo com sublinhado</td><td class="tk">a.active</td><td class="tk">src/components/layout/Header.astro</td></tr>
+            <tr><td>Botão de ícone social</td><td class="tk">.icon-btn</td><td>header e footer</td></tr>
+            <tr><td>Menu mobile em tela cheia</td><td class="tk">.mobile-menu</td><td class="tk">src/components/layout/Header.astro</td></tr>
+            <tr><td>Pill de submenu mobile</td><td class="tk">.m-sub a</td><td class="tk">src/components/layout/Header.astro</td></tr>
+            <tr><td>Footer de cinco colunas</td><td class="tk">.footer-inner</td><td class="tk">src/components/layout/Footer.astro</td></tr>
+            <tr><td>Barra inferior de créditos</td><td class="tk">.footer-bottom</td><td class="tk">src/components/layout/Footer.astro</td></tr>
+            <tr><td>Campo de fundo radial</td><td class="tk">.bg-field</td><td class="tk">src/pages/escolinha.astro</td></tr>
+            <tr><td>Eyebrow</td><td class="tk">.eyebrow</td><td class="tk">src/pages/escolinha.astro</td></tr>
+            <tr><td>Hero centralizado</td><td class="tk">.hero, h1.hero-title</td><td class="tk">src/pages/escolinha.astro</td></tr>
+            <tr><td>Barra de progresso</td><td class="tk">.progress-wrap</td><td class="tk">src/pages/escolinha.astro</td></tr>
+            <tr><td>Cabeçalho de seção</td><td class="tk">.section-head</td><td class="tk">src/pages/escolinha.astro</td></tr>
+            <tr><td>Card informativo</td><td class="tk">.info-box</td><td class="tk">src/pages/escolinha.astro</td></tr>
+            <tr><td>Espinha e leque de conectores</td><td class="tk">.spine-line, .fan path</td><td class="tk">src/pages/escolinha.astro</td></tr>
+            <tr><td>Node de trilha</td><td class="tk">.node, .accent, .rust, .wide</td><td class="tk">src/pages/escolinha.astro</td></tr>
+            <tr><td>Label de etapa</td><td class="tk">.label.plain, .label.boxed</td><td class="tk">src/pages/escolinha.astro</td></tr>
+            <tr><td>Cluster de nodes</td><td class="tk">.cluster, .cluster-title</td><td class="tk">src/pages/escolinha.astro</td></tr>
+            <tr><td>Bloco continue aprendendo</td><td class="tk">.keep-learning</td><td class="tk">src/pages/escolinha.astro</td></tr>
+            <tr><td>FAQ acordeão</td><td class="tk">.faq-item, .faq-q, .faq-a</td><td class="tk">src/pages/escolinha.astro</td></tr>
+            <tr><td>Métrica de comunidade</td><td class="tk">.stat .num, .stat .cta</td><td class="tk">src/pages/escolinha.astro</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 09 ACESSIBILIDADE ================================================= -->
+    <section id="acessibilidade">
+      <h2><span class="num">09</span>Acessibilidade</h2>
+      <p class="sec-sub">O que já está implementado e o que precisa continuar valendo em componente novo.</p>
+
+      <ul class="check">
+        <li><b>Foco visível em tudo que é interativo.</b> O padrão é <code class="tk">outline:2px solid var(--accent); outline-offset:2px</code>, com offset 3px em botão maior. Nunca remover outline sem colocar substituto.</li>
+        <li><b>Dropdown navegável por teclado</b> via <code class="tk">:focus-within</code>, sem depender de hover.</li>
+        <li><b>Página atual marcada</b> com <code class="tk">class="active"</code> e <code class="tk">aria-current="page"</code> juntos. Em item com dropdown, a classe vai no link dentro da <code class="tk">div.dropdown</code>.</li>
+        <li><b>Menu mobile</b> com <code class="tk">aria-expanded</code>, <code class="tk">aria-controls</code> e fechamento no Esc.</li>
+        <li><b>Ícone social</b> sempre com <code class="tk">aria-label</code>, porque o link não tem texto.</li>
+        <li><b>Elemento decorativo</b> com <code class="tk">aria-hidden="true"</code>, caso do campo de fundo e dos SVG dentro de link já rotulado.</li>
+        <li><b>Contraste:</b> nunca usar <code class="tk">--text-muted</code> em texto que precisa ser lido. Ele mede 3.03 sobre o fundo, abaixo do mínimo de 4.5 do WCAG AA.</li>
+        <li><b>Alvo de toque</b> de no mínimo 34px em botão de ícone, o que o <code class="tk">.icon-btn</code> já entrega.</li>
+        <li><b>Movimento:</b> nenhuma animação passa de 0.3s e nada pisca. Ainda assim, componente novo com animação maior deve respeitar <code class="tk">prefers-reduced-motion</code>.</li>
+      </ul>
+    </section>
+
+    <!-- 10 CODIGO ========================================================= -->
+    <section id="codigo">
+      <h2><span class="num">10</span>Bloco de tokens</h2>
+      <p class="sec-sub">Cole isto no topo do <code class="tk">style</code> de qualquer página nova. É o mesmo bloco dos três arquivos existentes, sem uma vírgula de diferença.</p>
+
+      <div class="codeblock">
+        <div class="head"><span>:root, bloco TOKENS</span><button class="copy" type="button" data-copy="#c-tokens">copiar</button></div>
+<pre id="c-tokens"><code><span class="c">/* TOKENS =================================================================== */</span>
+:root&#123;
+  <span class="p">--bg</span>: <span class="v">#0D0904</span>;
+  <span class="p">--bg-elev</span>: <span class="v">#1C130B</span>;
+  <span class="p">--bg-elev-2</span>: <span class="v">#251A0F</span>;
+  <span class="p">--border</span>: <span class="v">rgba(216,182,138,0.10)</span>;
+  <span class="p">--border-strong</span>: <span class="v">rgba(216,182,138,0.22)</span>;
+  <span class="p">--text-primary</span>: <span class="v">#F0E4CF</span>;
+  <span class="p">--text-secondary</span>: <span class="v">#B39A78</span>;
+  <span class="p">--text-muted</span>: <span class="v">#6E5A42</span>;
+  <span class="p">--accent</span>: <span class="v">#D9A441</span>;
+  <span class="p">--accent-dim</span>: <span class="v">#9C7226</span>;
+  <span class="p">--rust</span>: <span class="v">#C1573A</span>;
+  <span class="p">--serif</span>: <span class="v">'Instrument Serif', Georgia, serif</span>;
+  <span class="p">--sans</span>: <span class="v">'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif</span>;
+  <span class="p">--mono</span>: <span class="v">'JetBrains Mono', monospace</span>;
+&#125;
+*&#123; box-sizing:border-box; margin:0; padding:0; font-family: var(--sans); &#125;
+body&#123; background: var(--bg); color: var(--text-primary); &#125;
+a&#123; color:inherit; text-decoration:none; &#125;</code></pre>
+      </div>
+
+      <h3 class="blk">Checklist antes de publicar</h3>
+      <ul class="check">
+        <li><b>Zero travessão</b> em qualquer texto da página.</li>
+        <li><b>Tokens em variável,</b> nenhum hexadecimal solto no CSS do componente.</li>
+        <li><b>Rust só em conteúdo de IA, GEO e AEO,</b> ou em alerta. Em qualquer outro lugar, accent.</li>
+        <li><b>Foco visível</b> testado com Tab do início ao fim da página.</li>
+        <li><b>Breakpoints conferidos</b> em 1300, 1040, 880, 720 e 520.</li>
+        <li><b>Head com favicon completo</b> e <code class="tk">theme-color</code> em <code class="tk">#0D0904</code>.</li>
+        <li><b>Texto importante nunca em</b> <code class="tk">--text-muted</code>.</li>
+      </ul>
+
+      <div class="note" style="margin-top:20px">
+        <span class="lbl">roadmap</span>Quando os tokens saírem para um <b>tokens.css</b> compartilhado, esta página passa a importar o mesmo arquivo. Aí ela deixa de ser documentação escrita à mão e vira espelho automático do sistema.
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="ds-foot">
+  <div class="in">
+    <span>SEO Maroto · design system · atualizado em 29/08/2026</span>
+    <span>Fonte da verdade: <code>src/styles/global.css</code> · <a href="/escolinha">/escolinha</a></span>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</BaseLayout>
+
+<script>
+  import { initDesignSystem } from '../scripts/design-system';
+  initDesignSystem();
+</script>
+
+<style is:global>
+/* Reset proprio da pagina, o que difere do global.css */
+html{ scroll-padding-top:88px; }
+::selection{ background: rgba(217,164,65,0.28); }
+
+.bg-field{
+position:fixed; inset:0; z-index:0; pointer-events:none;
+background:
+  radial-gradient(ellipse 900px 500px at 15% -10%, rgba(217,164,65,0.07), transparent 60%),
+  radial-gradient(ellipse 700px 500px at 100% 10%, rgba(193,87,58,0.05), transparent 60%);
+}
+
+/* TOPBAR =================================================================== */
+.ds-top{ position:sticky; top:0; z-index:50; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:13px 26px; border-bottom:1px solid var(--border); background:rgba(13,9,4,0.88); backdrop-filter:blur(10px); }
+.ds-top .brand{ display:flex; align-items:center; gap:11px; font-family:var(--serif); font-style:italic; font-size:19px; }
+.ds-top .brand img{ width:38px; height:38px; border-radius:10px; object-fit:cover; display:block; }
+.ds-top .brand small{ display:block; font-family:var(--mono); font-style:normal; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin-top:2px; }
+.ds-top .ver{ font-family:var(--mono); font-size:11.5px; color:var(--text-muted); border:1px solid var(--border); border-radius:20px; padding:5px 12px; white-space:nowrap; }
+
+/* SHELL ==================================================================== */
+.shell{ position:relative; z-index:1; max-width:1280px; margin:0 auto; padding:0 26px 100px; display:grid; grid-template-columns:214px 1fr; gap:52px; align-items:start; }
+.sidenav{ position:sticky; top:84px; padding-top:44px; }
+.sidenav h4{ font-family:var(--mono); font-size:10.5px; font-weight:500; text-transform:uppercase; letter-spacing:.12em; color:var(--text-muted); margin-bottom:14px; }
+.sidenav a{ display:block; font-size:13px; color:var(--text-secondary); padding:7px 11px; border-radius:8px; border-left:2px solid transparent; transition:color .15s ease, background .15s ease, border-color .15s ease; }
+.sidenav a:hover{ color:var(--text-primary); background:rgba(216,182,138,0.06); }
+.sidenav a.on{ color:var(--accent); border-left-color:var(--accent); background:rgba(216,182,138,0.05); }
+.content{ min-width:0; padding-top:44px; }
+
+/* HERO ===================================================================== */
+.eyebrow{ display:inline-flex; align-items:center; gap:8px; font-size:12.5px; color:var(--text-secondary); font-family:var(--mono); border:1px solid var(--border); border-radius:20px; padding:6px 14px 6px 12px; }
+.eyebrow::before{ content:''; width:5px; height:5px; border-radius:50%; background:var(--accent); }
+h1.ds-title{ font-family:var(--serif); font-weight:400; font-style:italic; font-size:clamp(34px,5.4vw,50px); line-height:1.12; margin:20px 0 16px; max-width:720px; }
+h1.ds-title em{ color:var(--accent); font-style:italic; }
+.lede{ font-size:14.5px; line-height:1.75; color:var(--text-secondary); max-width:620px; }
+.lede + .lede{ margin-top:12px; }
+
+/* SECOES =================================================================== */
+section{ padding-top:72px; }
+section > h2{ font-family:var(--serif); font-weight:400; font-style:italic; font-size:clamp(26px,4vw,34px); margin-bottom:8px; }
+section > h2 .num{ font-family:var(--mono); font-style:normal; font-size:12px; color:var(--accent); vertical-align:super; margin-right:9px; letter-spacing:.06em; }
+.sec-sub{ font-size:14px; color:var(--text-secondary); line-height:1.7; max-width:640px; margin-bottom:26px; }
+h3.blk{ font-family:var(--mono); font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:.11em; color:var(--text-muted); margin:36px 0 14px; }
+h3.blk:first-of-type{ margin-top:0; }
+
+.card{ background:var(--bg-elev); border:1px solid var(--border); border-radius:12px; padding:20px 22px; }
+.card + .card{ margin-top:14px; }
+.card p{ font-size:13.5px; line-height:1.75; color:var(--text-secondary); }
+.card p + p{ margin-top:11px; }
+.card strong{ color:var(--text-primary); font-weight:600; }
+
+/* TABELAS ================================================================== */
+.tbl-wrap{ overflow-x:auto; border:1px solid var(--border); border-radius:12px; background:var(--bg-elev); }
+table{ width:100%; border-collapse:collapse; font-size:13px; min-width:520px; }
+th{ text-align:left; font-family:var(--mono); font-size:10.5px; font-weight:500; text-transform:uppercase; letter-spacing:.1em; color:var(--text-muted); padding:13px 16px; border-bottom:1px solid var(--border); white-space:nowrap; }
+td{ padding:12px 16px; border-bottom:1px solid var(--border); color:var(--text-secondary); vertical-align:middle; line-height:1.55; }
+tr:last-child td{ border-bottom:none; }
+tr:hover td{ background:var(--bg-elev-2); }
+td.tk, td code, code.tk{ font-family:var(--mono); font-size:12px; color:var(--accent); }
+td.val{ font-family:var(--mono); font-size:12px; color:var(--text-primary); white-space:nowrap; }
+
+/* SWATCHES ================================================================= */
+.swatches{ display:grid; grid-template-columns:repeat(auto-fill,minmax(196px,1fr)); gap:12px; }
+.sw{ background:var(--bg-elev); border:1px solid var(--border); border-radius:12px; overflow:hidden; cursor:pointer; text-align:left; width:100%; display:block; transition:border-color .16s ease, transform .16s ease; }
+.sw:hover{ border-color:var(--border-strong); transform:translateY(-2px); }
+.sw:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.sw .chip{ height:76px; border-bottom:1px solid var(--border); position:relative; }
+.sw .chip span{ position:absolute; right:9px; bottom:8px; font-family:var(--mono); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; opacity:0; transition:opacity .16s ease; }
+.sw:hover .chip span{ opacity:.75; }
+.sw .meta{ padding:11px 13px 13px; }
+.sw .meta b{ display:block; font-family:var(--mono); font-size:12px; font-weight:500; color:var(--text-primary); }
+.sw .meta i{ display:block; font-style:normal; font-family:var(--mono); font-size:11px; color:var(--accent); margin-top:3px; }
+.sw .meta em{ display:block; font-style:normal; font-size:11.5px; color:var(--text-muted); margin-top:7px; line-height:1.45; }
+
+/* NOTA / ALERTA ============================================================ */
+.note{ border:1px solid var(--border-strong); border-left:2px solid var(--accent); border-radius:10px; background:var(--bg-elev); padding:15px 18px; font-size:13px; line-height:1.7; color:var(--text-secondary); }
+.note.warn{ border-left-color:var(--rust); }
+.note b{ color:var(--text-primary); font-weight:600; }
+.note + .note{ margin-top:11px; }
+.note .lbl{ display:inline-block; font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); margin-right:8px; }
+.note.warn .lbl{ color:var(--rust); }
+
+/* CODIGO =================================================================== */
+.codeblock{ position:relative; background:#080502; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.codeblock .head{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; border-bottom:1px solid var(--border); background:var(--bg-elev); }
+.codeblock .head span{ font-family:var(--mono); font-size:11px; color:var(--text-muted); letter-spacing:.06em; }
+.copy{ font-family:var(--mono); font-size:11px; color:var(--text-secondary); background:var(--bg-elev-2); border:1px solid var(--border); border-radius:7px; padding:5px 11px; cursor:pointer; transition:color .15s ease, border-color .15s ease; }
+.copy:hover{ color:var(--accent); border-color:var(--border-strong); }
+.copy:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+pre{ margin:0; padding:16px 18px; overflow-x:auto; }
+pre code{ font-family:var(--mono); font-size:12px; line-height:1.75; color:var(--text-secondary); white-space:pre; }
+pre .c{ color:var(--text-muted); }
+pre .p{ color:var(--accent); }
+pre .v{ color:var(--text-primary); }
+
+/* DEMOS ==================================================================== */
+.demo-box{ background:var(--bg-elev); border:1px solid var(--border); border-radius:12px; padding:26px 24px; display:flex; flex-wrap:wrap; align-items:center; gap:14px; }
+.demo-box.col{ flex-direction:column; align-items:stretch; }
+.demo-cap{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--text-muted); margin-top:10px; }
+
+.node{ display:inline-block; border:1px solid var(--border-strong); border-radius:8px; padding:9px 16px; font-size:13.5px; font-weight:500; background:var(--bg-elev-2); color:var(--text-primary); transition:background .16s ease, border-color .16s ease, color .16s ease; cursor:default; }
+.node:hover{ border-color:rgba(216,182,138,0.34); color:var(--accent); }
+.node.accent{ background:var(--accent); color:#2B1704; border-color:var(--accent); font-weight:600; }
+.node.accent:hover{ color:#2B1704; }
+.node.rust{ background:rgba(193,87,58,0.14); border-color:var(--rust); color:var(--rust); }
+.node.rust:hover{ background:rgba(193,87,58,0.24); color:#DD7A5C; }
+.label-boxed{ display:inline-block; text-align:center; font-size:14px; font-weight:600; line-height:1.35; padding:11px 18px; border-radius:8px; background:var(--accent); color:#2B1704; border:1px solid var(--accent); box-shadow:0 4px 18px rgba(217,164,65,0.18); cursor:default; transition:background .16s ease, box-shadow .16s ease; }
+.label-boxed:hover{ background:#E6B75E; border-color:#E6B75E; box-shadow:0 6px 26px rgba(217,164,65,0.34); }
+.pill{ font-size:12px; color:var(--text-secondary); border:1px solid var(--border); border-radius:20px; padding:6px 12px; font-family:var(--mono); cursor:default; transition:color .15s ease, border-color .15s ease; }
+.pill:hover{ color:var(--accent); border-color:var(--border-strong); }
+.icon-btn{ width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; border-radius:9px; color:var(--text-muted); transition:color .15s ease, background .15s ease; }
+.icon-btn svg{ width:19px; height:19px; display:block; }
+.icon-btn:hover{ color:var(--accent); background:rgba(216,182,138,0.07); }
+.cluster-demo{ background:var(--bg-elev-2); border:1px solid var(--border); border-radius:12px; padding:14px; max-width:290px; }
+.cluster-demo .ct{ font-family:var(--mono); font-size:11.5px; font-weight:700; text-align:center; text-transform:uppercase; letter-spacing:.06em; color:var(--rust); margin-bottom:12px; }
+.cluster-demo .cg{ display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+.cluster-demo .node{ font-size:12.5px; padding:8px 10px; text-align:center; }
+.stat-demo .num{ font-family:var(--serif); font-style:italic; font-size:42px; line-height:1.1; color:var(--accent); }
+.stat-demo .lbl{ font-family:var(--mono); font-size:13px; color:var(--text-secondary); }
+.dots{ height:2px; width:100%; max-width:260px; background:repeating-linear-gradient(to right, var(--accent) 0 2px, transparent 2px 7px); opacity:.62; }
+.prog{ max-width:340px; width:100%; }
+.prog .top{ display:flex; justify-content:space-between; font-family:var(--mono); font-size:12.5px; color:var(--text-secondary); margin-bottom:10px; }
+.prog .bar{ height:5px; background:rgba(216,182,138,0.08); border-radius:3px; overflow:hidden; }
+.prog .fill{ height:100%; width:62%; background:var(--accent); border-radius:3px; }
+
+/* TIPOGRAFIA DEMO ========================================================== */
+.type-row{ border:1px solid var(--border); border-radius:12px; background:var(--bg-elev); padding:20px 22px; }
+.type-row + .type-row{ margin-top:12px; }
+.type-row .spec{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--text-muted); margin-bottom:12px; }
+.t-serif{ font-family:var(--serif); font-style:italic; font-weight:400; font-size:40px; line-height:1.12; }
+.t-sans{ font-family:var(--sans); font-size:20px; font-weight:500; }
+.t-mono{ font-family:var(--mono); font-size:15px; color:var(--text-secondary); }
+
+/* LOGO ===================================================================== */
+.logo-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; }
+.logo-card{ background:var(--bg-elev); border:1px solid var(--border); border-radius:12px; padding:22px; text-align:center; }
+.logo-card img{ display:block; margin:0 auto 16px; object-fit:cover; }
+.logo-card b{ display:block; font-family:var(--mono); font-size:11.5px; color:var(--text-primary); font-weight:500; }
+.logo-card em{ display:block; font-style:normal; font-size:11.5px; color:var(--text-muted); margin-top:6px; line-height:1.5; }
+.size-row{ display:flex; align-items:flex-end; gap:20px; flex-wrap:wrap; }
+.size-row figure{ text-align:center; }
+.size-row img{ display:block; object-fit:cover; margin-bottom:8px; }
+.size-row figcaption{ font-family:var(--mono); font-size:10.5px; color:var(--text-muted); }
+.do-dont{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.do-dont div{ border:1px solid var(--border); border-radius:10px; padding:15px 17px; font-size:13px; line-height:1.7; color:var(--text-secondary); }
+.do-dont div h5{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; margin-bottom:9px; font-weight:500; }
+.do-dont .do{ border-left:2px solid var(--accent); } .do-dont .do h5{ color:var(--accent); }
+.do-dont .dont{ border-left:2px solid var(--rust); } .do-dont .dont h5{ color:var(--rust); }
+.do-dont ul{ padding-left:17px; }
+.do-dont li{ margin-bottom:5px; }
+
+/* ESCALA VISUAL ============================================================ */
+.scale{ display:flex; flex-wrap:wrap; gap:16px; align-items:flex-end; }
+.scale figure{ text-align:center; }
+.scale .box{ background:var(--bg-elev-2); border:1px solid var(--border-strong); }
+.scale figcaption{ font-family:var(--mono); font-size:10.5px; color:var(--text-muted); margin-top:8px; }
+
+/* CHECKLIST ================================================================ */
+.check{ list-style:none; }
+.check li{ position:relative; padding:11px 0 11px 30px; font-size:13.5px; line-height:1.65; color:var(--text-secondary); border-bottom:1px solid var(--border); }
+.check li:last-child{ border-bottom:none; }
+.check li::before{ content:''; position:absolute; left:6px; top:17px; width:7px; height:7px; border-radius:50%; background:var(--accent); }
+.check li b{ color:var(--text-primary); font-weight:600; }
+
+/* TOAST ==================================================================== */
+.toast{ position:fixed; left:50%; bottom:30px; transform:translate(-50%,20px); background:var(--bg-elev-2); border:1px solid var(--border-strong); border-radius:10px; padding:11px 20px; font-family:var(--mono); font-size:12px; color:var(--text-primary); box-shadow:0 18px 44px rgba(0,0,0,0.55); opacity:0; visibility:hidden; transition:opacity .18s ease, transform .18s ease, visibility .18s; z-index:90; }
+.toast.on{ opacity:1; visibility:visible; transform:translate(-50%,0); }
+
+/* FOOT ===================================================================== */
+.ds-foot{ position:relative; z-index:1; border-top:1px solid var(--border); margin-top:20px; }
+.ds-foot .in{ max-width:1280px; margin:0 auto; padding:24px 26px 40px; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; font-family:var(--mono); font-size:12px; color:var(--text-muted); }
+.ds-foot a{ color:var(--text-secondary); }
+.ds-foot a:hover{ color:var(--accent); }
+
+@media (max-width:980px){
+.shell{ grid-template-columns:1fr; gap:0; padding:0 22px 80px; }
+.sidenav{ position:static; padding-top:30px; display:flex; flex-wrap:wrap; gap:6px; }
+.sidenav h4{ width:100%; margin-bottom:8px; }
+.sidenav a{ border-left:none; border:1px solid var(--border); border-radius:20px; padding:6px 13px; font-family:var(--mono); font-size:11.5px; }
+.sidenav a.on{ border-color:var(--accent); background:none; }
+.content{ padding-top:20px; }
+}
+@media (max-width:560px){
+.ds-top{ padding:12px 18px; }
+.ds-top .brand{ font-size:16px; }
+.shell{ padding:0 18px 70px; }
+.do-dont{ grid-template-columns:1fr; }
+section{ padding-top:56px; }
+}
+/* a textarea que o fallback de copia usa, quando a Clipboard API nao responde.
+   Era style inline no HTML de origem. */
+.fora-da-tela{ position:fixed; top:-999px; opacity:0; }
+</style>
