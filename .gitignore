@@ -1,0 +1,41 @@
+# Sistema operacional
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Editores
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.code-workspace
+*.swp
+*~
+
+# Dependencias e build
+node_modules/
+dist/
+build/
+.cache/
+.parcel-cache/
+.astro/
+
+# Ambiente e segredos
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Logs e temporarios
+*.log
+npm-debug.log*
+yarn-error.log*
+tmp/
+temp/
+
+# Arquivos de trabalho local
+*.bak
+*.orig
+rascunho/

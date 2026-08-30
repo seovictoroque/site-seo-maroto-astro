@@ -1,0 +1,18 @@
+# Normaliza fim de linha no repositorio, mantem CRLF no Windows quando preciso
+* text=auto
+
+*.html  text diff=html
+*.css   text
+*.js    text
+*.json  text
+*.md    text
+*.svg   text
+
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.webp  binary
+*.gif   binary
+*.ico   binary
+*.woff  binary
+*.woff2 binary
