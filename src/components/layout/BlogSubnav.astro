@@ -1,0 +1,137 @@
+---
+/**
+ * SUB-MENU DO BLOG, a faixa de categorias.
+ *
+ * Componente proprio, nao uma variante do Header: tem paleta propria nas
+ * variaveis --sn-*, sticky proprio em top:69px e JavaScript proprio. Quem
+ * monta os dois juntos e o BlogLayout.
+ *
+ * AUTOSSUFICIENTE
+ * Carrega a propria paleta clara, entao a faixa fica clara mesmo dentro de
+ * uma pagina de fundo escuro, sem depender do :root de quem a usa.
+ *
+ * DETALHES QUE CUSTARAM TEMPO E NAO SAO OBVIOS
+ * - A faixa e opaca, sem backdrop-filter. Ela e sticky em top:69px e passa
+ *   por cima de card escuro; com alfa ficaria suja no scroll.
+ * - O sub-menu acompanha o HEADER, nao a calha de 1180px: largura total,
+ *   padding 28px, e 18px abaixo de 560px. Quem alinha com a borda esquerda
+ *   da logo e a borda esquerda do chip ativo, as duas formas preenchidas em
+ *   ambar, nao o texto do chip. Alinhar pelo texto joga o pill 10px para
+ *   fora da margem e o topo da pagina fica torto.
+ * - A busca fechada e so a lupa. Sem JavaScript o campo nasce aberto e o
+ *   form funciona igual, o JS so fecha no carregamento.
+ */
+import Icon from './Icon.astro';
+import { categories } from '../../data/categories';
+
+interface Props {
+  /** slug da categoria ativa, ou 'tudo' em /blog */
+  active?: string;
+}
+
+const { active = '' } = Astro.props;
+---
+
+<div class="blog-subnav">
+  <nav class="subnav-inner" aria-label="Categorias do blog">
+    <div class="subnav-scroll">
+      <a
+        href="/blog"
+        class={active === 'tudo' ? 'active' : undefined}
+        aria-current={active === 'tudo' ? 'page' : undefined}
+      >Tudo</a>
+      {categories.map((c) => (
+        <a
+          href={`/blog/categoria/${c.slug}`}
+          class:list={[c.variant === 'rust' && 'is-rust', active === c.slug && 'active']}
+          aria-current={active === c.slug ? 'page' : undefined}
+        >{c.shortName}</a>
+      ))}
+    </div>
+
+    <!-- Sem JavaScript o campo nasce aberto e o formulario funciona igual.
+         O JS so fecha no carregamento e cuida da expansao. -->
+    <form class="subnav-search" action="/blog/busca" method="get" role="search">
+      <button
+        class="ss-toggle"
+        type="submit"
+        aria-expanded="false"
+        aria-controls="subnav-q"
+        aria-label="Abrir busca no blog"
+      >
+        <Icon set="ui" name="search" strokeWidth={2} />
+      </button>
+      <label class="sr-only" for="subnav-q">Buscar no blog</label>
+      <input id="subnav-q" type="search" name="q" placeholder="buscar no blog" autocomplete="off" />
+      <button class="sr-only" type="submit">Buscar</button>
+    </form>
+  </nav>
+</div>
+
+<script>
+  import { initSubnavSearch } from '../../scripts/subnav-search';
+  initSubnavSearch();
+</script>
+
+<style is:global>
+/* CSS DO SUB-MENU DO BLOG, extraido de blog.html.
+   Unica mudanca: os resets defensivos contra o `nav{}` do header sairam,
+   porque o header agora estiliza `.site-nav`. */
+.blog-subnav{
+  --sn-bg: #F0E4CF;
+  --sn-surface: #FFFDF8;
+  --sn-border: rgba(78,56,30,0.16);
+  --sn-border-strong: rgba(78,56,30,0.30);
+  --sn-text: #5F4A31;
+  --sn-text-strong: #241A0F;
+  --sn-muted: #74603F;
+  --sn-hover: rgba(78,56,30,0.07);
+  --sn-accent: #D9A441;
+  --sn-ink: #7D5814;
+  --sn-btn-ink: #2B1704;
+  --sn-rust: #C1573A;
+  --sn-rust-ink: #A34124;
+  --sn-rust-ink-hover: #7E3018;
+
+  position:sticky; top:69px; z-index:40;
+  background: var(--sn-bg);
+  border-bottom:1px solid var(--sn-border);
+}
+/* Os resets contra o seletor de elemento `nav` do header sairam daqui: o
+   header agora estiliza `.site-nav`, entao nada mais vaza para este nav. */
+.subnav-inner{ padding:0 28px; display:flex; align-items:center; gap:10px; }
+
+.subnav-scroll{ position:relative; flex:1; min-width:0; display:flex; align-items:center; gap:2px; overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none; padding:10px 0; }
+.subnav-scroll::-webkit-scrollbar{ display:none; }
+.subnav-scroll a{ font-size:13px; color: var(--sn-text); padding:7px 10px; border-radius:8px; white-space:nowrap; transition: color .15s ease, background .15s ease; }
+.subnav-scroll a:hover{ color: var(--sn-text-strong); background: var(--sn-hover); }
+.subnav-scroll a.active{ color: var(--sn-btn-ink); background: var(--sn-accent); font-weight:600; }
+/* IA, GEO e AEO puxa o rust, mesma regra do resto do site. O ponto existe
+   para o destaque nao depender so de cor. */
+.subnav-scroll a.is-rust{ display:inline-flex; align-items:center; gap:6px; color: var(--sn-rust-ink); }
+.subnav-scroll a.is-rust::before{ content:''; width:5px; height:5px; border-radius:50%; background: var(--sn-rust); flex-shrink:0; }
+.subnav-scroll a.is-rust:hover{ color: var(--sn-rust-ink-hover); background: rgba(193,87,58,0.10); }
+
+/* busca: fechada e so o icone, abre no clique */
+.subnav-search{ display:flex; align-items:center; flex-shrink:0; width:38px; height:38px; border:1px solid transparent; border-radius:9px; background:transparent; overflow:hidden; transition: width .22s ease, background .16s ease, border-color .16s ease; }
+.subnav-search.open{ width:270px; background: var(--sn-surface); border-color: var(--sn-border-strong); }
+.ss-toggle{ width:36px; height:36px; flex-shrink:0; display:flex; align-items:center; justify-content:center; border:none; background:none; color: var(--sn-text); border-radius:8px; cursor:pointer; transition: color .15s ease, background .15s ease; }
+.ss-toggle:hover{ color: var(--sn-ink); background: var(--sn-hover); }
+.subnav-search.open .ss-toggle{ color: var(--sn-ink); }
+.subnav-search.open .ss-toggle:hover{ background:none; }
+.ss-toggle svg{ width:17px; height:17px; display:block; }
+.subnav-search input{ flex:1; width:0; min-width:0; background:none; border:none; outline:none; font-family: var(--mono); font-size:12.5px; color: var(--sn-text-strong); padding:9px 0; opacity:0; transition: opacity .16s ease; }
+.subnav-search.open input{ opacity:1; padding-right:12px; }
+.subnav-search input::placeholder{ color: var(--sn-muted); }
+.blog-subnav :focus-visible{ outline:2px solid var(--sn-ink); outline-offset:2px; }
+
+/* o gutter do sub-menu acompanha o do header em cada breakpoint */
+@media (max-width:560px){
+  .subnav-inner{ padding:0 18px; }
+}
+/* com a busca aberta no celular os chips saem de cena e o campo ocupa a barra */
+@media (max-width:620px){
+  .blog-subnav.searching .subnav-scroll{ display:none; }
+  .subnav-search.open{ width:100%; }
+}
+</style>

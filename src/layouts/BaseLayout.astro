@@ -1,0 +1,194 @@
+---
+/**
+ * LAYOUT RAIZ.
+ *
+ * Monta head, header e footer, e recebe o conteudo pelo slot. Toda pagina do
+ * site passa por aqui, entao SEO tecnico e configurado em um lugar so, por
+ * props, em vez de copiado em cada arquivo.
+ *
+ * O QUE ELE RESOLVE POR PADRAO
+ * - title, description e canonical sem parametro
+ * - Open Graph e Twitter Card completos, com fallback para title/description
+ * - robots, com atalho `noindex` para categoria, busca e paginas internas
+ * - favicons, manifest, theme-color e as fontes
+ * - o grafo base de JSON-LD (WebSite e Person publisher), no qual cada pagina
+ *   injeta os proprios nos pelo prop `schema`
+ * - rel prev e next quando a pagina faz parte de uma serie paginada
+ *
+ * REGRA DO CANONICAL
+ * Sempre absoluto e sempre sem barra no fim, batendo com o trailingSlash
+ * 'never' do astro.config.mjs e com o .htaccess. Se um dos tres mudar, mudam
+ * os tres.
+ */
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import { site } from '../data/site';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  /** caminho da pagina, sem dominio. Ex: '/blog/o-que-e-seo' */
+  path?: string;
+  ogType?: 'website' | 'article' | 'profile';
+  ogTitle?: string;
+  ogDescription?: string;
+  /** caminho ou URL absoluta. Cai no logo da marca quando ausente. */
+  ogImage?: string;
+  noindex?: boolean;
+  /** so em ogType 'article' */
+  publishedTime?: string;
+  modifiedTime?: string;
+  authorName?: string;
+  authorUrl?: string;
+  section?: string;
+  /** nos de JSON-LD desta pagina, somados ao grafo base */
+  schema?: Record<string, unknown>[];
+  /** paginacao rastreavel */
+  prev?: string;
+  next?: string;
+  /** feed alternativo, quando a pagina tem um */
+  rss?: boolean;
+  variant?: 'site' | 'blog';
+  /**
+   * Sem header e sem footer. Usado so pela pagina de design system, que e
+   * referencia interna e traz a propria barra de topo.
+   */
+  bare?: boolean;
+  bodyClass?: string;
+}
+
+const {
+  title,
+  description,
+  path = Astro.url.pathname,
+  ogType = 'website',
+  ogTitle,
+  ogDescription,
+  ogImage,
+  noindex = false,
+  publishedTime,
+  modifiedTime,
+  authorName,
+  authorUrl,
+  section,
+  schema = [],
+  prev,
+  next,
+  rss = false,
+  variant = 'site',
+  bare = false,
+  bodyClass,
+} = Astro.props;
+
+/** absoluta, sem barra no fim, sem query */
+function abs(p: string): string {
+  const url = new URL(p, site.url);
+  url.search = '';
+  url.hash = '';
+  const out = url.href;
+  return out.length > site.url.length + 1 ? out.replace(/\/$/, '') : out;
+}
+
+const canonical = abs(path);
+const ogImageUrl = abs(ogImage ?? site.defaultOgImage);
+const robots = noindex
+  ? 'noindex, follow'
+  : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+
+/**
+ * Grafo base. O @id do Person e o MESMO usado como `author` no BlogPosting de
+ * cada post e como mainEntity da pagina de autor, entao as tres entidades se
+ * ligam em vez de virarem tres pessoas diferentes para o buscador.
+ */
+const baseGraph = [
+  {
+    '@type': 'WebSite',
+    '@id': `${site.url}/#website`,
+    url: `${site.url}/`,
+    name: site.name,
+    inLanguage: site.lang,
+    description: site.description,
+    publisher: { '@id': `${site.url}/autor/victor-roque#person` },
+  },
+  {
+    '@type': 'Organization',
+    '@id': `${site.url}/#org`,
+    name: site.name,
+    url: `${site.url}/`,
+    logo: abs(site.icon),
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [...baseGraph, ...schema],
+};
+---
+
+<!doctype html>
+<html lang={site.lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content={robots} />
+    {prev && <link rel="prev" href={abs(prev)} />}
+    {next && <link rel="next" href={abs(next)} />}
+    {rss && <link rel="alternate" type="application/rss+xml" title={`${site.name}, últimos artigos`} href="/blog/rss.xml" />}
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={site.locale} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={ogTitle ?? title} />
+    <meta property="og:description" content={ogDescription ?? description} />
+    <meta property="og:image" content={ogImageUrl} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+    {authorUrl && <meta property="article:author" content={abs(authorUrl)} />}
+    {section && <meta property="article:section" content={section} />}
+    {authorName && <meta name="author" content={authorName} />}
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content={site.twitter} />
+    <meta name="twitter:title" content={ogTitle ?? title} />
+    <meta name="twitter:description" content={ogDescription ?? description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <link rel="icon" href="/img/favicon-io/favicon__seomaroto.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-io/favicon-32x32__seomaroto.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-io/favicon-16x16__seomaroto.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon-io/apple-touch-icon__seomaroto.png" />
+    <link rel="manifest" href="/img/favicon-io/site.webmanifest" />
+    <meta name="theme-color" content={site.themeColor} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
+
+    <slot name="head" />
+  </head>
+
+  <body class={bodyClass}>
+    {bare ? (
+      <slot />
+    ) : (
+      <>
+        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+        <Header variant={variant} />
+        <slot />
+        <Footer />
+      </>
+    )}
+  </body>
+</html>

@@ -1,0 +1,45 @@
+---
+/**
+ * LAYOUT DAS PAGINAS DE BLOG.
+ *
+ * BaseLayout mais tres coisas que so o blog usa: o sub-menu de categorias, o
+ * <main class="blog-main"> que troca a paleta para o tema claro e o sprite de
+ * arte de capa.
+ *
+ * O TEMA CLARO
+ * Vive no seletor .blog-main, definido em global.css: ele redefine os MESMOS
+ * nomes de variavel do tema escuro. Header e footer ficam fora do main e
+ * seguem escuros, funcionando como ancora de contraste. Por isso nenhum
+ * componente precisa saber em que tema esta rodando.
+ *
+ * O ambar #D9A441 nunca e cor de texto aqui, so preenchimento, porque sobre o
+ * papel claro ele da 1.79:1. Para texto e link existe --accent-ink, e para
+ * IA/GEO/AEO existe --rust-ink.
+ *
+ * Os primitivos (.section, .eyebrow, .btn, .cat-tag, .link-more) sao
+ * carregados aqui e valem para as quatro paginas de blog sem nenhuma copia
+ * entre elas.
+ */
+import BaseLayout from './BaseLayout.astro';
+import BlogSubnav from '../components/layout/BlogSubnav.astro';
+import CoverArtSprite from '../components/blog/CoverArtSprite.astro';
+import '../styles/blog-primitives.css';
+
+type BaseProps = Parameters<typeof BaseLayout>[0];
+
+interface Props extends Omit<BaseProps, 'variant'> {
+  /** slug da categoria ativa no sub-menu, ou 'tudo' em /blog */
+  activeCategory?: string;
+}
+
+const { activeCategory = '', ...base } = Astro.props;
+---
+
+<BaseLayout {...base} variant="blog">
+  <slot name="head" slot="head" />
+  <CoverArtSprite />
+  <BlogSubnav active={activeCategory} />
+  <main class="blog-main" id="conteudo">
+    <slot />
+  </main>
+</BaseLayout>

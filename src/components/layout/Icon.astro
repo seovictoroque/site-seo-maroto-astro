@@ -1,0 +1,58 @@
+---
+/**
+ * Icone SVG. Le o miolo de src/data/icons.ts e monta o <svg> em volta.
+ *
+ * Existe para os paths viverem em um lugar so. No HTML original os mesmos
+ * nove icones do menu apareciam duas vezes por arquivo, em sete arquivos.
+ *
+ * `set` escolhe a familia:
+ *   nav     traco 1.8, herda currentColor
+ *   ui      traco configuravel, para seta, busca, hamburguer
+ *   social  glifo solido, fill currentColor
+ */
+import { navIcons, uiIcons, socialIcons, linkedinIcon } from '../../data/icons';
+
+interface Props {
+  set?: 'nav' | 'ui' | 'social' | 'linkedin';
+  name?: string;
+  /** so vale para os conjuntos de traco */
+  strokeWidth?: number;
+  class?: string;
+  /** quando o icone tem significado proprio, passe o rotulo */
+  label?: string;
+}
+
+const { set = 'nav', name = '', strokeWidth = 1.8, class: klass, label } = Astro.props;
+
+const source =
+  set === 'nav'
+    ? (navIcons as Record<string, string>)[name]
+    : set === 'ui'
+      ? (uiIcons as Record<string, string>)[name]
+      : set === 'social'
+        ? (socialIcons as Record<string, string>)[name]
+        : linkedinIcon;
+
+if (!source) {
+  throw new Error(`Icon: nao existe "${name}" no conjunto "${set}". Confira src/data/icons.ts.`);
+}
+
+const solid = set === 'social' || set === 'linkedin';
+const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': 'true' };
+---
+
+{solid ? (
+  <svg viewBox="0 0 24 24" fill="currentColor" class={klass} {...a11y} set:html={source} />
+) : (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width={strokeWidth}
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class={klass}
+    {...a11y}
+    set:html={source}
+  />
+)}

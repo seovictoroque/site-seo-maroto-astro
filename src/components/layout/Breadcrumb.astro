@@ -1,0 +1,57 @@
+---
+/**
+ * BREADCRUMB do blog, usado em post, categoria e autor.
+ *
+ * Ele acompanha o SUB-MENU, nao a calha de conteudo de 1180px: largura total
+ * e o mesmo padding lateral em cada breakpoint, 28px, e 18px abaixo de 560px.
+ * Sem isso, em tela larga ele nasce uns 130px a direita dos chips de
+ * categoria e o topo da pagina parece torto. Alinha com a borda do chip, nao
+ * com o texto do chip, pela mesma razao do sub-menu.
+ *
+ * O BreadcrumbList do JSON-LD sai da MESMA lista de itens, entao o marcado e
+ * o visivel nao tem como divergir. No HTML original eram dois blocos escritos
+ * a mao, com um comentario pedindo para lembrar de mudar os dois.
+ *
+ * O <style> e is:global por causa do chevron, que vem de Icon.astro via
+ * set:html e nao receberia o atributo de escopo.
+ */
+import Icon from './Icon.astro';
+
+export interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: Crumb[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="crumbs" aria-label="Você está aqui">
+  {items.map((item, i) => (
+    <>
+      {i > 0 && <Icon set="ui" name="chevron" strokeWidth={2.4} />}
+      {item.href ? (
+        <a href={item.href}>{item.label}</a>
+      ) : (
+        <span aria-current="page">{item.label}</span>
+      )}
+    </>
+  ))}
+</nav>
+
+<style is:global>
+/* CSS DO BREADCRUMB, extraido de post.html.
+   Os resets contra o `nav{}` do header sairam: o header agora estiliza
+   `.site-nav`, entao nada vaza para este nav. */
+.crumbs{ display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+         padding:22px 28px 0;
+         font-family: var(--mono); font-size:11.5px; color: var(--text-muted); }
+.crumbs a{ color: var(--text-secondary); }
+.crumbs a:hover{ color: var(--accent-ink); text-decoration:underline; text-underline-offset:3px; }
+.crumbs svg{ width:11px; height:11px; opacity:.55; flex-shrink:0; }
+.crumbs [aria-current]{ color: var(--text-muted); }
+@media (max-width:560px){ .crumbs{ padding:20px 18px 0; } }
+</style>
