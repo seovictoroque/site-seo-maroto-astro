@@ -258,7 +258,7 @@ Existe **um post escrito de verdade**, `o-que-e-seo`, convertido do template `po
 |:--|:--|:--|
 | `/` | home | index |
 | `/blog` | home do blog | index |
-| `/blog/<slug>` | post e pilar page | index, ou noindex enquanto for `stub` |
+| `/blog/<slug>` | post e pilar page | index, ou noindex e fora do sitemap enquanto for `stub` |
 | `/blog/categoria/<slug>` | listagem por categoria | **noindex, follow** |
 | `/blog/categoria/<slug>/pagina/N` | páginas 2 em diante | noindex, follow |
 | `/blog/busca` | busca no cliente | noindex, follow |
