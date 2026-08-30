@@ -1,0 +1,58 @@
+/* ==========================================================================
+   PRIMITIVOS DO BLOG, SEO MAROTO
+   Carregado uma unica vez pelo BlogLayout, entao vale para /blog, post,
+   categoria e autor sem nenhuma copia entre eles. No HTML original estes
+   mesmos blocos eram copia byte a byte em quatro arquivos.
+
+   NAO carregue na home nem na escolinha: elas definem .section, .eyebrow e
+   .btn com outros valores, no <style> escopado da propria pagina.
+
+   Os tokens usados aqui vem de global.css. Dentro de .blog-main os mesmos
+   nomes apontam para a paleta clara, entao nenhum componente precisa saber
+   em que tema esta rodando.
+   ========================================================================== */
+
+/* SUPERFICIE E RITMO ======================================================= */
+.blog-main{ flex:1; background: var(--bg); color: var(--text-primary); }
+.section{ padding:70px 0; }
+.section.tight{ padding:52px 0; }
+.section + .section{ border-top:1px solid var(--border); }
+
+/* primitivos compartilhados ---------------------------------------------- */
+.eyebrow{ display:inline-flex; align-items:center; gap:8px; font-size:12.5px; color: var(--text-secondary); font-family: var(--mono); border:1px solid var(--border-strong); border-radius:20px; padding:6px 14px 6px 12px; background: var(--bg-elev); }
+.eyebrow::before{ content:''; width:5px; height:5px; border-radius:50%; background: var(--accent-ink); }
+.eyebrow.rust{ color: var(--rust-ink); border-color: rgba(163,65,36,0.34); }
+.eyebrow.rust::before{ background: var(--rust); }
+
+.section-head{ max-width:660px; }
+.section-head h2{ font-family: var(--serif); font-weight:400; font-style:italic; font-size: clamp(27px,4vw,36px); line-height:1.15; margin:14px 0 12px; letter-spacing:-0.005em; }
+.section-head p{ color: var(--text-secondary); font-size:14.5px; line-height:1.7; }
+.head-row{ display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:34px; flex-wrap:wrap; }
+
+.btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; border-radius:9px; padding:12px 22px; font-size:14px; font-weight:600; font-family: var(--sans); cursor:pointer; border:1px solid transparent; transition: background .16s ease, border-color .16s ease, color .16s ease, box-shadow .16s ease, transform .16s ease; }
+.btn svg{ width:16px; height:16px; flex-shrink:0; }
+.btn-primary{ background: var(--accent); color: var(--btn-ink); border-color: var(--accent-dim); box-shadow: 0 4px 18px rgba(124,88,20,0.18); }
+.btn-primary:hover{ background:#E6B75E; border-color:#C8912F; box-shadow: 0 6px 26px rgba(124,88,20,0.26); }
+.btn-ghost{ background: var(--bg-elev-2); color: var(--text-primary); border-color: var(--border-strong); }
+.btn-ghost:hover{ background: var(--bg-elev); border-color: var(--accent-dim); color: var(--accent-ink); }
+
+.link-more{ display:inline-flex; align-items:center; gap:7px; font-family: var(--mono); font-size:12.5px; color: var(--text-secondary); border-bottom:1px solid var(--border-strong); padding-bottom:3px; transition: color .15s ease, border-color .15s ease; white-space:nowrap; }
+.link-more:hover{ color: var(--accent-ink); border-color: var(--accent-ink); }
+.link-more svg{ width:13px; height:13px; }
+
+/* etiqueta de categoria, usada no card e no cabeçalho de bloco ----------- */
+.cat-tag{ display:inline-flex; align-items:center; gap:6px; font-family: var(--mono); font-size:10.5px; font-weight:500; text-transform:uppercase; letter-spacing:0.09em; color: var(--accent-ink); transition: color .15s ease; }
+.cat-tag:hover{ color:#5E410E; text-decoration:underline; text-underline-offset:3px; }
+.cat-tag.rust{ color: var(--rust-ink); }
+.cat-tag.rust:hover{ color:#7E3018; }
+
+/* arte de capa provisória ------------------------------------------------ */
+.cover-art{ display:block; width:100%; height:100%; }
+
+/* RESPONSIVO DOS PRIMITIVOS ================================================ */
+@media (max-width:860px){
+  .section{ padding:56px 0; }
+}
+@media (max-width:620px){
+  .wrap{ padding:0 20px; }
+}

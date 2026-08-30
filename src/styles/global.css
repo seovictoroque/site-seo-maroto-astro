@@ -1,0 +1,90 @@
+/* ==========================================================================
+   GLOBAL.CSS, SEO MAROTO
+   Aqui vive so o que e de fato compartilhado por TODAS as paginas: tokens de
+   cor e tipografia, reset e a calha de conteudo.
+
+   O que NAO entra aqui:
+   - primitivos do blog (.section, .eyebrow, .btn, .cat-tag, .link-more), que
+     tem valores proprios no blog e valores diferentes na home. Eles vivem em
+     src/styles/blog-primitives.css e sao carregados so pelo BlogLayout.
+   - CSS de componente, que fica no <style> escopado do proprio .astro.
+
+   Motivo de existir dois conjuntos de primitivos: no HTML original a home e o
+   blog definiam .section, .eyebrow e .btn com valores diferentes. Juntar tudo
+   em um arquivo so quebraria uma das duas. Cada um carrega o seu.
+   ========================================================================== */
+
+/* TOKENS, TEMA ESCURO DO SITE ============================================== */
+:root{
+  --bg: #0D0904;
+  --bg-elev: #1C130B;
+  --bg-elev-2: #251A0F;
+  --border: rgba(216,182,138,0.10);
+  --border-strong: rgba(216,182,138,0.22);
+  --text-primary: #F0E4CF;
+  --text-secondary: #B39A78;
+  --text-muted: #6E5A42;
+  --accent: #D9A441;
+  --accent-dim: #9C7226;
+  --accent-ink: #D9A441;
+  --rust: #C1573A;
+  --rust-dim: #7A3323;
+  --rust-ink: #DD7A5C;
+  --btn-ink: #2B1704;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+/* TOKENS, TEMA CLARO DO BLOG ==============================================
+   Mesma família quente, invertida. Os cards continuam mais claros que o
+   fundo, igual ao tema escuro, então a hierarquia de elevação não muda.
+   Contraste medido sobre o fundo #F0E4CF:
+   text-primary 13.6:1 | text-secondary 6.6:1 | text-muted 4.8:1
+   accent-ink 5.1:1 | rust-ink 5.0:1 | tinta do botão sobre âmbar 7.6:1
+   ========================================================================== */
+.blog-main{
+  --bg: #F0E4CF;
+  --bg-elev: #FAF3E7;
+  --bg-elev-2: #FFFDF8;
+  --border: rgba(78,56,30,0.16);
+  --border-strong: rgba(78,56,30,0.30);
+  --text-primary: #241A0F;
+  --text-secondary: #5F4A31;
+  --text-muted: #74603F;
+  --accent: #D9A441;
+  --accent-dim: #9C7226;
+  --accent-ink: #7D5814;
+  --rust: #C1573A;
+  --rust-dim: #8E3A22;
+  --rust-ink: #A34124;
+  --btn-ink: #2B1704;
+}
+
+/* RESET ==================================================================== */
+*{ box-sizing:border-box; margin:0; padding:0; font-family: var(--sans); }
+html{ scroll-behavior:smooth; }
+body{ background: var(--bg); color: var(--text-primary); min-height:100vh; display:flex; flex-direction:column; -webkit-font-smoothing:antialiased; }
+a{ color:inherit; text-decoration:none; }
+img{ max-width:100%; height:auto; display:block; }
+ul{ list-style:none; }
+:focus-visible{ outline:2px solid var(--accent-ink); outline-offset:3px; border-radius:6px; }
+.skip-link{ position:absolute; left:-9999px; top:0; background: var(--accent); color:#2B1704; padding:10px 18px; border-radius:0 0 8px 0; font-size:13px; font-weight:600; z-index:100; }
+.skip-link:focus{ left:0; }
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+main{ flex:1; }
+
+/* CALHA DE CONTEUDO =========================================================
+   1180px, a mesma na home, na escolinha e no blog. O header, o sub-menu do
+   blog e o breadcrumb NAO usam esta calha: eles acompanham a largura total
+   com padding de 28px, senao o topo da pagina sai torto em tela larga.
+   ========================================================================== */
+.wrap{ max-width:1180px; margin:0 auto; padding:0 28px; }
+
+@media (max-width:520px){
+  .wrap{ padding:0 20px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ transition:none !important; animation:none !important; scroll-behavior:auto !important; }
+}
