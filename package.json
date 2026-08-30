@@ -1,0 +1,21 @@
+{
+  "name": "site-seo-maroto",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Site do SEO Maroto em Astro, build estatico para a Hostinger",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^7.0.8",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^7.2.9"
+  }
+}

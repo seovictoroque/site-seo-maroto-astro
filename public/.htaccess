@@ -1,0 +1,59 @@
+# ==========================================================================
+# SEO Maroto, build estatico na Hostinger (Apache)
+#
+# O Astro gera /blog/index.html, mas os canonicals do site nao tem barra no
+# fim. Estas regras fazem as duas pontas se encontrarem:
+#   1. DirectorySlash Off impede o 301 automatico de /blog para /blog/
+#   2. a regra de reescrita entrega /blog/index.html sem mudar a URL
+#   3. quem chegar com barra no fim leva 301 para a versao sem barra
+# ==========================================================================
+
+Options -MultiViews
+DirectorySlash Off
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # tira a barra do fim, uma vez so, preservando a query string
+  RewriteCond %{REQUEST_URI} !^/$
+  RewriteCond %{REQUEST_URI} (.+)/$
+  RewriteRule ^ %1 [R=301,L,QSA]
+
+  # /blog serve /blog/index.html sem redirecionar
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME}/index.html -f
+  RewriteRule ^(.*)$ $1/index.html [L]
+</IfModule>
+
+ErrorDocument 404 /404/index.html
+
+# ==========================================================================
+# Cache. Asset com hash no nome pode ser imutavel, HTML nunca.
+# ==========================================================================
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html                 "access plus 0 seconds"
+  ExpiresByType text/css                  "access plus 1 year"
+  ExpiresByType application/javascript    "access plus 1 year"
+  ExpiresByType image/webp                "access plus 1 year"
+  ExpiresByType image/png                 "access plus 1 year"
+  ExpiresByType image/svg+xml             "access plus 1 year"
+  ExpiresByType image/x-icon              "access plus 1 year"
+  ExpiresByType font/woff2                "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|js|webp|png|svg|ico|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml application/json
+</IfModule>

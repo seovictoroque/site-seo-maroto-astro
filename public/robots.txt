@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# A busca interna e as listagens de categoria nascem noindex, follow.
+# O Disallow aqui evita gasto de rastreamento nelas, o noindex resolve o resto.
+Disallow: /blog/busca
+Disallow: /*?q=
+
+Sitemap: https://seomaroto.com.br/sitemap-index.xml
