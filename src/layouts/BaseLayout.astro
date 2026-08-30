@@ -22,7 +22,7 @@
  */
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
-import { site } from '../data/site';
+import { site, indexavel } from '../data/site';
 import '../styles/global.css';
 
 interface Props {
@@ -92,9 +92,21 @@ function abs(p: string): string {
 
 const canonical = abs(path);
 const ogImageUrl = abs(ogImage ?? site.defaultOgImage);
-const robots = noindex
-  ? 'noindex, follow'
-  : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+/**
+ * A chave geral vence qualquer decisao de pagina. Com ela desligada nada aqui
+ * dentro consegue pedir indexacao, o que e o ponto: nao existe pagina
+ * esquecida indexavel num site que deveria estar fechado.
+ *
+ * Repare no `nofollow` do modo bloqueado. Ele nao existe no noindex de
+ * pagina, que e sempre `noindex, follow`: uma categoria precisa continuar
+ * distribuindo autoridade para os posts. Um site fechado nao precisa
+ * distribuir nada.
+ */
+const robots = !indexavel
+  ? 'noindex, nofollow'
+  : noindex
+    ? 'noindex, follow'
+    : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 
 /**
  * Grafo base. O @id do Person e o MESMO usado como `author` no BlogPosting de

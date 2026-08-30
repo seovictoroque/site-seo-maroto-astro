@@ -311,6 +311,43 @@ Outros itens da fila:
 
 <br>
 
+## 🔒 Fechar o site para indexação
+
+Uma chave só, no `.env` da raiz. Não precisa tocar em página nenhuma.
+
+```bash
+cp .env.example .env
+# descomente a linha SITE_INDEXAVEL=false
+npm run build
+```
+
+Com ela desligada, o build inteiro sai fechado:
+
+| Camada | Fica assim |
+|:--|:--|
+| `<meta name="robots">` de toda página | `noindex, nofollow` |
+| `robots.txt` | `Disallow: /` |
+| sitemap | não é gerado |
+| `X-Robots-Tag` no `.htaccess` | `noindex, nofollow` |
+
+A chave geral **vence a decisão de cada página**. Não existe página esquecida indexável num site que deveria estar fechado.
+
+O `X-Robots-Tag` existe porque `<meta name="robots">` só vale em HTML: o feed em `/blog/rss.xml`, o índice de busca em JSON e qualquer PDF que entre depois ficariam de fora. O header cobre tudo que o servidor entrega.
+
+**O build avisa em letra garrafal** sempre que sai fechado. Para reabrir, apague a linha do `.env` (ou o arquivo inteiro), rode `npm run build` de novo e confira o `<meta name="robots">` do `dist` antes de subir.
+
+> ⚠️ O `.env` mora só na sua máquina, e é ela que gera o build. Então quem decide o estado do site é o `.env` no momento do `npm run build`, não nada que esteja no servidor.
+
+### Sobre `Disallow` mais `noindex` na mesma frase
+
+Os dois juntos têm um ponto cego conhecido: o `Disallow` impede o rastreio, e sem rastrear o robô nunca lê o `noindex`. Se alguém linkar uma URL do site de fora, ela pode aparecer na SERP como URL nua, sem título nem descrição.
+
+Para um site que ainda não foi lançado e não está linkado em lugar nenhum, esse risco é pequeno e reversível, então a combinação vale pela força bruta. Se o domínio já estiver no ar ou já tiver sido rastreado alguma vez, o certo é o contrário: **liberar o rastreio e deixar só o `noindex` trabalhar**, para o robô conseguir ler a instrução. Nesse caso, edite o bloco `BLOQUEADO` em `src/pages/robots.txt.ts`.
+
+Melhor que os dois, quando existe a opção: proteger o ambiente com senha no servidor. Aí nada entra, e não sobra nem URL nua.
+
+<br>
+
 ## 📌 Convenção de commits
 
 [Conventional Commits](https://www.conventionalcommits.org/pt-br/), em português e sem acento na mensagem. Um commit por mudança coesa, não um por arquivo e nem um gigante com tudo dentro.
