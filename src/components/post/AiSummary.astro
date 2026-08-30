@@ -1,0 +1,59 @@
+---
+/**
+ * RESUMO PARA IA, a resposta direta.
+ *
+ * Autocontido, escrito para ser recortado por um LLM ou por um trecho em
+ * destaque. As definicoes cobrem as sub-perguntas vizinhas que o query fan
+ * out abre a partir da principal.
+ *
+ * REGRA: cada resposta precisa fazer sentido sozinha, fora do contexto da
+ * pagina. E o que o query fan out consome.
+ *
+ * Os textos vem do frontmatter com o HTML inline do original, entao vao por
+ * set:html. Markdown em campo de frontmatter nao e processado.
+ */
+import Icon from '../layout/Icon.astro';
+
+interface Props {
+  question: string;
+  answer: string;
+  definitions?: { term: string; answer: string }[];
+}
+const { question, answer, definitions = [] } = Astro.props;
+---
+
+<section class="ai-summary" aria-labelledby="resumo-ia">
+  <p class="ai-summary-head">
+    <Icon set="ui" name="sparkle" strokeWidth={1.9} />
+    Resposta rápida
+  </p>
+  <h2 id="resumo-ia">{question}</h2>
+  <p set:html={answer} />
+
+  {definitions.length > 0 && (
+    <dl>
+      {definitions.map((d) => (
+        <>
+          <dt set:html={d.term} />
+          <dd set:html={d.answer} />
+        </>
+      ))}
+    </dl>
+  )}
+</section>
+
+<style is:global>
+/* 8. RESUMO PARA IA -------------------------------------------------------
+ Resposta direta a duvida principal, escrita para ser extraida por LLM e
+ por trecho em destaque. Rust porque e o acento de IA, GEO e AEO.
+ ------------------------------------------------------------------------ */
+.ai-summary{ background: linear-gradient(150deg, rgba(193,87,58,0.10), rgba(193,87,58,0.03)); border:1px solid rgba(163,65,36,0.30); border-radius:14px; padding:26px 28px; margin:0 0 40px; }
+.ai-summary-head{ display:flex; align-items:center; gap:9px; font-family: var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:0.11em; color: var(--rust-ink); margin-bottom:13px; }
+.ai-summary-head svg{ width:15px; height:15px; flex-shrink:0; }
+.ai-summary h2{ font-family: var(--sans); font-style:normal; font-size:17px; font-weight:600; color: var(--text-primary); margin:0 0 11px; line-height:1.4; }
+.ai-summary p{ font-size:15px; line-height:1.7; margin:0 0 12px; }
+.ai-summary p:last-of-type{ margin-bottom:0; }
+.ai-summary dl{ margin:16px 0 0; display:flex; flex-direction:column; gap:12px; border-top:1px solid rgba(163,65,36,0.22); padding-top:16px; }
+.ai-summary dt{ font-size:14px; font-weight:600; color: var(--text-primary); margin-bottom:3px; }
+.ai-summary dd{ font-size:14px; line-height:1.65; color: var(--text-secondary); margin:0; }
+</style>

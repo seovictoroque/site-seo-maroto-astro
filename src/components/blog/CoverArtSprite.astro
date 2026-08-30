@@ -1,0 +1,115 @@
+---
+/**
+ * ARTE DE CAPA PROVISORIA.
+ *
+ * Enquanto nao existir imagem real de capa, cada card usa um destes simbolos
+ * por <use href="#art-...">. Sao SVG inline, entao nao pesam requisicao e nao
+ * disputam o LCP.
+ *
+ * No HTML original este sprite estava copiado em quatro arquivos. Aqui existe
+ * uma vez e o BlogLayout o injeta em toda pagina de blog.
+ *
+ * QUANDO A CAPA REAL ENTRAR
+ * Troque o bloco svg do card por:
+ *   <img src="/img/blog/<slug>-640.webp"
+ *        srcset="/img/blog/<slug>-640.webp 640w, /img/blog/<slug>-1280.webp 1280w"
+ *        sizes="(max-width:620px) 100vw, (max-width:1080px) 50vw, 360px"
+ *        width="640" height="360" alt="" loading="lazy" decoding="async">
+ * Mantenha width e height no HTML e height:auto no CSS, senao a imagem
+ * deforma e o CLS estoura.
+ *
+ * O `style="position:absolute"` que estava inline no HTML virou a classe
+ * .cover-sprite aqui embaixo.
+ */
+// Os ids vivem em src/data/cover-art.ts, porque o schema da collection
+// tambem precisa deles e o content.config.ts nao importa .astro.
+---
+
+<svg class="cover-sprite" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="art-tech" viewBox="0 0 640 360">
+      <rect width="640" height="360" fill="#14100A"/>
+      <g stroke="#D9A441" stroke-width="1.5" fill="none" opacity=".55">
+        <rect x="120" y="70" width="180" height="52" rx="8"/>
+        <rect x="80" y="180" width="120" height="44" rx="8"/>
+        <rect x="230" y="180" width="120" height="44" rx="8"/>
+        <rect x="380" y="180" width="120" height="44" rx="8"/>
+        <path d="M210 122v34M210 156h-70v24M210 156h80v24M210 156h230v24" stroke-dasharray="4 5"/>
+      </g>
+      <g fill="#D9A441" opacity=".9">
+        <circle cx="140" cy="272" r="3"/><circle cx="290" cy="272" r="3"/><circle cx="440" cy="272" r="3"/>
+      </g>
+      <g stroke="#9C7226" stroke-width="1.2" opacity=".45" fill="none">
+        <path d="M140 224v48M290 224v48M440 224v48M140 272h300" stroke-dasharray="3 5"/>
+      </g>
+      <circle cx="500" cy="96" r="34" fill="none" stroke="#C1573A" stroke-width="1.5" opacity=".5"/>
+      <path d="M524 120l26 26" stroke="#C1573A" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+    </symbol>
+    <symbol id="art-links" viewBox="0 0 640 360">
+      <rect width="640" height="360" fill="#14100A"/>
+      <g stroke="#D9A441" stroke-width="1.4" fill="none" opacity=".5">
+        <circle cx="320" cy="180" r="58"/><circle cx="150" cy="106" r="26"/><circle cx="140" cy="252" r="20"/>
+        <circle cx="500" cy="98" r="22"/><circle cx="512" cy="248" r="30"/><circle cx="322" cy="52" r="16"/>
+        <path d="M176 118l90 40M160 244l106 -34M478 110l-100 44M486 236l-108 -30M322 68v54" stroke-dasharray="4 5"/>
+      </g>
+      <g fill="#D9A441" opacity=".75"><circle cx="320" cy="180" r="5"/></g>
+      <g stroke="#9C7226" stroke-width="1" opacity=".3" fill="none"><circle cx="320" cy="180" r="92"/></g>
+    </symbol>
+    <symbol id="art-ai" viewBox="0 0 640 360">
+      <rect width="640" height="360" fill="#14100A"/>
+      <g stroke="#C1573A" stroke-width="1.5" fill="none" opacity=".6">
+        <rect x="110" y="88" width="200" height="46" rx="10"/>
+        <rect x="110" y="152" width="150" height="46" rx="10"/>
+        <rect x="110" y="216" width="176" height="46" rx="10"/>
+        <path d="M330 111h74M330 175h74M330 239h74" stroke-dasharray="4 5"/>
+        <rect x="416" y="120" width="120" height="120" rx="18"/>
+      </g>
+      <g fill="#C1573A" opacity=".8">
+        <path d="M476 156l7 17 17 7-17 7-7 17-7-17-17-7 17-7z"/>
+      </g>
+      <g stroke="#D9A441" stroke-width="1.2" opacity=".4" fill="none">
+        <path d="M446 150h-6M446 210h-6M506 150h6M506 210h6" stroke-linecap="round"/>
+      </g>
+    </symbol>
+    <symbol id="art-data" viewBox="0 0 640 360">
+      <rect width="640" height="360" fill="#14100A"/>
+      <g stroke="#9C7226" stroke-width="1" opacity=".32">
+        <path d="M100 288h440M100 232h440M100 176h440M100 120h440" stroke-dasharray="3 6"/>
+      </g>
+      <g fill="#D9A441" opacity=".55">
+        <rect x="128" y="212" width="34" height="76" rx="4"/>
+        <rect x="188" y="176" width="34" height="112" rx="4"/>
+        <rect x="248" y="236" width="34" height="52" rx="4"/>
+        <rect x="308" y="140" width="34" height="148" rx="4"/>
+        <rect x="368" y="188" width="34" height="100" rx="4"/>
+      </g>
+      <rect x="428" y="104" width="34" height="184" rx="4" fill="#C1573A" opacity=".65"/>
+      <path d="M145 200 L205 164 L265 224 L325 128 L385 176 L445 92" fill="none" stroke="#F0E4CF" stroke-width="2" opacity=".55" stroke-linecap="round" stroke-linejoin="round"/>
+      <g fill="#F0E4CF" opacity=".7"><circle cx="445" cy="92" r="4"/></g>
+    </symbol>
+    <symbol id="art-content" viewBox="0 0 640 360">
+      <rect width="640" height="360" fill="#14100A"/>
+      <g fill="#D9A441" opacity=".45">
+        <rect x="110" y="96" width="230" height="14" rx="7"/>
+        <rect x="110" y="130" width="300" height="9" rx="4.5"/>
+        <rect x="110" y="152" width="270" height="9" rx="4.5"/>
+        <rect x="110" y="174" width="290" height="9" rx="4.5"/>
+        <rect x="110" y="214" width="160" height="12" rx="6"/>
+        <rect x="110" y="246" width="280" height="9" rx="4.5"/>
+        <rect x="110" y="268" width="240" height="9" rx="4.5"/>
+      </g>
+      <g stroke="#C1573A" stroke-width="1.5" fill="none" opacity=".55">
+        <rect x="440" y="96" width="106" height="164" rx="12"/>
+        <path d="M462 130h62M462 156h62M462 182h40" stroke-linecap="round"/>
+      </g>
+      <g stroke="#D9A441" stroke-width="1.2" opacity=".35" fill="none">
+        <path d="M410 178h30" stroke-dasharray="4 5"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+
+<style is:global>
+.cover-sprite{ position:absolute; }
+</style>

@@ -1,0 +1,197 @@
+---
+title: "O que é SEO, sem a definição de dicionário"
+seoTitle: "O que é SEO? Guia completo e sem enrolação | SEO Maroto"
+description: "SEO é fazer sua página ser encontrada, entendida e escolhida por quem busca. Entenda como funciona, os três pilares e por onde começar."
+excerpt: "Como a busca funciona hoje, o que mudou com IA e o que continua igual desde sempre."
+standfirst: "Todo mundo já leu que SEO é \"otimização para mecanismos de busca\". Isso não ajuda ninguém a decidir o que fazer na segunda-feira de manhã. Este guia explica como a busca funciona hoje, o que realmente move o ponteiro e em que ordem atacar."
+category: "fundamentos-de-seo"
+author: "victor-roque"
+publishDate: 2026-03-12
+updatedDate: 2026-08-28
+readingTime: 18
+coverArt: "art-tech"
+pillar: true
+status: "published"
+
+# Bloco padrao de todo post. Tres a cinco frases fechadas, cada uma
+# entregando um fato, nao uma promessa de que o texto vai explicar.
+keyPoints:
+  - "SEO é o trabalho de fazer uma página ser encontrada, entendida e escolhida por quem busca, e hoje isso vale tanto para a SERP tradicional quanto para as respostas geradas por IA;"
+  - "O trabalho se divide em três frentes que se sustentam: base técnica, conteúdo que responde a intenção e autoridade construída fora do site;"
+  - "A ordem importa mais que o esforço: site que não é rastreado não ranqueia, por melhor que seja o texto;"
+  - "Resultado de SEO leva meses e depende de manutenção, então quem promete primeira página em 30 dias está vendendo outra coisa."
+
+# Resposta direta, autocontida, escrita para ser recortada por um LLM ou
+# por um trecho em destaque. Cada definicao cobre uma das sub-perguntas
+# que o query fan out abre a partir da principal, e precisa fazer sentido
+# sozinha, fora do contexto da pagina.
+# O `answer` guarda o HTML inline do original (<strong>), renderizado com
+# set:html no componente. Markdown em campo de frontmatter nao e processado.
+aiSummary:
+  question: "O que é SEO?"
+  answer: "SEO, ou otimização para mecanismos de busca, é o conjunto de práticas que faz uma página ser rastreada, indexada e escolhida como resposta para o que uma pessoa procura. Na prática são três frentes: <strong>SEO técnico</strong>, que garante que o buscador consiga acessar e entender a página, <strong>conteúdo</strong>, que responde a intenção por trás da busca, e <strong>autoridade</strong>, que são os sinais externos de que aquela fonte é confiável. Desde que buscadores e assistentes passaram a gerar respostas em vez de só listar links, o mesmo trabalho passou a decidir se a sua marca é citada nessas respostas."
+  definitions:
+    - term: "SEO é a mesma coisa que Google Ads?"
+      answer: "Não. SEO é tráfego orgânico, você não paga por clique e o resultado depende do conteúdo e da estrutura do site. Google Ads é mídia paga: para de pagar, para de aparecer."
+    - term: "Quanto tempo leva para SEO dar resultado?"
+      answer: "Em site novo, de quatro a oito meses até o volume ficar previsível. Correções técnicas em site já indexado podem aparecer em semanas, porque o conteúdo já existe e só estava sendo mal interpretado."
+    - term: "SEO ainda funciona com respostas geradas por IA?"
+      answer: "Sim, e virou pré-requisito. Assistentes como ChatGPT, Gemini e Perplexity montam a resposta a partir de páginas que conseguem rastrear e interpretar. Sem base técnica e sem conteúdo claro, sua página não entra na resposta nem como citação."
+    - term: "Dá para fazer SEO sozinho?"
+      answer: "O básico, sim: corrigir títulos, estrutura de headings, links internos e velocidade. O que costuma exigir apoio é diagnóstico de site grande, migração e link building."
+
+# O FAQPage do JSON-LD e montado a partir DESTE campo, entao o visivel e o
+# marcado nao tem como divergir.
+faq:
+  - question: "SEO ainda vale a pena em 2026?"
+    answer: "Vale, e por um motivo que mudou de forma: além de trazer clique da busca tradicional, o mesmo trabalho define se a sua página é usada como fonte nas respostas geradas por IA. Site que não é rastreável não entra em nenhum dos dois."
+  - question: "Quanto custa fazer SEO?"
+    answer: "Depende do tamanho do site e de quem executa. O trabalho básico, corrigir títulos, headings, links internos e velocidade, custa tempo e não dinheiro. O que costuma pesar no orçamento é produção de conteúdo em escala, ferramenta paga e link building. Desconfie de proposta fechada por posição garantida. Ninguém controla o ranqueamento, então garantia de primeira posição é promessa que o vendedor não tem como cumprir."
+  - question: "Qual a diferença entre SEO e SEM?"
+    answer: "SEM, ou search engine marketing, é o guarda-chuva de tudo que você faz para aparecer em busca, incluindo mídia paga. SEO é a parte orgânica desse guarda-chuva. Na prática do mercado brasileiro, muita gente usa SEM como sinônimo de anúncio em buscador."
+  - question: "Preciso de ferramenta paga para fazer SEO?"
+    answer: "Não para começar. Search Console e Analytics são gratuitos e respondem a maior parte das perguntas de um site pequeno ou médio. Ferramenta paga compra velocidade e dado de concorrente, não compra diagnóstico."
+  - question: "O que é query fan out?"
+    answer: "É quando o sistema de busca quebra uma pergunta ampla em várias buscas menores, roda todas em paralelo e monta a resposta juntando os resultados. Para quem produz conteúdo, isso significa que a página não disputa uma busca só, disputa também as sub-perguntas em volta dela."
+  - question: "Quanto tempo até aparecer no Google?"
+    answer: "Indexar uma página nova costuma levar de horas a algumas semanas, dependendo da autoridade do domínio e de quantos links internos apontam para ela. Ranquear bem é outra história: em site novo, conte com quatro a oito meses até o volume ficar previsível."
+
+# Nome e cargo sao obrigatorios. Citacao de terceiro so entra com
+# sourceUrl. Nunca publique citacao de terceiro sem fonte verificavel.
+expert:
+  name: "Victor Roque"
+  role: "Consultor de SEO e autor do SEO Maroto"
+  quote: "A pergunta que eu faço em toda auditoria não é \"o que falta fazer\", é \"o que a gente para de fazer\". Time pequeno que ataca as três frentes ao mesmo tempo entrega mal nas três. Escolhe a que está travando e resolve ela até o fim."
+  photo: "/img/autor/perfil-victor-roque-400.webp"
+  cite: "https://seomaroto.com.br/sobre"
+  sourceUrl: "/sobre"
+  sourceLabel: "SEO Maroto"
+---
+
+import CtaBand from '../../components/post/CtaBand.astro';
+import ExpertQuote from '../../components/post/ExpertQuote.astro';
+
+{/*
+  Os blocos abaixo ficam no corpo, e nao no template da pagina, porque a
+  POSICAO deles e escolha editorial de cada post. Os dados vem do frontmatter,
+  entao o schema continua validando: citacao de terceiro sem sourceUrl nao
+  passa. */}
+
+## O que é SEO, na prática
+
+Esquece a sigla por um minuto. Todo buscador precisa resolver três problemas antes de te mostrar qualquer coisa: **achar** a sua página, **entender** do que ela trata e **decidir** se ela merece aparecer na frente das outras. SEO é o trabalho de facilitar essas três decisões.
+
+É por isso que a definição de dicionário não ajuda. "Otimizar para mecanismos de busca" não diz se você deve arrumar o servidor, reescrever um texto ou parar de comprar link. A pergunta útil é outra: *qual dos três problemas está travando o meu site agora?*
+
+Na maioria dos sites que eu audito, o gargalo não é o que o time imagina. Todo mundo quer falar de palavra-chave, e o problema está em template que gera 40 mil URLs de filtro, ou em página órfã que nenhum link interno aponta.
+
+### SEO não é truque, é manutenção
+
+Existe uma expectativa ruim de que SEO seja uma lista de ajustes que você faz uma vez e pronto. Não é. Concorrente publica, o buscador muda de critério, o seu conteúdo envelhece. O trabalho é contínuo, e a parte chata é justamente a que dá resultado: revisar o que já existe, cortar o que não serve mais, corrigir o que quebrou na última publicação.
+
+## Como o Google decide o que mostrar
+
+Simplificando bastante, o processo tem quatro etapas, e cada uma delas pode ser o seu gargalo:
+
+1. **Descoberta.** O buscador precisa saber que a URL existe, seja por link, por sitemap ou por já ter visitado antes.
+2. **Rastreamento.** Um robô acessa a URL. Se o servidor devolve erro, se o robots.txt bloqueia ou se a página depende de JavaScript que não roda, ele desiste.
+3. **Indexação.** O conteúdo é processado e guardado. Nem tudo que é rastreado é indexado: página fina, duplicada ou sem valor claro fica de fora.
+4. **Ranqueamento.** Só aqui entram os critérios que todo mundo discute: relevância para a busca, qualidade, autoridade, experiência na página.
+
+Repare que ranqueamento é a *última* etapa. Discutir densidade de palavra-chave enquanto o site trava na etapa dois é o equivalente a escolher a cor da parede com o telhado furado.
+
+<div class="table-wrap">
+<table>
+<caption class="sr-only">Onde cada tipo de problema costuma travar o site</caption>
+<thead>
+<tr><th scope="col">Sintoma</th><th scope="col">Etapa provável</th><th scope="col">Onde olhar primeiro</th></tr>
+</thead>
+<tbody>
+<tr><td>Página nova não aparece nem buscando pelo título exato</td><td>Rastreamento ou indexação</td><td>Inspeção de URL no Search Console</td></tr>
+<tr><td>Muitas URLs indexadas que você nem sabia que existiam</td><td>Descoberta</td><td>Parâmetros, filtros e paginação</td></tr>
+<tr><td>Página indexada, mas posição parada na página 3</td><td>Ranqueamento</td><td>Intenção da busca e concorrência da SERP</td></tr>
+<tr><td>Tráfego caindo devagar há meses, sem queda brusca</td><td>Ranqueamento</td><td>Conteúdo desatualizado e canibalização</td></tr>
+</tbody>
+</table>
+</div>
+
+<CtaBand
+  kicker="escolinha"
+  title="Não quer ler 18 minutos e sair sem saber por onde começar?"
+  text="A trilha iniciante da Escolinha é a versão em passos do que este guia explica, com exercício no seu próprio site a cada etapa. Gratuita e sem cadastro."
+  href="/escolinha/iniciante"
+  label="Começar a trilha"
+/>
+
+## Os três pilares: técnico, conteúdo e autoridade
+
+Toda tarefa de SEO cai em uma dessas três frentes. Saber em qual delas você está mexendo evita a confusão mais comum do mercado, que é tentar resolver com texto um problema que era de servidor.
+
+### 1. Base técnica
+
+É o que garante que o buscador consegue acessar, renderizar e interpretar as suas páginas. Entra aqui robots.txt, sitemap, códigos de status, canonical, arquitetura de URL, velocidade e dados estruturados. Não é glamouroso e é onde mora a maior parte do tráfego perdido.
+
+### 2. Conteúdo
+
+É responder a intenção real da busca, não a palavra digitada. Quem procura "melhor CRM" quer comparação, não a página de vendas do seu CRM. Errar a intenção é o motivo número um de página bem escrita que não ranqueia.
+
+### 3. Autoridade
+
+São os sinais de fora: quem cita você, em que contexto, com que consistência. Link continua contando, mas menção de marca e reputação em comunidade pesam cada vez mais, principalmente para aparecer em resposta de IA.
+
+- **Se o problema é técnico**, texto novo não resolve, só adiciona páginas ao mesmo buraco;
+- **Se o problema é de intenção**, link não resolve, você vai empurrar autoridade para a página errada;
+- **Se o problema é de autoridade**, reescrever pela quinta vez não resolve, o conteúdo já está bom.
+
+<ExpertQuote {...frontmatter.expert} />
+
+## O que mudou com a busca por IA
+
+A mudança real não é o buscador ter ficado mais esperto, é a resposta ter mudado de formato. Antes você disputava dez links azuis. Agora, em boa parte das buscas, existe um bloco gerado por IA acima deles, e em outra fatia a pessoa nem passa pelo buscador: pergunta direto ao assistente.
+
+Isso cria duas consequências práticas. A primeira é que aparecer como **citação** na resposta passou a valer tanto quanto posição. A segunda é que o clique ficou mais caro de conquistar: quem clica depois de ler a resposta é quem quer mais profundidade, então conteúdo raso perde os dois jogos ao mesmo tempo.
+
+### Query fan out, e por que isso muda o seu texto
+
+Quando alguém faz uma pergunta ampla, o sistema não procura aquela frase. Ele quebra a pergunta em várias buscas menores, roda todas, e monta a resposta juntando os pedaços. É o chamado *query fan out*.
+
+Na prática, isso significa que o seu artigo não compete por uma busca, ele compete por dezenas de sub-perguntas. Página que responde só o título perde para a que responde o título e as ramificações vizinhas, cada uma em um trecho curto e autocontido.
+
+- Responda a pergunta principal **nos primeiros parágrafos**, sem enrolação de introdução;
+- Dê a cada sub-pergunta um heading próprio e uma resposta que faça sentido fora do contexto da página;
+- Deixe número, data e fonte explícitos no texto, não só na imagem;
+- Mantenha a página rastreável para os agentes que você quiser deixar entrar, e decida isso de forma consciente no robots.txt.
+
+Se quiser ir a fundo nessa parte, o guia de [GEO e AEO](/blog/geo-aeo) cobre como medir citação e o que dá para influenciar de fato.
+
+## Por onde começar, na ordem certa
+
+Essa é a ordem que eu uso em auditoria, e ela é deliberada: cada etapa só faz sentido se a anterior estiver de pé.
+
+1. **Confirme que o site é rastreável.** Search Console conectado, robots.txt revisado, sitemap enviado e sem erro de servidor recorrente.
+2. **Veja o que já está indexado.** Antes de criar página nova, entenda o que existe. Site com metade das URLs sendo lixo de parâmetro não precisa de conteúdo, precisa de faxina.
+3. **Arrume o que já traz tráfego.** A página que está na posição 8 e recebe impressão é o ganho mais rápido que existe. Ninguém começa pelo artigo novo.
+4. **Mapeie intenção antes de escrever.** Olhe a SERP da busca alvo. Se ela está cheia de comparativo, a sua página de produto não vai entrar ali.
+5. **Só então produza.** E produza com plano de manutenção, não com meta de volume.
+
+<CtaBand
+  kicker="escolinha, trilha técnica"
+  title="Quer fazer esse diagnóstico no seu site agora?"
+  text="A trilha técnica pega crawl, indexação e Core Web Vitals na mesma ordem deste guia, com checklist para marcar conforme você resolve."
+  href="/escolinha/tecnica"
+  label="Ver a trilha técnica"
+/>
+
+## Os erros que mais fazem perder tempo
+
+- **Escrever antes de olhar a SERP.** Você descobre a intenção errada depois de publicar, e aí já gastou o esforço;
+- **Publicar sem plano de atualização.** Conteúdo de SEO envelhece, e post abandonado puxa o site inteiro para baixo;
+- **Confundir tráfego com resultado.** Visita que nunca vira nada é custo, não conquista;
+- **Comprar link em pacote.** Barato hoje, auditoria cara depois;
+- **Trocar de estratégia a cada três meses.** SEO precisa de tempo para maturar, e quem reinicia toda hora nunca chega na parte que dá retorno.
+
+## Conclusão
+
+SEO não é uma lista de truques, é a disciplina de manter um site fácil de acessar, fácil de entender e digno de ser escolhido. As três frentes continuam as mesmas de dez anos atrás. O que mudou foi o formato da resposta, e isso aumentou o prêmio para quem faz o básico bem feito, em vez de diminuir.
+
+Se você lembrar de uma coisa só deste guia, que seja a ordem: primeiro o buscador precisa conseguir chegar na sua página. Todo o resto vem depois disso.

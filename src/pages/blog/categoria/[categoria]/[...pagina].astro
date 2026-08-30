@@ -1,0 +1,166 @@
+---
+/**
+ * PAGINA DE CATEGORIA, com paginacao rastreavel.
+ *
+ * Uma rota so cobre /blog/categoria/<slug> e /blog/categoria/<slug>/pagina/N,
+ * pelo parametro rest `pagina`. A divisao em paginas vem de src/lib/paginate,
+ * que existe porque o paginate() nativo gera /base/2 e o site usa
+ * /base/pagina/2.
+ *
+ * NOINDEX, FOLLOW, e isso e deliberado.
+ * A listagem nao tem conteudo proprio para ranquear. Quem disputa SERP e a
+ * pilar page da categoria; a categoria existe para navegacao e distribuicao
+ * de link interno. Por isso o JSON-LD traz so o BreadcrumbList: declarar
+ * CollectionPage numa pagina noindex aumenta superficie de erro sem gerar
+ * nada.
+ *
+ * Pagina 2 em diante leva canonical PROPRIO, nunca canonical para a pagina 1.
+ */
+import BlogLayout from '../../../../layouts/BlogLayout.astro';
+import Breadcrumb from '../../../../components/layout/Breadcrumb.astro';
+import CategoryHeroArt from '../../../../components/blog/CategoryHeroArt.astro';
+import CardGrid from '../../../../components/blog/CardGrid.astro';
+import PostCard from '../../../../components/blog/PostCard.astro';
+import LoadMore from '../../../../components/blog/LoadMore.astro';
+import NewsletterBanner from '../../../../components/blog/NewsletterBanner.astro';
+import Icon from '../../../../components/layout/Icon.astro';
+import { categories } from '../../../../data/categories';
+import { site } from '../../../../data/site';
+import { allPosts, inCategory, pillarOf } from '../../../../lib/posts';
+import { paginar, POR_PAGINA } from '../../../../lib/paginate';
+import { breadcrumbNode } from '../../../../lib/schema';
+
+export async function getStaticPaths() {
+  const posts = await allPosts();
+  const rotas = [];
+
+  for (const category of categories) {
+    const daCategoria = inCategory(posts, category.slug);
+    const base = `/blog/categoria/${category.slug}`;
+    const paginas = paginar(daCategoria, base, POR_PAGINA);
+
+    for (const p of paginas) {
+      rotas.push({
+        params: {
+          categoria: category.slug,
+          pagina: p.page === 1 ? undefined : `pagina/${p.page}`,
+        },
+        props: { category, pagina: p, pilar: pillarOf(posts, category.slug) },
+      });
+    }
+  }
+
+  return rotas;
+}
+
+const { category, pagina, pilar } = Astro.props;
+const rust = category.variant === 'rust';
+const paragrafos = category.heroParagraphs ?? [category.intro];
+const maisLongo = pagina.items.reduce((max, p) => Math.max(max, p.data.readingTime), 0);
+const pilares = pagina.items.filter((p) => p.data.pillar).length;
+
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Blog', href: '/blog' },
+  { label: category.name },
+];
+
+const sufixo = pagina.page > 1 ? `, página ${pagina.page}` : '';
+---
+
+<BlogLayout
+  title={`${category.name}${sufixo} | ${site.name}`}
+  description={category.intro}
+  path={pagina.url}
+  noindex
+  prev={pagina.prev}
+  next={pagina.next}
+  activeCategory={category.slug}
+  schema={[breadcrumbNode(crumbs)]}
+>
+  <section class="cat-hero">
+    {/* o breadcrumb fica FORA do .wrap de propósito: ele acompanha a calha do
+        sub-menu, não a do conteúdo. Continua dentro da faixa do hero. */}
+    <Breadcrumb items={crumbs} />
+
+    <div class="wrap ch-inner">
+      <div class:list={['ch-grid', !category.heroArt && 'ch-grid-solo']}>
+        <div>
+          <span class:list={['eyebrow', rust && 'rust']}>categoria</span>
+          <h1>{category.name}</h1>
+          {paragrafos.map((p) => <p class="ch-desc">{p}</p>)}
+
+          {pilar && (
+            <a class="ch-pillar" href={`/blog/${pilar.id}`}>
+              Comece pelo guia completo de {category.name}
+              <Icon set="ui" name="arrow" strokeWidth={2.4} />
+            </a>
+          )}
+
+          <div class="ch-stats">
+            <div><strong>{pagina.total}</strong><span>artigos na categoria</span></div>
+            <div><strong>{pilares}</strong><span>{pilares === 1 ? 'guia pilar' : 'guias pilares'}</span></div>
+            {maisLongo > 0 && <div><strong>{maisLongo} min</strong><span>o mais longo deles</span></div>}
+          </div>
+        </div>
+
+        {category.heroArt && <CategoryHeroArt art={category.heroArt} />}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="artigos">
+    <div class="wrap">
+      <CardGrid>
+        {pagina.items.map((post) => <PostCard post={post} />)}
+      </CardGrid>
+
+      <LoadMore base={`/blog/categoria/${category.slug}`} lastPage={pagina.lastPage} page={pagina.page} />
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="wrap">
+      <NewsletterBanner variant="band" />
+    </div>
+  </section>
+</BlogLayout>
+
+<style is:global>
+
+/* 2. HERO DA CATEGORIA ----------------------------------------------------
+ Faixa de largura total, um degrau mais quente que o papel da pagina, para
+ a categoria se anunciar sem precisar de outra cor de marca.
+ ------------------------------------------------------------------------ */
+.cat-hero{ position:relative; overflow:hidden; background: linear-gradient(165deg, #F8F0DF, #EEE1C9); border-bottom:1px solid var(--border); padding:0 0 56px; }
+/* a ponta escura da faixa e #EEE1C9 de proposito: em #EADCC2 o --text-muted
+   caia para 4.45:1, abaixo do AA. Se escurecer a faixa, mede de novo. */
+.cat-hero::before{ content:''; position:absolute; top:-320px; right:-120px; width:820px; height:640px; background: radial-gradient(ellipse at center, rgba(217,164,65,0.34), transparent 66%); pointer-events:none; }
+.ch-inner{ position:relative; }
+.ch-grid{ display:grid; grid-template-columns: minmax(0,1fr) 0.92fr; gap:52px; align-items:center; margin-top:30px; }
+.cat-hero h1{ font-family: var(--serif); font-weight:400; font-style:italic; font-size: clamp(38px,5.4vw,58px); line-height:1.04; letter-spacing:-0.015em; margin:14px 0 18px; }
+.ch-desc{ font-size:16.5px; line-height:1.74; color: var(--text-secondary); max-width:540px; }
+.ch-desc + .ch-desc{ margin-top:14px; }
+.ch-pillar{ display:inline-flex; align-items:center; gap:9px; margin-top:22px; font-size:14.5px; font-weight:600; color: var(--accent-ink); border-bottom:1px solid rgba(125,88,20,0.4); padding-bottom:3px; transition: border-color .15s ease; }
+.ch-pillar:hover{ border-color: var(--accent-ink); }
+.ch-pillar svg{ width:16px; height:16px; flex-shrink:0; }
+.ch-stats{ display:flex; gap:26px; flex-wrap:wrap; margin-top:28px; }
+.ch-stats div{ display:flex; flex-direction:column; gap:3px; }
+.ch-stats strong{ font-family: var(--serif); font-style:italic; font-weight:400; font-size:26px; color: var(--accent-ink); line-height:1; }
+.ch-stats span{ font-family: var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color: var(--text-muted); }
+
+.ch-art{ background:#14100A; border:1px solid rgba(216,182,138,0.20); border-radius:18px; padding:24px; box-shadow: 0 26px 60px rgba(60,40,14,0.20); }
+.ch-art svg{ width:100%; height:auto; display:block; }
+.ch-art figcaption{ font-family: var(--mono); font-size:11px; color:#9A8260; margin-top:14px; text-align:center; }
+
+/* categoria sem ilustracao no hero fica em uma coluna so */
+.ch-grid-solo{ grid-template-columns:minmax(0,1fr); }
+
+@media (max-width:1080px){
+  .ch-grid{ grid-template-columns:minmax(0,1fr); gap:36px; }
+  .ch-art{ max-width:560px; }
+}
+@media (max-width:620px){
+  .cat-hero{ padding:0 0 40px; }
+}
+</style>

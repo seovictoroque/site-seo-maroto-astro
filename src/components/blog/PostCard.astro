@@ -1,0 +1,126 @@
+---
+/**
+ * POST CARD, o componente base das listagens.
+ *
+ * Usado em /blog, na pagina de categoria, na de autor e nos relacionados do
+ * post. No HTML original era o mesmo bloco copiado nos quatro arquivos.
+ *
+ * Capa, resumo, foto e link do autor, categoria com link, titulo com link,
+ * data e tempo de leitura.
+ *
+ * A foto do autor e uma caixa quadrada fixa de 34px com a imagem em
+ * width:100%, height:100% e object-fit:cover. E assim para os atributos width
+ * e height do HTML nao brigarem com o CSS: com largura e altura definidas nos
+ * dois lugares o navegador ignora o aspect-ratio e a imagem sai deformada.
+ * Os atributos ficam porque sao eles que reservam o espaco e evitam CLS.
+ */
+import { getCategory } from '../../data/categories';
+import { getAuthor } from '../../data/authors';
+import { formatDate, isoDate, type Post } from '../../lib/posts';
+
+interface Props {
+  post: Post;
+  /** mostra o selo "pilar da categoria" acima do titulo */
+  showPillarLabel?: boolean;
+  /**
+   * Oculta o rodape com autor e data. Nenhuma pagina usa hoje, todas as
+   * listagens do HTML de origem mostram a assinatura. Existe para o dia em
+   * que um bloco estreito precisar do card sem o rodape.
+   */
+  compact?: boolean;
+}
+
+const { post, showPillarLabel = false, compact = false } = Astro.props;
+const { data } = post;
+const category = getCategory(data.category);
+const author = getAuthor(data.author);
+const rust = category?.variant === 'rust';
+const href = `/blog/${post.id}`;
+---
+
+<article class:list={['post-card', rust && 'rust']}>
+  <a class="pc-cover" href={href} tabindex="-1" aria-hidden="true">
+    {data.image ? (
+      <img src={data.image.src} width={data.image.width} height={data.image.height} alt="" loading="lazy" decoding="async" />
+    ) : (
+      <svg class="cover-art" viewBox="0 0 640 360" role="presentation"><use href={`#${data.coverArt}`} /></svg>
+    )}
+  </a>
+
+  <div class="pc-body">
+    {showPillarLabel && data.pillar && <span class="cb-pillar">pilar da categoria</span>}
+    {category && !showPillarLabel && (
+      <a class:list={['cat-tag', rust && 'rust']} href={`/blog/categoria/${category.slug}`}>{category.name}</a>
+    )}
+    <h3 class="pc-title"><a href={href}>{data.title}</a></h3>
+    {data.excerpt && <p class="pc-excerpt">{data.excerpt}</p>}
+  </div>
+
+  {!compact && author && (
+    <div class="pc-foot">
+      <a class="pc-avatar" href={`/autor/${author.slug}`} tabindex="-1" aria-hidden="true">
+        <img
+          src={author.photo.src}
+          srcset={author.photo.srcset}
+          sizes="34px"
+          width={author.photo.width}
+          height={author.photo.height}
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+      </a>
+      <div class="pc-byline">
+        <a class="pc-author" href={`/autor/${author.slug}`}>{author.name}</a>
+        <span class="pc-time">
+          <time datetime={isoDate(data.publishDate)}>{formatDate(data.publishDate)}</time>
+          <span class="dot"></span>
+          <span>{data.readingTime} min de leitura</span>
+        </span>
+      </div>
+    </div>
+  )}
+</article>
+
+<style is:global>
+/* etiqueta de pilar da categoria, exibida por showPillarLabel */
+.cb-pillar{ display:flex; align-items:center; gap:8px; font-family: var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.09em; color: var(--accent-ink); background: rgba(217,164,65,0.16); border-radius:6px; padding:5px 9px; }
+
+/* 5. POST CARD ----------------------------------------------------------- */
+.post-card{ display:flex; flex-direction:column; background: var(--bg-elev); border:1px solid var(--border); border-radius:15px; overflow:hidden; transition: border-color .16s ease, transform .16s ease, box-shadow .16s ease; }
+.post-card:hover{ border-color: var(--border-strong); transform: translateY(-3px); box-shadow: 0 16px 38px rgba(60,40,14,0.10); }
+.pc-cover{ display:block; aspect-ratio: 16 / 9; background: #14100A; border-bottom:1px solid var(--border); overflow:hidden; }
+.pc-cover img{ width:100%; height:auto; aspect-ratio:16 / 9; object-fit:cover; }
+.pc-body{ display:flex; flex-direction:column; gap:11px; padding:20px 21px 0; flex:1; }
+.pc-title{ font-size:17px; font-weight:600; line-height:1.35; letter-spacing:-0.005em; }
+.pc-title a:hover{ color: var(--accent-ink); }
+.post-card.rust .pc-title a:hover{ color: var(--rust-ink); }
+.pc-excerpt{ font-size:13.5px; line-height:1.62; color: var(--text-secondary); }
+.pc-foot{ display:flex; align-items:center; gap:11px; padding:16px 21px 18px; margin-top:auto; border-top:1px solid var(--border); }
+/* a foto do autor vive numa caixa quadrada fixa e a imagem preenche 100%
+   dela, assim os atributos width e height do HTML nao brigam com o CSS e a
+   foto nunca sai deformada */
+.pc-avatar{ width:34px; height:34px; border-radius:50%; overflow:hidden; flex-shrink:0; border:1px solid var(--border-strong); background: var(--bg-elev-2); }
+.pc-avatar img{ width:100%; height:100%; object-fit:cover; }
+.pc-byline{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.pc-author{ font-size:12.5px; font-weight:500; color: var(--text-primary); }
+.pc-author:hover{ color: var(--accent-ink); text-decoration:underline; text-underline-offset:2px; }
+.pc-time{ display:flex; align-items:center; gap:7px; font-family: var(--mono); font-size:11px; color: var(--text-muted); }
+.pc-time .dot{ width:3px; height:3px; border-radius:50%; background: var(--text-muted); flex-shrink:0; }
+
+/* card horizontal, usado nos blocos por categoria ------------------------ */
+.post-row{ display:flex; gap:18px; align-items:flex-start; background: var(--bg-elev); border:1px solid var(--border); border-radius:13px; padding:16px; transition: border-color .16s ease, background .16s ease; }
+.post-row:hover{ border-color: var(--border-strong); background: var(--bg-elev-2); }
+.post-row .pr-cover{ width:132px; flex-shrink:0; aspect-ratio:16 / 10; border-radius:9px; overflow:hidden; background:#14100A; }
+.post-row .pr-cover img{ width:132px; height:auto; aspect-ratio:16 / 10; object-fit:cover; }
+.post-row .pr-body{ display:flex; flex-direction:column; gap:7px; min-width:0; }
+.post-row h3{ font-size:15px; font-weight:600; line-height:1.38; }
+.post-row:hover h3{ color: var(--accent-ink); }
+.post-row.rust:hover h3{ color: var(--rust-ink); }
+
+@media (max-width:620px){
+  .post-row{ flex-direction:column; }
+  .post-row .pr-cover{ width:100%; aspect-ratio:16 / 9; }
+  .post-row .pr-cover img{ width:100%; aspect-ratio:16 / 9; }
+}
+</style>

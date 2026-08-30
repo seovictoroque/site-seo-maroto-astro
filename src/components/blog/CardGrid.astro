@@ -1,0 +1,19 @@
+---
+/**
+ * GRADE DE TRES COLUNAS das listagens de categoria e de autor.
+ *
+ * O CSS da grade e do scroll infinito vive aqui e em LoadMore. No HTML
+ * original os dois blocos eram copia byte a byte em autor.html e
+ * categoria.html.
+ */
+---
+
+<div class="card-grid" id="grade-artigos">
+  <slot />
+</div>
+
+<style is:global>
+.card-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+@media (max-width:1080px){ .card-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:620px){ .card-grid{ grid-template-columns:1fr; } }
+</style>

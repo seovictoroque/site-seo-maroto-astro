@@ -1,0 +1,51 @@
+---
+/**
+ * ILUSTRACAO DO HERO DE CATEGORIA.
+ *
+ * Hoje existe uma so, o funil das quatro etapas ate ranquear, que veio do
+ * prototipo de /blog/categoria/seo-tecnico. Ela e usada apenas na categoria
+ * que a declara em `heroArt`, e nao em todas: um desenho de funil de
+ * indexacao no topo de Link Building seria decoracao errada.
+ *
+ * Categoria sem `heroArt` renderiza o hero em uma coluna so.
+ */
+interface Props {
+  art: 'funil';
+}
+const { art } = Astro.props;
+---
+
+{art === 'funil' && (
+  <figure class="ch-art">
+    <svg viewBox="0 0 520 340" role="img" aria-labelledby="chArtTitle chArtDesc">
+      <title id="chArtTitle">As quatro etapas até uma página ranquear</title>
+      <desc id="chArtDesc">Descoberta, rastreamento, indexação e ranqueamento ligados em sequência, com o funil estreitando a cada etapa.</desc>
+      <g font-family="JetBrains Mono, monospace" font-size="10">
+        <rect x="34" y="30" width="452" height="46" rx="10" fill="#251A0F" stroke="rgba(216,182,138,0.30)"/>
+        <text x="56" y="52" fill="#F0E4CF" font-size="11">1. Descoberta</text>
+        <text x="56" y="66" fill="#6E5A42">link, sitemap, visita anterior</text>
+        <rect x="70" y="102" width="380" height="46" rx="10" fill="#251A0F" stroke="rgba(216,182,138,0.30)"/>
+        <text x="92" y="124" fill="#F0E4CF" font-size="11">2. Rastreamento</text>
+        <text x="92" y="138" fill="#6E5A42">robots.txt, status, renderização</text>
+        <rect x="106" y="174" width="308" height="46" rx="10" fill="#251A0F" stroke="rgba(216,182,138,0.30)"/>
+        <text x="128" y="196" fill="#F0E4CF" font-size="11">3. Indexação</text>
+        <text x="128" y="210" fill="#6E5A42">canonical, duplicidade, valor</text>
+        <rect x="142" y="246" width="236" height="46" rx="10" fill="rgba(217,164,65,0.16)" stroke="#D9A441"/>
+        <text x="164" y="268" fill="#D9A441" font-size="11">4. Ranqueamento</text>
+        <text x="164" y="282" fill="#9C7226">relevância, qualidade, autoridade</text>
+      </g>
+      <g stroke="#D9A441" stroke-width="1.3" stroke-dasharray="4 5" opacity=".55" fill="none">
+        <path d="M260 76v26M260 148v26M260 220v26"/>
+      </g>
+      <g fill="#C1573A" opacity=".8">
+        <circle cx="470" cy="125" r="3"/><circle cx="470" cy="197" r="3"/>
+      </g>
+      <g fill="#9A8260" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="end">
+        <text x="462" y="128">perde aqui</text>
+        <text x="462" y="200">e aqui</text>
+      </g>
+      <text x="260" y="322" text-anchor="middle" fill="#6E5A42" font-family="JetBrains Mono, monospace" font-size="10">ranqueamento é a última etapa, não a primeira</text>
+    </svg>
+    <figcaption>Onde o tráfego costuma se perder antes de virar posição</figcaption>
+  </figure>
+)}

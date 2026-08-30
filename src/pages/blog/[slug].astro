@@ -1,0 +1,306 @@
+---
+/**
+ * POST DO BLOG.
+ *
+ * As rotas saem do getStaticPaths sobre a collection `blog`, entao um arquivo
+ * .md ou .mdx novo em src/content/blog/ vira pagina sozinho.
+ *
+ * ESTRUTURA, NA ORDEM
+ * breadcrumb, hero, post-shell com artigo a esquerda e coluna lateral grudada
+ * a direita, FAQ, bloco do autor e seis relacionados em duas linhas de tres.
+ *
+ * O indice sai dos headings que o render() devolve, e o FAQPage sai do mesmo
+ * campo `faq` que a pagina renderiza, entao nada aqui pode ficar
+ * dessincronizado do texto.
+ *
+ * TRES ARMADILHAS DE LAYOUT, TODAS RESOLVIDAS NO CSS ABAIXO
+ * 1. .post-body precisa de min-width:0. Sem isso a tabela (min-width:520px)
+ *    empurra a faixa do grid e a pagina inteira ganha rolagem horizontal no
+ *    celular.
+ * 2. No mobile o .post-shell vira flex e precisa de align-items:stretch
+ *    explicito. O align-items:start da regra de grid sobrevive na media query
+ *    e faz cada item se dimensionar por conteudo, o que reintroduz o overflow
+ *    do item 1. O sintoma e identico, a causa e outra.
+ * 3. No mobile o indice vem ANTES do artigo, senao o leitor so encontra o
+ *    sumario depois de rolar o texto inteiro. Feito com display:contents no
+ *    wrapper .post-side mais `order` nos filhos. Por isso o wrapper e um div
+ *    e nao um aside.
+ */
+import { render } from 'astro:content';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import Breadcrumb from '../../components/layout/Breadcrumb.astro';
+import PostHeroArt from '../../components/post/PostHeroArt.astro';
+import KeyPoints from '../../components/post/KeyPoints.astro';
+import AiSummary from '../../components/post/AiSummary.astro';
+import SourceBox from '../../components/post/SourceBox.astro';
+import AiTools from '../../components/post/AiTools.astro';
+import Toc from '../../components/post/Toc.astro';
+import SideCta from '../../components/post/SideCta.astro';
+import Faq from '../../components/post/Faq.astro';
+import AuthorBox from '../../components/post/AuthorBox.astro';
+import PostCard from '../../components/blog/PostCard.astro';
+import Icon from '../../components/layout/Icon.astro';
+import { getCategory } from '../../data/categories';
+import { getAuthor } from '../../data/authors';
+import { site } from '../../data/site';
+import { allPosts, relatedTo, formatDate, isoDate } from '../../lib/posts';
+import { blogPostingNode, breadcrumbNode, faqNode, personNode, abs } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const posts = await allPosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { data } = post;
+const { Content, headings } = await render(post);
+
+const category = getCategory(data.category)!;
+const author = getAuthor(data.author)!;
+const rust = category.variant === 'rust';
+const path = `/blog/${post.id}`;
+const updated = data.updatedDate ?? data.publishDate;
+const stub = data.status === 'stub';
+
+// description cai para o excerpt e depois para o titulo, o que so acontece em
+// post com status 'stub'. Post publicado escreve a sua.
+const description = data.description ?? data.excerpt ?? data.title;
+
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Blog', href: '/blog' },
+  { label: category.name, href: `/blog/categoria/${category.slug}` },
+  { label: data.title },
+];
+
+// o indice sai dos H2 do texto, mais as duas ancoras fixas do fim da pagina
+const todos = await allPosts();
+const relacionados = relatedTo(todos, post, 6);
+const tocItems = [
+  ...headings.filter((h) => h.depth === 2).map((h) => ({ slug: h.slug, text: h.text })),
+  ...(data.faq?.length ? [{ slug: 'faq', text: 'Perguntas frequentes' }] : []),
+  ...(relacionados.length ? [{ slug: 'relacionados', text: 'Conteúdo relacionado' }] : []),
+];
+
+const schema = [
+  blogPostingNode({
+    path,
+    headline: data.title,
+    description,
+    datePublished: data.publishDate,
+    dateModified: updated,
+    section: category.name,
+    authorSlug: author.slug,
+    image: data.ogImage,
+  }),
+  personNode(author),
+  breadcrumbNode(crumbs),
+  ...(data.faq?.length ? [faqNode(path, data.faq)] : []),
+];
+---
+
+<BlogLayout
+  title={data.seoTitle ?? `${data.title} | ${site.name}`}
+  description={description}
+  path={path}
+  ogType="article"
+  ogTitle={data.title}
+  ogImage={data.ogImage}
+  noindex={stub}
+  publishedTime={data.publishDate.toISOString()}
+  modifiedTime={updated.toISOString()}
+  authorName={author.name}
+  authorUrl={`/autor/${author.slug}`}
+  section={category.name}
+  activeCategory={category.slug}
+  schema={schema}
+  rss
+>
+  <Breadcrumb items={crumbs} />
+
+  <section class="post-hero">
+    <div class="wrap ph-grid">
+      <div>
+        <a class:list={['cat-tag', rust && 'rust']} href={`/blog/categoria/${category.slug}`}>{category.name}</a>
+        <h1>{data.title}</h1>
+        {data.standfirst && <p class="ph-standfirst">{data.standfirst}</p>}
+
+        <div class="byline">
+          <a class="byline-avatar" href={`/autor/${author.slug}`} tabindex="-1" aria-hidden="true">
+            <img
+              src={author.photo.src}
+              srcset={author.photo.srcset}
+              sizes="48px"
+              width={author.photo.width}
+              height={author.photo.height}
+              alt=""
+              decoding="async"
+            />
+          </a>
+          <div class="byline-text">
+            <span class="byline-name">Por <a href={`/autor/${author.slug}`} rel="author">{author.name}</a></span>
+            <span class="byline-meta">
+              <span>Atualizado em <time datetime={isoDate(updated)}>{formatDate(updated)}</time></span>
+              <span class="dot"></span>
+              <span>{data.readingTime} min de leitura</span>
+              <span class="dot"></span>
+              <span>revisado à mão, não gerado</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <PostHeroArt />
+    </div>
+  </section>
+
+  <div class="wrap post-shell">
+    <article class="post-body">
+      {data.keyPoints?.length && <KeyPoints items={data.keyPoints} />}
+      {data.aiSummary && <AiSummary {...data.aiSummary} />}
+
+      <Content />
+
+      {data.source && <SourceBox {...data.source} />}
+
+      <AiTools pageTitle={data.title} pageUrl={abs(path)} />
+    </article>
+
+    <div class="post-side">
+      <Toc items={tocItems} />
+      <SideCta />
+    </div>
+  </div>
+
+  {data.faq?.length && <Faq items={data.faq} title={`Perguntas frequentes sobre ${category.name}`} />}
+
+  <AuthorBox author={author} />
+
+  {relacionados.length > 0 && (
+    <section class="section" id="relacionados">
+      <div class="wrap">
+        <div class="head-row">
+          <div class="section-head">
+            <span class="eyebrow">conteúdo relacionado</span>
+            <h2>Para continuar daqui</h2>
+          </div>
+          <a class="link-more" href={`/blog/categoria/${category.slug}`}>
+            Ver tudo de {category.name}
+            <Icon set="ui" name="arrow" strokeWidth={2.4} />
+          </a>
+        </div>
+        <div class="related-grid">
+          {relacionados.map((p) => <PostCard post={p} />)}
+        </div>
+      </div>
+    </section>
+  )}
+</BlogLayout>
+
+<style is:global>
+/* 2. HERO DO POST --------------------------------------------------------- */
+.post-hero{ padding:26px 0 52px; position:relative; overflow:hidden; }
+.post-hero::before{ content:''; position:absolute; top:-300px; right:-140px; width:760px; height:600px; background: radial-gradient(ellipse at center, rgba(217,164,65,0.26), transparent 66%); pointer-events:none; }
+.ph-grid{ position:relative; display:grid; grid-template-columns: 1.08fr 0.92fr; gap:52px; align-items:center; }
+.post-hero h1{ font-family: var(--serif); font-weight:400; font-style:italic; font-size: clamp(34px,4.8vw,52px); line-height:1.08; letter-spacing:-0.015em; margin:14px 0 18px; }
+.ph-standfirst{ font-size:16.5px; line-height:1.7; color: var(--text-secondary); max-width:520px; }
+
+/* linha de assinatura: autor, atualizacao e tempo de leitura */
+.byline{ display:flex; align-items:center; gap:14px; margin-top:28px; flex-wrap:wrap; }
+.byline-avatar{ width:48px; height:48px; border-radius:50%; overflow:hidden; flex-shrink:0; border:1px solid var(--border-strong); background: var(--bg-elev-2); }
+.byline-avatar img{ width:100%; height:100%; object-fit:cover; }
+.byline-text{ display:flex; flex-direction:column; gap:4px; }
+.byline-name{ font-size:14.5px; font-weight:600; color: var(--text-primary); }
+.byline-name a:hover{ color: var(--accent-ink); text-decoration:underline; text-underline-offset:3px; }
+.byline-meta{ display:flex; align-items:center; gap:9px; flex-wrap:wrap; font-family: var(--mono); font-size:11.5px; color: var(--text-muted); }
+.byline-meta .dot{ width:3px; height:3px; border-radius:50%; background: var(--text-muted); flex-shrink:0; }
+
+.ph-art{ background:#14100A; border:1px solid rgba(216,182,138,0.20); border-radius:18px; padding:24px; box-shadow: 0 26px 60px rgba(60,40,14,0.18); }
+.ph-art svg{ width:100%; height:auto; display:block; }
+.ph-art figcaption{ font-family: var(--mono); font-size:11px; color:#9A8260; margin-top:14px; text-align:center; }
+/* 3. ESTRUTURA DE DUAS COLUNAS -------------------------------------------- */
+.post-shell{ display:grid; grid-template-columns: minmax(0,1fr) 330px; gap:56px; align-items:start; padding-bottom:76px; }
+
+/* coluna lateral, gruda abaixo do header mais o sub-menu */
+.post-side{ position:sticky; top:132px; display:flex; flex-direction:column; gap:20px; }
+/* 6. CORPO DO ARTIGO ------------------------------------------------------ */
+/* min-width:0 e obrigatorio: sem ele a tabela empurra a coluna do grid
+   e a pagina inteira ganha rolagem horizontal no celular */
+.post-body{ min-width:0; max-width:720px; font-size:17px; line-height:1.78; color: var(--text-secondary); }
+.post-body > p{ margin:0 0 22px; }
+.post-body strong{ color: var(--text-primary); font-weight:600; }
+.post-body em{ font-style:italic; }
+.post-body a:not(.btn):not(.cat-tag){ color: var(--accent-ink); text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px; text-decoration-color: rgba(125,88,20,0.42); transition: text-decoration-color .15s ease; }
+.post-body a:not(.btn):not(.cat-tag):hover{ text-decoration-color: var(--accent-ink); }
+
+.post-body h2{ font-family: var(--serif); font-weight:400; font-style:italic; font-size: clamp(28px,3.4vw,36px); line-height:1.16; letter-spacing:-0.008em; color: var(--text-primary); margin:52px 0 18px; scroll-margin-top:150px; }
+.post-body h2:first-child{ margin-top:0; }
+.post-body h3{ font-size:19.5px; font-weight:600; line-height:1.35; color: var(--text-primary); margin:34px 0 12px; scroll-margin-top:150px; }
+.post-body h4{ font-size:16px; font-weight:600; color: var(--text-primary); margin:26px 0 10px; }
+
+.post-body ul, .post-body ol{ margin:0 0 24px; padding-left:4px; display:flex; flex-direction:column; gap:11px; }
+.post-body li{ display:flex; gap:12px; align-items:flex-start; }
+.post-body ul > li::before{ content:''; width:6px; height:6px; border-radius:50%; background: var(--accent); margin-top:10px; flex-shrink:0; }
+.post-body ol{ counter-reset:steps; }
+.post-body ol > li{ counter-increment:steps; }
+.post-body ol > li::before{ content:counter(steps); font-family: var(--mono); font-size:11.5px; color: var(--accent-ink); background: rgba(217,164,65,0.16); border-radius:6px; min-width:22px; height:22px; display:flex; align-items:center; justify-content:center; margin-top:5px; flex-shrink:0; }
+
+.post-body figure{ margin:34px 0; }
+.post-body figure img{ width:100%; height:auto; border-radius:12px; border:1px solid var(--border); }
+.post-body figcaption{ font-family: var(--mono); font-size:11.5px; color: var(--text-muted); margin-top:10px; line-height:1.6; }
+
+.table-wrap{ overflow-x:auto; margin:0 0 26px; border:1px solid var(--border); border-radius:12px; background: var(--bg-elev); }
+.post-body table{ width:100%; border-collapse:collapse; font-size:14px; min-width:520px; }
+.post-body th, .post-body td{ text-align:left; padding:13px 16px; border-bottom:1px solid var(--border); line-height:1.6; }
+.post-body th{ font-family: var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color: var(--text-muted); font-weight:500; }
+.post-body td{ color: var(--text-secondary); }
+.post-body tbody tr:last-child td{ border-bottom:none; }
+/* 15. ARTIGOS RELACIONADOS ------------------------------------------------ */
+.related-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+/* RESPONSIVO DO POST ------------------------------------------------------ */
+@media (max-width:1080px){
+  .ph-grid{ grid-template-columns:1fr; gap:38px; }
+  .ph-art{ max-width:560px; }
+  /* Fora do desktop o indice precisa vir ANTES do texto, senao o leitor so
+     encontra o sumario depois de rolar o artigo inteiro. O display:contents
+     dissolve o wrapper e deixa indice, artigo e CTA se ordenarem sozinhos. */
+  /* align-items:stretch e obrigatorio aqui: o align-items:start herdado da
+     regra de grid faria cada item se dimensionar por conteudo, e a tabela
+     (min-width:520px) esticaria a coluna inteira alem da tela */
+  .post-shell{ display:flex; flex-direction:column; align-items:stretch; gap:32px; }
+  .post-side{ display:contents; }
+  .toc{ order:1; }
+  .post-body{ order:2; }
+  .side-cta{ order:3; }
+  .toc ol{ display:grid; grid-template-columns:1fr 1fr; gap:2px 14px; }
+  .side-cta{ display:grid; grid-template-columns:1fr auto; gap:24px; align-items:center; text-align:left; }
+  .side-cta .btn{ width:auto; white-space:nowrap; }
+  .side-cta figure{ display:none; }
+  .related-grid{ grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width:860px){
+  .post-body{ font-size:16.5px; }
+  .cta-band{ grid-template-columns:1fr; }
+  .cta-band .btn{ justify-self:start; }
+}
+@media (max-width:620px){
+  .post-hero{ padding:20px 0 40px; }
+  .toc ol{ grid-template-columns:1fr; }
+  .key-points{ padding:24px 20px; }
+  .ai-summary{ padding:22px 20px; }
+  .expert{ padding:28px 22px 24px; }
+  .expert blockquote{ font-size:20px; }
+  .cta-band{ padding:26px 22px; }
+  .cta-band .btn{ width:100%; }
+  .side-cta{ grid-template-columns:1fr; text-align:center; }
+  .side-cta .btn{ width:100%; }
+  .author-box{ grid-template-columns:1fr; gap:18px; padding:26px 22px; }
+  .related-grid{ grid-template-columns:1fr; }
+  .post-body h2{ scroll-margin-top:130px; }
+}
+</style>
+
+<script>
+  import { initTocScrollspy } from '../../scripts/toc-scrollspy';
+  initTocScrollspy();
+</script>

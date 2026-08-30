@@ -1,0 +1,32 @@
+---
+/**
+ * PONTOS PRINCIPAIS. Bloco padrao de todo post publicado.
+ *
+ * Tres a cinco frases fechadas, cada uma entregando um fato, nao uma promessa
+ * de que o texto vai explicar. O conteudo vem do campo `keyPoints` do
+ * frontmatter, entao escrever o post e escrever este bloco.
+ */
+interface Props {
+  items: string[];
+}
+const { items } = Astro.props;
+---
+
+<section class="key-points" aria-labelledby="pontos-principais">
+  <h2 id="pontos-principais">Pontos principais do artigo:</h2>
+  <ul>
+    {items.map((item) => <li set:html={item} />)}
+  </ul>
+</section>
+
+<style is:global>
+/* 7. PONTOS PRINCIPAIS DO ARTIGO -----------------------------------------
+ Padrao fixo em todo post. Fundo levemente diferente do papel da pagina,
+ so o suficiente para separar sem virar caixa de aviso.
+ ------------------------------------------------------------------------ */
+.key-points{ background: var(--bg-elev); border:1px solid var(--border); border-radius:14px; padding:28px 30px; margin:0 0 30px; }
+.key-points h2{ font-family: var(--sans); font-style:normal; font-size:17px; font-weight:600; margin:0 0 16px; color: var(--text-primary); }
+.key-points ul{ margin:0; gap:13px; }
+.key-points li{ font-size:15px; line-height:1.65; }
+.key-points li::before{ margin-top:9px; }
+</style>

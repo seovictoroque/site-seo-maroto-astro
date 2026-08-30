@@ -1,0 +1,43 @@
+---
+/**
+ * ARTE DO HERO DO POST, provisoria.
+ *
+ * SVG inline, entao nao pesa requisicao e nao disputa o LCP.
+ *
+ * Quando entrar imagem de verdade, ela e a UNICA da pagina sem loading lazy:
+ *   <img src="/img/blog/<slug>-1280.webp"
+ *        srcset="/img/blog/<slug>-800.webp 800w, /img/blog/<slug>-1280.webp 1280w"
+ *        sizes="(max-width:1080px) 100vw, 520px"
+ *        width="1280" height="720" alt="descrição real da imagem"
+ *        fetchpriority="high" decoding="async">
+ * Preencha o campo `image` do frontmatter e o card e o hero passam a usar a
+ * foto no lugar deste desenho.
+ */
+---
+
+<figure class="ph-art">
+  <svg viewBox="0 0 520 320" role="img" aria-labelledby="phArtTitle phArtDesc">
+    <title id="phArtTitle">Uma página de resultados de busca</title>
+    <desc id="phArtDesc">Campo de busca no topo, um bloco de resposta gerada por IA e três resultados orgânicos abaixo, com o primeiro em destaque.</desc>
+    <rect x="40" y="28" width="440" height="42" rx="21" fill="#251A0F" stroke="rgba(216,182,138,0.26)" stroke-width="1"/>
+    <circle cx="72" cy="49" r="8" fill="none" stroke="#D9A441" stroke-width="1.6"/>
+    <path d="M78 55l7 7" stroke="#D9A441" stroke-width="2.2" stroke-linecap="round"/>
+    <rect x="98" y="43" width="150" height="10" rx="5" fill="#6E5A42" opacity=".7"/>
+
+    <rect x="40" y="88" width="440" height="62" rx="12" fill="rgba(193,87,58,0.12)" stroke="rgba(193,87,58,0.38)" stroke-width="1"/>
+    <text x="58" y="110" fill="#DD7A5C" font-family="JetBrains Mono, monospace" font-size="9">RESPOSTA GERADA POR IA</text>
+    <rect x="58" y="120" width="330" height="7" rx="3.5" fill="#C1573A" opacity=".38"/>
+    <rect x="58" y="134" width="260" height="7" rx="3.5" fill="#C1573A" opacity=".38"/>
+
+    <rect x="40" y="168" width="440" height="52" rx="10" fill="#1C130B" stroke="rgba(216,182,138,0.26)" stroke-width="1"/>
+    <rect x="58" y="182" width="196" height="9" rx="4.5" fill="#D9A441" opacity=".75"/>
+    <rect x="58" y="199" width="300" height="6" rx="3" fill="#6E5A42" opacity=".75"/>
+    <text x="440" y="194" fill="#D9A441" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">#1</text>
+
+    <rect x="40" y="230" width="440" height="34" rx="9" fill="#14100A" stroke="rgba(216,182,138,0.14)" stroke-width="1"/>
+    <rect x="58" y="242" width="150" height="8" rx="4" fill="#6E5A42" opacity=".55"/>
+    <rect x="40" y="272" width="440" height="34" rx="9" fill="#14100A" stroke="rgba(216,182,138,0.14)" stroke-width="1"/>
+    <rect x="58" y="284" width="180" height="8" rx="4" fill="#6E5A42" opacity=".55"/>
+  </svg>
+  <figcaption>A SERP de hoje: resposta de IA no topo, orgânico embaixo</figcaption>
+</figure>

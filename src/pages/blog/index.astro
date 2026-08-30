@@ -1,0 +1,177 @@
+---
+/**
+ * HOME DO BLOG.
+ *
+ * Secoes, na ordem: hero, pilares, faixa de busca com a grade de categorias,
+ * publicados recentemente, blocos por categoria, banner de afiliado, mais
+ * blocos por categoria e newsletter.
+ *
+ * Tudo que era numero fixo no prototipo em HTML agora sai da collection:
+ * quantidade de artigos por categoria, total do site e quantos pilares
+ * existem. Numero escrito a mao em template envelhece sozinho.
+ *
+ * O banner de afiliado fica ENTRE blocos de categoria, nunca no topo.
+ */
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import BlogHeroArt from '../../components/blog/BlogHeroArt.astro';
+import PillarBlock from '../../components/blog/PillarBlock.astro';
+import SearchBand from '../../components/blog/SearchBand.astro';
+import CategoryGrid from '../../components/blog/CategoryGrid.astro';
+import CategoryBlock from '../../components/blog/CategoryBlock.astro';
+import AffiliateBanner from '../../components/blog/AffiliateBanner.astro';
+import NewsletterBanner from '../../components/blog/NewsletterBanner.astro';
+import PostCard from '../../components/blog/PostCard.astro';
+import Icon from '../../components/layout/Icon.astro';
+import { categories } from '../../data/categories';
+import { site } from '../../data/site';
+import { allPosts, countByCategory, inCategory, pillarOf } from '../../lib/posts';
+import { breadcrumbNode } from '../../lib/schema';
+
+const posts = await allPosts();
+const counts = countByCategory(posts);
+const pilares = posts.filter((p) => p.data.pillar);
+const recentes = posts.slice(0, 3);
+
+// o destaque dos pilares e o guia de SEO tecnico, com os outros ao lado
+const destaquePilar = pilares.find((p) => p.data.category === 'seo-tecnico') ?? pilares[0];
+const outrosPilares = pilares.filter((p) => p.id !== destaquePilar?.id).slice(0, 4);
+
+/** monta um bloco por categoria: pilar a esquerda, tres de apoio a direita */
+function bloco(slug: string) {
+  const category = categories.find((c) => c.slug === slug)!;
+  const daCategoria = inCategory(posts, slug);
+  const destaque = pillarOf(posts, slug) ?? daCategoria[0];
+  const apoio = daCategoria.filter((p) => p.id !== destaque?.id).slice(0, 3);
+  return { category, destaque, apoio, total: daCategoria.length };
+}
+
+const blocosAntes = ['seo-tecnico', 'link-building'].map(bloco);
+const blocosDepois = ['ia-geo-aeo', 'dados-e-estudos'].map(bloco);
+
+const crumbs = [{ label: 'Home', href: '/' }, { label: 'Blog' }];
+---
+
+<BlogLayout
+  title={`Blog de SEO técnico, sem enrolação | ${site.name}`}
+  description="Guias completos, experimentos que às vezes dão errado e o que realmente move o ponteiro em busca orgânica e em busca com IA."
+  path="/blog"
+  activeCategory="tudo"
+  schema={[breadcrumbNode(crumbs)]}
+  rss
+>
+  <section class="blog-hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">laboratório aberto de SEO</span>
+        <h1>SEO sem enrolação, <em>com o dado na mesa</em></h1>
+        <p class="hero-sub">Guias completos, experimentos que às vezes dão errado e o que realmente move o ponteiro em busca orgânica e em busca com IA. Sem guru, sem firula, sem "10 dicas infalíveis".</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="/blog/o-que-e-seo">
+            Comece pelo guia de SEO
+            <Icon set="ui" name="arrow" strokeWidth={2.2} />
+          </a>
+          <a class="btn btn-ghost" href="/blog/categoria/dados-e-estudos">Ver os estudos com dados próprios</a>
+        </div>
+        <div class="hero-stats">
+          <div><strong>{categories.length}</strong><span>pilares de conteúdo</span></div>
+          <div><strong>{posts.length}</strong><span>artigos publicados</span></div>
+          <div><strong>0</strong><span>post patrocinado disfarçado</span></div>
+        </div>
+      </div>
+
+      <BlogHeroArt />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="head-row">
+        <div class="section-head">
+          <span class="eyebrow">comece por aqui</span>
+          <h2>Os guias que sustentam o resto</h2>
+          <p>Guias longos, revisados de tempos em tempos, cada um com os artigos da categoria pendurados nele. Se você está chegando agora, é por aqui.</p>
+        </div>
+      </div>
+
+      {destaquePilar && <PillarBlock destaque={destaquePilar} outros={outrosPilares} />}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <SearchBand />
+      <CategoryGrid counts={counts} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="head-row">
+        <div class="section-head">
+          <span class="eyebrow">publicados recentemente</span>
+          <h2>O que saiu do forno</h2>
+          <p>Ordem cronológica pura, sem curadoria. O que foi publicado por último aparece primeiro.</p>
+        </div>
+      </div>
+
+      <div class="post-grid">
+        {recentes.map((post) => <PostCard post={post} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      {blocosAntes.map((b) => <CategoryBlock {...b} />)}
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="wrap">
+      <AffiliateBanner />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      {blocosDepois.map((b) => <CategoryBlock {...b} />)}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <NewsletterBanner variant="centered" />
+    </div>
+  </section>
+</BlogLayout>
+
+<style is:global>
+.post-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+@media (max-width:860px){ .post-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:620px){ .post-grid{ grid-template-columns:1fr; } }
+
+/* 2. HERO ---------------------------------------------------------------- */
+.blog-hero{ padding:64px 0 60px; position:relative; overflow:hidden; }
+.blog-hero::before{ content:''; position:absolute; top:-280px; right:-120px; width:760px; height:600px; background: radial-gradient(ellipse at center, rgba(217,164,65,0.30), transparent 66%); pointer-events:none; }
+.hero-grid{ position:relative; display:grid; grid-template-columns: 1.05fr 0.95fr; gap:56px; align-items:center; }
+.blog-hero h1{ font-family: var(--serif); font-weight:400; font-style:italic; font-size: clamp(38px,5.6vw,60px); line-height:1.05; margin:20px 0 18px; letter-spacing:-0.015em; }
+.blog-hero h1 em{ font-style:italic; color: var(--accent-ink); }
+.hero-sub{ font-size:16.5px; line-height:1.72; color: var(--text-secondary); max-width:520px; }
+.hero-actions{ display:flex; align-items:center; gap:14px; margin-top:32px; flex-wrap:wrap; }
+.hero-stats{ display:flex; gap:26px; margin-top:34px; flex-wrap:wrap; }
+.hero-stats div{ display:flex; flex-direction:column; gap:3px; }
+.hero-stats strong{ font-family: var(--serif); font-style:italic; font-weight:400; font-size:26px; color: var(--accent-ink); line-height:1; }
+.hero-stats span{ font-family: var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color: var(--text-muted); }
+
+.hero-art{ background: #14100A; border:1px solid rgba(216,182,138,0.20); border-radius:18px; padding:26px; box-shadow: 0 26px 60px rgba(60,40,14,0.20); }
+.hero-art svg{ width:100%; height:auto; display:block; }
+.hero-art figcaption{ font-family: var(--mono); font-size:11px; color:#9A8260; margin-top:16px; text-align:center; letter-spacing:0.04em; }
+@media (max-width:1080px){
+  .hero-grid{ grid-template-columns:1fr; gap:42px; }
+  .hero-art{ max-width:560px; }
+}
+@media (max-width:620px){
+  .blog-hero{ padding:44px 0 46px; }
+  .hero-actions .btn{ width:100%; }
+}
+</style>

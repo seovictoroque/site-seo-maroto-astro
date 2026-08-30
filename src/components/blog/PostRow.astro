@@ -1,0 +1,37 @@
+---
+/**
+ * POST ROW, a versao horizontal do card.
+ *
+ * Capa pequena a esquerda, categoria, titulo, data e tempo de leitura a
+ * direita. Sem resumo, de proposito: e o formato de lista de apoio ao lado de
+ * um card grande. O CSS mora em PostCard.astro, que os dois compartilham.
+ */
+import { getCategory } from '../../data/categories';
+import { formatDate, isoDate, type Post } from '../../lib/posts';
+
+interface Props {
+  post: Post;
+}
+const { post } = Astro.props;
+const { data } = post;
+const category = getCategory(data.category);
+const rust = category?.variant === 'rust';
+const href = `/blog/${post.id}`;
+---
+
+<article class:list={['post-row', rust && 'rust']}>
+  <a class="pr-cover" href={href} tabindex="-1" aria-hidden="true">
+    <svg class="cover-art" viewBox="0 0 640 360" role="presentation"><use href={`#${data.coverArt}`} /></svg>
+  </a>
+  <div class="pr-body">
+    {category && (
+      <a class:list={['cat-tag', rust && 'rust']} href={`/blog/categoria/${category.slug}`}>{category.name}</a>
+    )}
+    <h3><a href={href}>{data.title}</a></h3>
+    <span class="pc-time">
+      <time datetime={isoDate(data.publishDate)}>{formatDate(data.publishDate)}</time>
+      <span class="dot"></span>
+      <span>{data.readingTime} min</span>
+    </span>
+  </div>
+</article>

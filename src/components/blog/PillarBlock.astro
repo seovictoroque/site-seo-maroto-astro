@@ -1,0 +1,82 @@
+---
+/**
+ * BLOCO DOS PILARES: card grande de destaque mais quatro links ao lado.
+ *
+ * E o componente que concentra link interno nas paginas que precisam
+ * ranquear. As pilares saem do campo `pillar: true` do frontmatter, entao a
+ * lista nunca aponta para um post que nao existe.
+ */
+import Icon from '../layout/Icon.astro';
+import { getCategory } from '../../data/categories';
+import { formatDate, isoDate, type Post } from '../../lib/posts';
+
+interface Props {
+  destaque: Post;
+  outros: Post[];
+}
+const { destaque, outros } = Astro.props;
+const cat = getCategory(destaque.data.category);
+---
+
+<div class="pillar-grid">
+  <article class="pillar-feature">
+    <a class="pf-cover" href={`/blog/${destaque.id}`} tabindex="-1" aria-hidden="true">
+      <svg class="cover-art" viewBox="0 0 640 360" role="presentation"><use href={`#${destaque.data.coverArt}`} /></svg>
+    </a>
+    <div class="pf-body">
+      {cat && <a class:list={['cat-tag', cat.variant === 'rust' && 'rust']} href={`/blog/categoria/${cat.slug}`}>{cat.name}</a>}
+      <h3><a href={`/blog/${destaque.id}`}>{destaque.data.title}</a></h3>
+      {destaque.data.excerpt && <p>{destaque.data.excerpt}</p>}
+      <div class="pf-meta">
+        <span>guia pilar</span><span class="dot"></span>
+        <span>{destaque.data.readingTime} min de leitura</span><span class="dot"></span>
+        <time datetime={isoDate(destaque.data.updatedDate ?? destaque.data.publishDate)}>
+          atualizado em {formatDate(destaque.data.updatedDate ?? destaque.data.publishDate)}
+        </time>
+      </div>
+    </div>
+  </article>
+
+  <div class="pillar-list">
+    <p class="pl-head">outros pilares</p>
+    {outros.map((p, i) => {
+      const c = getCategory(p.data.category);
+      return (
+        <a class:list={['pillar-item', c?.variant === 'rust' && 'rust']} href={`/blog/${p.id}`}>
+          <span class="pi-num">{String(i + 1).padStart(2, '0')}</span>
+          <span class="pi-body">
+            <h4>{p.data.title}</h4>
+            {p.data.excerpt && <p>{p.data.excerpt}</p>}
+          </span>
+        </a>
+      );
+    })}
+  </div>
+</div>
+
+<style is:global>
+/* 3. PILARES ------------------------------------------------------------- */
+.pillar-grid{ display:grid; grid-template-columns: 1.15fr 1fr; gap:26px; align-items:stretch; }
+.pillar-feature{ display:flex; flex-direction:column; background: var(--bg-elev); border:1px solid var(--border); border-radius:16px; overflow:hidden; transition: border-color .16s ease, transform .16s ease, box-shadow .16s ease; }
+.pillar-feature:hover{ border-color: var(--border-strong); transform: translateY(-2px); box-shadow: 0 16px 40px rgba(60,40,14,0.10); }
+.pillar-feature .pf-cover{ aspect-ratio: 16 / 9; background: #14100A; border-bottom:1px solid var(--border); }
+.pillar-feature .pf-body{ padding:26px 26px 28px; display:flex; flex-direction:column; gap:12px; flex:1; }
+.pillar-feature h3{ font-family: var(--serif); font-style:italic; font-weight:400; font-size:28px; line-height:1.18; letter-spacing:-0.005em; }
+.pillar-feature h3 a:hover{ color: var(--accent-ink); }
+.pillar-feature p{ font-size:14.5px; line-height:1.7; color: var(--text-secondary); }
+.pf-meta{ display:flex; align-items:center; gap:10px; font-family: var(--mono); font-size:11.5px; color: var(--text-muted); margin-top:auto; padding-top:6px; }
+.pf-meta .dot{ width:3px; height:3px; border-radius:50%; background: var(--text-muted); }
+
+.pillar-list{ display:flex; flex-direction:column; gap:10px; }
+.pillar-list > .pl-head{ font-family: var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.11em; color: var(--text-muted); margin-bottom:2px; }
+.pillar-item{ position:relative; display:flex; gap:16px; align-items:flex-start; background: var(--bg-elev); border:1px solid var(--border); border-radius:13px; padding:17px 19px; flex:1; transition: border-color .16s ease, background .16s ease; }
+.pillar-item:hover{ border-color: var(--border-strong); background: var(--bg-elev-2); }
+.pillar-item .pi-num{ font-family: var(--mono); font-size:11px; color: var(--accent-ink); padding-top:3px; flex-shrink:0; }
+.pillar-item.rust .pi-num{ color: var(--rust-ink); }
+.pillar-item .pi-body{ display:flex; flex-direction:column; gap:5px; min-width:0; }
+.pillar-item h4{ font-size:14.5px; font-weight:600; line-height:1.35; }
+.pillar-item:hover h4{ color: var(--accent-ink); }
+.pillar-item.rust:hover h4{ color: var(--rust-ink); }
+.pillar-item p{ font-size:12.5px; line-height:1.55; color: var(--text-muted); }
+@media (max-width:1080px){ .pillar-grid{ grid-template-columns:1fr; } }
+</style>

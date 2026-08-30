@@ -1,0 +1,42 @@
+---
+/**
+ * BANNER DE CTA NO MEIO DO TEXTO.
+ *
+ * Usado dentro do corpo do post, em MDX. E o unico bloco que aparece no meio
+ * da prosa, entao a posicao dele e escolha editorial e fica no proprio .mdx,
+ * nao no frontmatter.
+ */
+import Icon from '../layout/Icon.astro';
+
+interface Props {
+  kicker: string;
+  title: string;
+  text: string;
+  href: string;
+  label: string;
+}
+const { kicker, title, text, href, label } = Astro.props;
+---
+
+<aside class="cta-band">
+  <div>
+    <p class="cb-kicker">{kicker}</p>
+    <h2>{title}</h2>
+    <p>{text}</p>
+  </div>
+  <a class="btn btn-primary" href={href}>
+    {label}
+    <Icon set="ui" name="arrow" strokeWidth={2.2} />
+  </a>
+</aside>
+
+<style is:global>
+/* 9. BANNER DE CTA NO MEIO DO TEXTO --------------------------------------- */
+.cta-band{ position:relative; background: linear-gradient(150deg, #1F1509, #14100A 62%); border:1px solid rgba(216,182,138,0.24); border-radius:16px; padding:30px 32px; margin:40px 0; display:grid; grid-template-columns: 1fr auto; gap:26px; align-items:center; overflow:hidden; }
+.cta-band::before{ content:''; position:absolute; top:-150px; right:-70px; width:420px; height:360px; background: radial-gradient(ellipse at center, rgba(217,164,65,0.20), transparent 68%); pointer-events:none; }
+.cta-band > *{ position:relative; }
+.cta-band .cb-kicker{ font-family: var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:0.12em; color:#9A8260; }
+.cta-band h2{ font-family: var(--serif); font-style:italic; font-weight:400; font-size:25px; line-height:1.2; color:#F0E4CF; margin:9px 0 8px; }
+.cta-band p{ font-size:14px; line-height:1.6; color:#B39A78; max-width:460px; margin:0; }
+.cta-band .btn-primary{ border-color:#D9A441; box-shadow: 0 6px 24px rgba(217,164,65,0.24); white-space:nowrap; }
+</style>

@@ -1,0 +1,49 @@
+---
+/**
+ * INDICE, "Aqui voce encontra".
+ *
+ * Montado a partir dos headings que o render() do post devolve, entao ele
+ * nunca fica dessincronizado do texto. No HTML original era uma lista escrita
+ * a mao, que precisava ser atualizada junto com cada H2 novo.
+ *
+ * O wrapper .post-side e um div, e nao um aside, de proposito: no mobile ele
+ * vira display:contents para o indice poder vir ANTES do artigo pela
+ * propriedade order. Ver o bloco responsivo em src/pages/blog/[slug].astro.
+ */
+import Icon from '../layout/Icon.astro';
+
+interface Props {
+  /** headings de nivel 2 do artigo, mais as ancoras fixas do fim da pagina */
+  items: { slug: string; text: string }[];
+}
+const { items } = Astro.props;
+---
+
+<nav class="toc" id="toc" aria-labelledby="toc-head">
+  <p class="toc-head" id="toc-head">
+    <Icon set="ui" name="list" strokeWidth={1.9} />
+    Aqui você encontra:
+  </p>
+  <ol>
+    {items.map((item) => (
+      <li><a href={`#${item.slug}`}>{item.text}</a></li>
+    ))}
+  </ol>
+</nav>
+
+<style is:global>
+/* 4. INDICE, AQUI VOCE ENCONTRA ------------------------------------------- */
+/* .toc tambem e um nav, mesma armadilha do breadcrumb: sem os resets ele
+   herda display:flex do header e o titulo vai parar ao lado da lista */
+.toc{ position:static; z-index:auto; backdrop-filter:none; border-bottom:none; font-size:inherit; display:block;
+      background: var(--bg-elev); border:1px solid var(--border); border-radius:14px; padding:20px 22px; }
+.toc-head{ display:flex; align-items:center; gap:10px; font-size:15px; font-weight:600; margin-bottom:14px; }
+.toc-head svg{ width:17px; height:17px; color: var(--accent-ink); flex-shrink:0; }
+.toc ol{ list-style:none; counter-reset:toc; display:flex; flex-direction:column; gap:2px; }
+.toc a{ display:flex; gap:10px; align-items:flex-start; font-size:13.5px; line-height:1.5; color: var(--text-secondary); padding:8px 10px; border-radius:8px; transition: color .15s ease, background .15s ease; }
+.toc a::before{ content:''; width:5px; height:5px; border-radius:50%; background: var(--border-strong); margin-top:7px; flex-shrink:0; transition: background .15s ease; }
+.toc a:hover{ color: var(--text-primary); background: rgba(78,56,30,0.06); }
+.toc a:hover::before{ background: var(--accent); }
+.toc a.current{ color: var(--accent-ink); font-weight:600; background: rgba(217,164,65,0.14); }
+.toc a.current::before{ background: var(--accent); }
+</style>

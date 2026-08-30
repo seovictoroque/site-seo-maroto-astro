@@ -1,0 +1,59 @@
+---
+/**
+ * FAIXA DE BUSCA de /blog.
+ *
+ * O form aponta para /blog/busca, uma pagina estatica que filtra um indice
+ * JSON gerado no build. Em hospedagem estatica nao existe servidor para
+ * responder /blog?q=, entao a busca acontece no navegador.
+ *
+ * /blog/busca nasce noindex, follow: e listagem sem conteudo proprio, e
+ * deixar URL de busca indexavel e fabrica de pagina fina.
+ */
+import Icon from '../layout/Icon.astro';
+import { publishedPosts } from '../../lib/posts';
+
+const total = (await publishedPosts()).length;
+const sugestoes = ['canonical', 'indexacao', 'schema', 'llms.txt'];
+---
+
+<div class="search-band">
+  <div>
+    <h2>Procurando algo específico?</h2>
+    <p>São {total} artigos aqui dentro. Busque pelo termo, pelo erro que apareceu no Search Console ou pelo nome daquela ferramenta que você não lembra direito.</p>
+  </div>
+  <div>
+    <form class="search-form" action="/blog/busca" method="get" role="search">
+      <div class="row">
+        <div class="field">
+          <Icon set="ui" name="search" strokeWidth={2} />
+          <label class="sr-only" for="blog-q">Buscar no blog</label>
+          <input id="blog-q" type="search" name="q" placeholder="core web vitals, canonical, llms.txt..." autocomplete="off" />
+        </div>
+        <button class="btn btn-primary" type="submit">Buscar</button>
+      </div>
+    </form>
+    <div class="search-hints">
+      <span>buscas frequentes:</span>
+      {sugestoes.map((s) => <a href={`/blog/busca?q=${encodeURIComponent(s)}`}>{s}</a>)}
+    </div>
+  </div>
+</div>
+
+<style is:global>
+/* 4. BUSCA E CATEGORIAS -------------------------------------------------- */
+.search-band{ background: var(--bg-elev); border:1px solid var(--border-strong); border-radius:16px; padding:34px 36px; display:grid; grid-template-columns: 1fr 1.1fr; gap:34px; align-items:center; }
+.search-band h2{ font-family: var(--serif); font-style:italic; font-weight:400; font-size:27px; line-height:1.2; margin-bottom:9px; }
+.search-band p{ font-size:14px; line-height:1.65; color: var(--text-secondary); }
+.search-form .field{ display:flex; align-items:center; gap:11px; background: var(--bg-elev-2); border:1px solid var(--border-strong); border-radius:11px; padding:0 16px; transition: border-color .16s ease, box-shadow .16s ease; }
+.search-form .field:focus-within{ border-color: var(--accent-dim); box-shadow: 0 0 0 3px rgba(217,164,65,0.20); }
+.search-form .field svg{ width:18px; height:18px; color: var(--text-muted); flex-shrink:0; }
+.search-form input{ flex:1; min-width:0; background:none; border:none; outline:none; font-family: var(--mono); font-size:14px; color: var(--text-primary); padding:16px 0; }
+.search-form input::placeholder{ color: var(--text-muted); }
+.search-form .row{ display:flex; gap:10px; }
+.search-form .row .field{ flex:1; }
+.search-hints{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:14px; font-family: var(--mono); font-size:11.5px; color: var(--text-muted); }
+.search-hints a{ border:1px solid var(--border); border-radius:20px; padding:5px 11px; color: var(--text-secondary); transition: color .15s ease, border-color .15s ease, background .15s ease; }
+.search-hints a:hover{ color: var(--accent-ink); border-color: var(--accent-dim); background: var(--bg-elev-2); }
+@media (max-width:1080px){ .search-band{ grid-template-columns:1fr; gap:24px; padding:30px; } }
+@media (max-width:620px){ .search-form .row{ flex-direction:column; } }
+</style>

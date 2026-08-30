@@ -1,0 +1,43 @@
+---
+/**
+ * FONTE OFICIAL, bloco de creditos.
+ *
+ * So aparece em conteudo traduzido ou adaptado de material de terceiro. Em
+ * post 100% original, nao preencha o campo `source` do frontmatter e o bloco
+ * simplesmente nao existe.
+ */
+interface Props {
+  officialName: string;
+  officialUrl: string;
+  articleTitle?: string;
+  articleUrl?: string;
+  authorName?: string;
+  authorUrl?: string;
+  topics?: { label: string; url: string }[];
+  licenseLabel?: string;
+  licenseUrl?: string;
+}
+const {
+  officialName, officialUrl, articleTitle, articleUrl,
+  authorName, authorUrl, topics = [], licenseLabel, licenseUrl,
+} = Astro.props;
+---
+
+<aside class="source-box">
+  <span class="sb-label">créditos e fonte</span>
+  Fonte oficial: <a href={officialUrl} rel="noopener">{officialName}</a>.
+  {articleTitle && articleUrl && (<>Artigo original: <a href={articleUrl} rel="noopener">{articleTitle}</a>.</>)}
+  {authorName && authorUrl && (<>Autor: <a href={authorUrl} rel="noopener">{authorName}</a>.</>)}
+  {topics.length > 0 && (
+    <>É uma fonte de autoridade nos tópicos: {topics.map((t, i) => (<>{i > 0 && ', '}<a href={t.url} rel="noopener">{t.label}</a></>))}.</>
+  )}
+  {licenseLabel && licenseUrl && (<>Direitos de uso: <a href={licenseUrl} rel="license noopener">{licenseLabel}</a>.</>)}
+  Sempre, priorizamos e citamos o site como a fonte original e oficial.
+</aside>
+
+<style is:global>
+/* 11. FONTE OFICIAL ------------------------------------------------------- */
+.source-box{ background: var(--bg-elev); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:12px; padding:20px 22px; margin:40px 0 0; font-size:13.5px; line-height:1.75; color: var(--text-secondary); }
+.source-box .sb-label{ display:block; font-family: var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:0.11em; color: var(--text-muted); margin-bottom:9px; }
+.source-box a{ color: var(--accent-ink); text-decoration:underline; text-underline-offset:3px; }
+</style>

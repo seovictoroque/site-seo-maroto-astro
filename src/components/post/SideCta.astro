@@ -1,0 +1,55 @@
+---
+/**
+ * BANNER VERTICAL DA ESCOLINHA, na coluna lateral do post.
+ *
+ * Conteudo fixo, igual em todo post, entao nao recebe props. Se um dia
+ * precisar variar por post, o caminho e prop, nao copia do bloco.
+ *
+ * A arte e SVG inline: nao pesa requisicao e nao disputa o LCP.
+ */
+---
+
+<div class="side-cta">
+  <p class="sc-kicker">escolinha</p>
+  <h2>Aprenda SEO na ordem certa</h2>
+  <p>Três trilhas gratuitas, do zero ao técnico, com exercício no seu próprio site. Sem cadastro e sem venda de curso no fim.</p>
+  <a class="btn btn-primary" href="/escolinha">
+    Entrar na Escolinha
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </a>
+  <p class="sc-note">gratuito, sem e-mail obrigatório</p>
+  <figure>
+    <svg viewBox="0 0 260 150" role="img" aria-labelledby="scArtTitle">
+      <title id="scArtTitle">As três trilhas da Escolinha, do iniciante ao GEO</title>
+      <g stroke="#D9A441" stroke-width="1.3" fill="none" opacity=".55" stroke-dasharray="4 5">
+        <path d="M40 34h180M40 75h180M40 116h180"/>
+      </g>
+      <g fill="#251A0F" stroke="rgba(216,182,138,0.3)" stroke-width="1">
+        <rect x="26" y="20" width="208" height="28" rx="8"/>
+        <rect x="26" y="61" width="208" height="28" rx="8"/>
+        <rect x="26" y="102" width="208" height="28" rx="8"/>
+      </g>
+      <g fill="#B39A78" font-family="Space Grotesk, sans-serif" font-size="11">
+        <text x="46" y="38">Trilha iniciante</text>
+        <text x="46" y="79">Trilha técnica</text>
+        <text x="46" y="120">Trilha GEO e AEO</text>
+      </g>
+      <g fill="#D9A441"><circle cx="36" cy="34" r="3"/><circle cx="36" cy="75" r="3"/></g>
+      <circle cx="36" cy="116" r="3" fill="#C1573A"/>
+    </svg>
+  </figure>
+</div>
+
+<style is:global>
+/* 5. BANNER VERTICAL DA ESCOLINHA ----------------------------------------- */
+.side-cta{ position:relative; background: linear-gradient(155deg, #1F1509, #14100A 62%); border:1px solid rgba(216,182,138,0.24); border-radius:16px; padding:26px 24px 24px; overflow:hidden; text-align:center; }
+.side-cta::before{ content:''; position:absolute; top:-130px; left:50%; transform:translateX(-50%); width:340px; height:280px; background: radial-gradient(ellipse at center, rgba(217,164,65,0.24), transparent 68%); pointer-events:none; }
+.side-cta > *{ position:relative; }
+.side-cta .sc-kicker{ font-family: var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:0.12em; color:#9A8260; }
+.side-cta h2{ font-family: var(--serif); font-style:italic; font-weight:400; font-size:24px; line-height:1.18; color:#F0E4CF; margin:10px 0 10px; }
+.side-cta p{ font-size:13.5px; line-height:1.65; color:#B39A78; }
+.side-cta .btn{ width:100%; margin-top:18px; }
+.side-cta .sc-note{ font-family: var(--mono); font-size:10.5px; color:#9A8260; margin-top:11px; }
+.side-cta figure{ margin-top:18px; border-top:1px solid rgba(216,182,138,0.14); padding-top:18px; }
+.side-cta figure svg{ width:100%; height:auto; display:block; }
+</style>

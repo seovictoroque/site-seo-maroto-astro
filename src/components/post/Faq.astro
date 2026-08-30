@@ -1,0 +1,56 @@
+---
+/**
+ * FAQ do post.
+ *
+ * details e summary nativos: abre e fecha sem JavaScript, o teclado ja
+ * funciona e o Ctrl+F do navegador encontra texto de bloco fechado nos
+ * navegadores atuais.
+ *
+ * As perguntas e respostas visiveis saem do MESMO campo `faq` do frontmatter
+ * que alimenta o FAQPage do JSON-LD, entao o visivel e o marcado nao tem como
+ * divergir. No HTML original eram dois blocos escritos a mao com um aviso
+ * pedindo para lembrar dos dois.
+ */
+import Icon from '../layout/Icon.astro';
+
+interface Props {
+  items: { question: string; answer: string }[];
+  title?: string;
+}
+const { items, title = 'Perguntas frequentes' } = Astro.props;
+---
+
+<section class="section" id="faq">
+  <div class="wrap faq">
+    <div class="section-head">
+      <span class="eyebrow">perguntas frequentes</span>
+      <h2>{title}</h2>
+    </div>
+
+    {items.map((item, i) => (
+      <details class="faq-item" open={i === 0}>
+        <summary>
+          {item.question}
+          <Icon set="ui" name="caret" strokeWidth={2.2} />
+        </summary>
+        <div class="faq-answer">
+          {item.answer.split(/\n{2,}/).map((p) => <p set:html={p} />)}
+        </div>
+      </details>
+    ))}
+  </div>
+</section>
+
+<style is:global>
+/* 13. FAQ ----------------------------------------------------------------- */
+.faq{ max-width:820px; margin:0 auto; }
+.faq .section-head{ text-align:center; margin:0 auto 30px; }
+.faq-item{ border-bottom:1px solid var(--border); }
+.faq-item summary{ display:flex; align-items:center; justify-content:space-between; gap:20px; cursor:pointer; list-style:none; padding:20px 2px; font-size:17px; font-weight:600; color: var(--text-primary); transition: color .15s ease; }
+.faq-item summary::-webkit-details-marker{ display:none; }
+.faq-item summary:hover{ color: var(--accent-ink); }
+.faq-item summary svg{ width:18px; height:18px; color: var(--text-muted); flex-shrink:0; transition: transform .2s ease, color .15s ease; }
+.faq-item[open] summary svg{ transform:rotate(180deg); color: var(--accent-ink); }
+.faq-answer{ padding:0 2px 22px; font-size:15px; line-height:1.72; color: var(--text-secondary); }
+.faq-answer p + p{ margin-top:13px; }
+</style>

@@ -1,0 +1,58 @@
+---
+/**
+ * BLOCO DO AUTOR no fim do post.
+ *
+ * Foto, bio curta e link para os outros posts. Os dados vem de
+ * src/data/authors.ts, entao nao existe bio escrita a mao dentro do template.
+ */
+import Icon from '../layout/Icon.astro';
+import type { Author } from '../../data/authors';
+
+interface Props {
+  author: Author;
+}
+const { author } = Astro.props;
+---
+
+<section class="section tight">
+  <div class="wrap">
+    <div class="author-box">
+      <div class="ab-photo">
+        <img
+          src={author.photo.src}
+          srcset={author.photo.srcset}
+          sizes="92px"
+          width={author.photo.width}
+          height={author.photo.height}
+          alt={author.name}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <div>
+        <h2><a href={`/autor/${author.slug}`}>{author.name}</a></h2>
+        <p class="ab-role">{author.role}</p>
+        <p>{author.shortBio}</p>
+        <div class="ab-links">
+          <a class="btn btn-ghost" href={`/autor/${author.slug}`}>Mais posts do autor</a>
+          <a class="link-more" href="/sobre">
+            Sobre o SEO Maroto
+            <Icon set="ui" name="arrow" strokeWidth={2.4} />
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+/* 14. BLOCO DO AUTOR ------------------------------------------------------ */
+.author-box{ display:grid; grid-template-columns:auto 1fr; gap:26px; align-items:start; background: var(--bg-elev); border:1px solid var(--border); border-radius:16px; padding:30px 32px; }
+.author-box .ab-photo{ width:92px; height:92px; border-radius:50%; overflow:hidden; border:1px solid var(--border-strong); background: var(--bg-elev-2); }
+.author-box .ab-photo img{ width:100%; height:100%; object-fit:cover; }
+.author-box h2{ font-family: var(--serif); font-style:italic; font-weight:400; font-size:26px; line-height:1.2; margin-bottom:5px; }
+.author-box h2 a:hover{ color: var(--accent-ink); }
+.author-box .ab-role{ font-family: var(--mono); font-size:11.5px; text-transform:uppercase; letter-spacing:0.08em; color: var(--text-muted); margin-bottom:12px; }
+.author-box p{ font-size:14.5px; line-height:1.72; color: var(--text-secondary); max-width:640px; }
+.author-box .ab-links{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-top:16px; }
+</style>

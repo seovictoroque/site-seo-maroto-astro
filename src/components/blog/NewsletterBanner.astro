@@ -1,0 +1,121 @@
+---
+/**
+ * BANNER DE NEWSLETTER, nas duas formas que o site usa.
+ *
+ * variant="centered"  bloco centralizado, o do fim de /blog
+ * variant="band"      faixa larga com arte, o do fim da pagina de categoria
+ *
+ * Use um ou outro por pagina, nunca os dois.
+ *
+ * Detalhe de especificidade que ja custou tempo: `.news-banner p` (0,1,1)
+ * vence `.nb-kicker` e `.nb-note` (0,1,0), entao o kicker saia com 14.5px em
+ * vez de 10.5px e com a cor errada. As duas regras estao escritas como
+ * `.news-banner .nb-kicker` de proposito. Vale conferir esse padrao sempre
+ * que uma regra `.bloco elemento` conviver com classes utilitarias dentro do
+ * mesmo bloco.
+ */
+import Icon from '../layout/Icon.astro';
+
+interface Props {
+  variant?: 'centered' | 'band';
+}
+const { variant = 'centered' } = Astro.props;
+
+const titulo = 'Um e-mail por semana, sem "confira nosso novo artigo"';
+const texto =
+  'O que eu testei, o que quebrou e o que mudou na busca nos últimos sete dias. Se não prestar, o link de descadastro fica no topo, não escondido no rodapé.';
+const nota = 'Sem spam, sem venda de lista, sem curso no fim do funil.';
+---
+
+{variant === 'centered' ? (
+  <div class="news">
+    <span class="eyebrow">newsletter</span>
+    <h2>{titulo}</h2>
+    <p>{texto}</p>
+    <form class="news-form" action="/newsletter" method="post">
+      <label class="field" for="news-email">
+        <Icon set="ui" name="mail" strokeWidth={1.8} />
+        <span class="sr-only">Seu melhor e-mail</span>
+        <input id="news-email" type="email" name="email" placeholder="seu@email.com.br" autocomplete="email" required />
+      </label>
+      <button class="btn btn-primary" type="submit">Quero receber</button>
+    </form>
+    <p class="news-note">{nota}</p>
+  </div>
+) : (
+  <aside class="news-banner" aria-labelledby="news-head">
+    <div>
+      <p class="nb-kicker">newsletter</p>
+      <h2 id="news-head">{titulo}</h2>
+      <p>{texto}</p>
+      <form class="nb-form" action="/newsletter" method="post">
+        <label class="field" for="nb-email">
+          <Icon set="ui" name="mail" strokeWidth={1.8} />
+          <span class="sr-only">Seu melhor e-mail</span>
+          <input id="nb-email" type="email" name="email" placeholder="seu@email.com.br" autocomplete="email" required />
+        </label>
+        <button class="btn btn-primary" type="submit">Quero receber</button>
+      </form>
+      <p class="nb-note">{nota}</p>
+    </div>
+<div class="nb-art" aria-hidden="true">
+  <svg viewBox="0 0 320 220" role="presentation">
+    <rect x="30" y="46" width="260" height="150" rx="14" fill="#251A0F" stroke="rgba(216,182,138,0.24)"/>
+    <path d="M30 60l130 84 130-84" fill="none" stroke="#D9A441" stroke-width="1.6" opacity=".65"/>
+    <g fill="#6E5A42" opacity=".8">
+      <rect x="56" y="84" width="120" height="7" rx="3.5"/>
+      <rect x="56" y="102" width="90" height="7" rx="3.5"/>
+    </g>
+    <circle cx="252" cy="62" r="16" fill="rgba(193,87,58,0.18)" stroke="#C1573A" stroke-width="1.4"/>
+    <text x="252" y="66" text-anchor="middle" fill="#DD7A5C" font-family="JetBrains Mono, monospace" font-size="11">1</text>
+  </svg>
+</div>
+  </aside>
+)}
+
+<style is:global>
+/* variante centralizada, de /blog */
+.news{ background: var(--bg-elev); border:1px solid var(--border-strong); border-radius:18px; padding:48px; text-align:center; }
+.news h2{ font-family: var(--serif); font-style:italic; font-weight:400; font-size: clamp(27px,4vw,34px); line-height:1.15; margin:16px 0 12px; }
+.news p{ font-size:14.5px; line-height:1.7; color: var(--text-secondary); max-width:520px; margin:0 auto; }
+.news-form{ display:flex; gap:10px; max-width:520px; margin:28px auto 0; }
+.news-form .field{ flex:1; display:flex; align-items:center; gap:10px; background: var(--bg-elev-2); border:1px solid var(--border-strong); border-radius:10px; padding:0 14px; transition: border-color .16s ease; }
+.news-form .field:focus-within{ border-color: var(--accent-dim); }
+.news-form .field svg{ width:17px; height:17px; color: var(--text-muted); flex-shrink:0; }
+.news-form input{ flex:1; min-width:0; background:none; border:none; outline:none; font-family: var(--mono); font-size:14px; color: var(--text-primary); padding:14px 0; }
+.news-form input::placeholder{ color: var(--text-muted); }
+.news-note{ font-family: var(--mono); font-size:11.5px; color: var(--text-muted); margin-top:14px; }
+@media (max-width:620px){
+  .news{ padding:34px 22px; }
+  .news-form{ flex-direction:column; }
+  .news-form .btn{ width:100%; }
+}
+
+/* variante em faixa, do fim da pagina de categoria */
+.news-banner{ position:relative; background: linear-gradient(150deg, #201608, #14100A 62%); border:1px solid rgba(216,182,138,0.24); border-radius:20px; padding:44px 48px; display:grid; grid-template-columns: 1.15fr 0.85fr; gap:44px; align-items:center; overflow:hidden; }
+.news-banner::before{ content:''; position:absolute; top:-190px; right:-90px; width:560px; height:460px; background: radial-gradient(ellipse at center, rgba(217,164,65,0.22), transparent 68%); pointer-events:none; }
+.news-banner > *{ position:relative; }
+.news-banner .nb-kicker{ font-family: var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:0.12em; color:#9A8260; }
+.news-banner h2{ font-family: var(--serif); font-style:italic; font-weight:400; font-size: clamp(26px,3.2vw,34px); line-height:1.15; color:#F0E4CF; margin:12px 0 11px; }
+.news-banner p{ font-size:14.5px; line-height:1.68; color:#B39A78; max-width:460px; }
+.nb-form{ display:flex; gap:10px; margin-top:24px; max-width:480px; }
+.nb-form .field{ flex:1; display:flex; align-items:center; gap:10px; background: rgba(240,228,207,0.06); border:1px solid rgba(216,182,138,0.26); border-radius:10px; padding:0 14px; transition: border-color .16s ease; }
+.nb-form .field:focus-within{ border-color:#D9A441; }
+.nb-form .field svg{ width:17px; height:17px; color:#9A8260; flex-shrink:0; }
+.nb-form input{ flex:1; min-width:0; background:none; border:none; outline:none; font-family: var(--mono); font-size:14px; color:#F0E4CF; padding:14px 0; }
+.nb-form input::placeholder{ color:#9A8260; }
+.nb-form .btn-primary{ border-color:#D9A441; box-shadow: 0 6px 24px rgba(217,164,65,0.24); white-space:nowrap; }
+.news-banner .nb-note{ font-family: var(--mono); font-size:11px; color:#9A8260; margin-top:14px; }
+.nb-art svg{ width:100%; height:auto; display:block; }
+
+/* RESPONSIVO -------------------------------------------------------------- */
+@media (max-width:1080px){
+  .news-banner{ grid-template-columns:1fr; gap:30px; padding:36px; }
+  .nb-art{ display:none; }
+}
+@media (max-width:620px){
+  .news-banner{ padding:28px 22px; border-radius:16px; }
+  .nb-form{ flex-direction:column; }
+  .nb-form .btn{ width:100%; }
+}
+</style>

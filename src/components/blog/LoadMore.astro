@@ -1,0 +1,60 @@
+---
+/**
+ * CARREGAR MAIS ARTIGOS, o scroll infinito.
+ *
+ * A REGRA QUE NAO PODE SER QUEBRADA
+ * Este elemento e um LINK REAL para a proxima pagina, com rel="next", e o par
+ * dele esta no <head>. O JavaScript so intercepta o clique, e o
+ * IntersectionObserver so automatiza esse clique.
+ *
+ * Se virar button puro, a paginacao some do rastreio e todo o arquivo antigo
+ * fica orfao. Scroll infinito sem paginacao rastreavel e um dos jeitos mais
+ * faceis de perder conteudo indexado.
+ *
+ * Ordem de degradacao: sem JS o link navega para a pagina N; com JS ele
+ * carrega no lugar; com observer ele carrega sozinho ao entrar na tela.
+ *
+ * Diferente do prototipo em HTML, que trazia a proxima leva num <template>
+ * embutido, aqui o JS faz fetch da pagina N de verdade, gerada pelo
+ * paginate() do Astro.
+ */
+import Icon from '../layout/Icon.astro';
+
+interface Props {
+  /** raiz da paginacao. Ex: '/blog/categoria/seo-tecnico' */
+  base: string;
+  /** numero da ultima pagina da serie */
+  lastPage: number;
+  /** pagina atual */
+  page: number;
+}
+const { base, lastPage, page } = Astro.props;
+const next = page < lastPage ? `${base}/pagina/${page + 1}` : null;
+---
+
+{next && (
+  <div class="load-more" id="carregar-mais" data-base={base} data-ultima={String(lastPage)} data-pagina={String(page)}>
+    <div class="load-spinner" aria-hidden="true"></div>
+    <a class="btn btn-ghost" href={next} id="btn-carregar" rel="next">
+      Carregar mais artigos
+      <Icon set="ui" name="arrowDown" strokeWidth={2.2} />
+    </a>
+    <p class="load-status" role="status" aria-live="polite"></p>
+  </div>
+)}
+
+<script>
+  import { initInfiniteScroll } from '../../scripts/infinite-scroll';
+  initInfiniteScroll();
+</script>
+
+<style is:global>
+.load-more{ display:flex; flex-direction:column; align-items:center; gap:12px; padding:48px 0 0; }
+.load-status{ font-family: var(--mono); font-size:12px; color: var(--text-muted); min-height:18px; text-align:center; }
+.load-spinner{ display:none; width:18px; height:18px; border:2px solid var(--border-strong); border-top-color: var(--accent); border-radius:50%; animation: girar .7s linear infinite; }
+.load-more.carregando .load-spinner{ display:block; }
+.load-more.carregando .btn{ display:none; }
+.load-more.fim .btn, .load-more.fim .load-spinner{ display:none; }
+@keyframes girar{ to{ transform:rotate(360deg); } }
+@media (prefers-reduced-motion: reduce){ .load-spinner{ animation:none; } }
+</style>

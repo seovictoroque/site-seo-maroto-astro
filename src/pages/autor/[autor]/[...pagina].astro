@@ -1,0 +1,213 @@
+---
+/**
+ * PAGINA DE AUTOR, com paginacao rastreavel.
+ *
+ * Mesmo esqueleto da pagina de categoria, com duas diferencas: o hero e de
+ * pessoa e existe o card de Expertise.
+ *
+ * POR QUE O EXPERTISE FICA NO HERO, e nao ao lado da grade
+ * Com uma coluna lateral ao lado da grade os cards cairiam para uns 245px e,
+ * com scroll infinito, a coluna acabaria em poucos segundos deixando um vao
+ * enorme. No hero ele fica na altura da bio, que e onde a informacao faz
+ * sentido. Cada item leva para a categoria correspondente, entao o bloco
+ * tambem distribui link interno: nao e lista decorativa.
+ *
+ * E-E-A-T
+ * Esta e a pagina onde a confianca do site e verificada. O ProfilePage traz
+ * um Person cujo @id e o MESMO referenciado como author nos posts, entao as
+ * entidades se ligam. O `sameAs` so aceita perfil que existe de verdade:
+ * perfil inventado derruba a confianca do grafo inteiro. Credencial tambem
+ * nao se inventa, ver o aviso em src/data/authors.ts.
+ *
+ * Pagina 2 em diante leva canonical proprio e rel=prev, NUNCA canonical para
+ * a pagina 1.
+ */
+import BlogLayout from '../../../layouts/BlogLayout.astro';
+import Breadcrumb from '../../../components/layout/Breadcrumb.astro';
+import CardGrid from '../../../components/blog/CardGrid.astro';
+import PostCard from '../../../components/blog/PostCard.astro';
+import LoadMore from '../../../components/blog/LoadMore.astro';
+import Icon from '../../../components/layout/Icon.astro';
+import { authors } from '../../../data/authors';
+import { getCategory } from '../../../data/categories';
+import { site } from '../../../data/site';
+import { allPosts, byAuthor } from '../../../lib/posts';
+import { paginar, POR_PAGINA } from '../../../lib/paginate';
+import { breadcrumbNode, personNode, profilePageNode } from '../../../lib/schema';
+
+export async function getStaticPaths() {
+  const posts = await allPosts();
+  const rotas = [];
+
+  for (const author of authors) {
+    const doAutor = byAuthor(posts, author.slug);
+    const base = `/autor/${author.slug}`;
+    for (const p of paginar(doAutor, base, POR_PAGINA)) {
+      rotas.push({
+        params: { autor: author.slug, pagina: p.page === 1 ? undefined : `pagina/${p.page}` },
+        props: { author, pagina: p },
+      });
+    }
+  }
+
+  return rotas;
+}
+
+const { author, pagina } = Astro.props;
+
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Blog', href: '/blog' },
+  { label: author.name },
+];
+
+const sufixo = pagina.page > 1 ? `, página ${pagina.page}` : '';
+---
+
+<BlogLayout
+  title={`${author.name}, ${author.role.split(',')[0]}${sufixo} | ${site.name}`}
+  description={author.summary}
+  path={pagina.url}
+  ogType="profile"
+  noindex={pagina.page > 1}
+  prev={pagina.prev}
+  next={pagina.next}
+  schema={[profilePageNode(author, `/autor/${author.slug}`), personNode(author), breadcrumbNode(crumbs)]}
+>
+  <Breadcrumb items={crumbs} />
+
+  <section class="author-hero">
+    <div class="wrap ah-grid">
+      <div class="ah-intro">
+        {/* maior imagem acima da dobra: sem loading lazy e com fetchpriority alto */}
+        <div class="ah-photo">
+          <img
+            src={author.photo.src}
+            srcset={author.photo.srcset}
+            sizes="150px"
+            width={author.photo.width}
+            height={author.photo.height}
+            alt={author.name}
+            fetchpriority="high"
+            decoding="async"
+          />
+        </div>
+
+        <div>
+          <p class="ah-role">{author.role}</p>
+          <h1>{author.name}</h1>
+          {author.bio.map((p) => <p class="ah-bio">{p}</p>)}
+
+          <div class="ah-creds">
+            {author.credentials.map((c) => (
+              <span><Icon set="ui" name="check" strokeWidth={2} />{c}</span>
+            ))}
+          </div>
+
+          <div class="ah-actions">
+            {author.linkedin && (
+              <a class="btn btn-linkedin" href={author.linkedin} rel="me noopener" target="_blank">
+                <Icon set="linkedin" />
+                {author.name} no LinkedIn
+              </a>
+            )}
+            <a class="btn btn-ghost" href="/contato">Falar comigo</a>
+          </div>
+
+          <div class="ah-stats">
+            {author.stats.map((s) => (
+              <div><strong>{s.value}</strong><span>{s.label}</span></div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <aside class="expertise" aria-labelledby="expertise-head">
+        <p class="expertise-head" id="expertise-head">
+          <Icon set="ui" name="award" strokeWidth={1.8} />
+          Expertise
+        </p>
+        <ul>
+          {author.expertise.map((e) => (
+            <li class:list={[getCategory(e.category)?.variant === 'rust' && 'rust']}>
+              <a href={`/blog/categoria/${e.category}`}>{e.label}</a>
+            </li>
+          ))}
+        </ul>
+        <p class="ex-foot">{author.expertiseFootnote}</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section" id="artigos">
+    <div class="wrap">
+      <CardGrid>
+        {pagina.items.map((post) => <PostCard post={post} />)}
+      </CardGrid>
+
+      <LoadMore base={`/autor/${author.slug}`} lastPage={pagina.lastPage} page={pagina.page} />
+    </div>
+  </section>
+</BlogLayout>
+
+<style is:global>
+/* 2. HERO DO AUTOR -------------------------------------------------------- */
+.author-hero{ padding:26px 0 56px; position:relative; overflow:hidden; }
+.author-hero::before{ content:''; position:absolute; top:-300px; right:-140px; width:780px; height:600px; background: radial-gradient(ellipse at center, rgba(217,164,65,0.26), transparent 66%); pointer-events:none; }
+.ah-grid{ position:relative; display:grid; grid-template-columns: minmax(0,1fr) 320px; gap:52px; align-items:start; }
+.ah-intro{ display:grid; grid-template-columns:auto minmax(0,1fr); gap:30px; align-items:start; }
+
+.ah-photo{ width:150px; height:150px; border-radius:50%; overflow:hidden; flex-shrink:0; border:1px solid var(--border-strong); background: var(--bg-elev-2); box-shadow: 0 16px 40px rgba(60,40,14,0.16); }
+.ah-photo img{ width:100%; height:100%; object-fit:cover; }
+
+.author-hero h1{ font-family: var(--serif); font-weight:400; font-style:italic; font-size: clamp(36px,5vw,54px); line-height:1.04; letter-spacing:-0.015em; margin:10px 0 8px; }
+.ah-role{ font-family: var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color: var(--text-muted); }
+.ah-bio{ font-size:16px; line-height:1.74; color: var(--text-secondary); margin-top:16px; max-width:620px; }
+.ah-bio + .ah-bio{ margin-top:14px; }
+.ah-bio a{ color: var(--accent-ink); text-decoration:underline; text-underline-offset:3px; }
+
+/* certificações e credenciais */
+.ah-creds{ display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
+.ah-creds span{ display:inline-flex; align-items:center; gap:7px; font-family: var(--mono); font-size:11.5px; color: var(--text-secondary); background: var(--bg-elev); border:1px solid var(--border); border-radius:20px; padding:7px 13px 7px 11px; }
+.ah-creds svg{ width:13px; height:13px; color: var(--accent-ink); flex-shrink:0; }
+
+.ah-actions{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:24px; }
+/* botão transparente do LinkedIn: sem preenchimento, só contorno */
+.btn-linkedin{ background:transparent; color: var(--text-primary); border-color: var(--border-strong); }
+.btn-linkedin:hover{ background: var(--bg-elev); border-color: var(--accent-dim); color: var(--accent-ink); }
+.btn-linkedin svg{ width:17px; height:17px; }
+
+.ah-stats{ display:flex; gap:28px; flex-wrap:wrap; margin-top:28px; padding-top:24px; border-top:1px solid var(--border); }
+.ah-stats div{ display:flex; flex-direction:column; gap:3px; }
+.ah-stats strong{ font-family: var(--serif); font-style:italic; font-weight:400; font-size:26px; color: var(--accent-ink); line-height:1; }
+.ah-stats span{ font-family: var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color: var(--text-muted); }
+
+/* 3. EXPERTISE ------------------------------------------------------------
+ Card da direita. Cada item leva para a categoria correspondente, então ele
+ também trabalha como distribuição de link interno, não é só decoração.
+ ------------------------------------------------------------------------ */
+.expertise{ background: var(--bg-elev); border:1px solid var(--border); border-radius:14px; padding:22px 24px 24px; }
+.expertise-head{ display:flex; align-items:center; gap:10px; font-family: var(--mono); font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.13em; color: var(--text-primary); margin-bottom:16px; }
+.expertise-head svg{ width:18px; height:18px; color: var(--accent-ink); flex-shrink:0; }
+.expertise ul{ display:flex; flex-direction:column; gap:2px; }
+.expertise a{ display:flex; align-items:center; gap:11px; font-size:14px; color: var(--text-secondary); padding:8px 10px; margin:0 -10px; border-radius:8px; transition: color .15s ease, background .15s ease; }
+.expertise a::before{ content:''; width:6px; height:6px; border-radius:50%; background: var(--accent); flex-shrink:0; }
+.expertise a:hover{ color: var(--accent-ink); background: rgba(78,56,30,0.06); }
+.expertise li.rust a::before{ background: var(--rust); }
+.expertise li.rust a:hover{ color: var(--rust-ink); }
+.expertise .ex-foot{ margin-top:16px; padding-top:16px; border-top:1px solid var(--border); font-family: var(--mono); font-size:11px; line-height:1.65; color: var(--text-muted); }
+
+/* RESPONSIVO */
+@media (max-width:1080px){
+  .ah-grid{ grid-template-columns:minmax(0,1fr); gap:36px; }
+  .expertise{ max-width:none; }
+  .expertise ul{ display:grid; grid-template-columns:1fr 1fr; gap:2px 18px; }
+}
+@media (max-width:620px){
+  .author-hero{ padding:20px 0 44px; }
+  .ah-intro{ grid-template-columns:1fr; gap:20px; }
+  .ah-photo{ width:110px; height:110px; }
+  .ah-actions .btn{ width:100%; }
+  .expertise ul{ grid-template-columns:1fr; }
+}
+</style>

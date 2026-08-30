@@ -1,0 +1,63 @@
+---
+/**
+ * BLOCO POR CATEGORIA da home do blog.
+ *
+ * A pilar page ocupa o card grande a esquerda e os artigos de apoio ficam em
+ * coluna a direita. E o padrao que concentra link interno nas paginas que
+ * precisam ranquear.
+ *
+ * Sem pilar marcada na categoria, o card grande recebe o artigo mais recente
+ * e o selo de pilar nao aparece.
+ */
+import PostCard from './PostCard.astro';
+import PostRow from './PostRow.astro';
+import Icon from '../layout/Icon.astro';
+import type { Category } from '../../data/categories';
+import type { Post } from '../../lib/posts';
+
+interface Props {
+  category: Category;
+  destaque?: Post;
+  apoio: Post[];
+  total: number;
+}
+const { category, destaque, apoio, total } = Astro.props;
+const rust = category.variant === 'rust';
+---
+
+<div class:list={['cat-block', rust && 'rust']}>
+  <div class="cat-block-head">
+    <h2><a href={`/blog/categoria/${category.slug}`}>{category.name}</a></h2>
+    <p class="cb-desc">{category.intro}</p>
+    <a class="link-more" href={`/blog/categoria/${category.slug}`}>
+      Ver {total === 1 ? 'o artigo' : `os ${total} artigos`}
+      <Icon set="ui" name="arrow" strokeWidth={2.4} />
+    </a>
+  </div>
+
+  <div class="cat-split">
+    {destaque && <PostCard post={destaque} showPillarLabel={destaque.data.pillar} />}
+    <div class="stack">
+      {apoio.map((p) => <PostRow post={p} />)}
+    </div>
+  </div>
+</div>
+
+<style is:global>
+/* 6. BLOCO POR CATEGORIA ------------------------------------------------- */
+.cat-block + .cat-block{ margin-top:52px; }
+.cat-block-head{ display:flex; align-items:center; justify-content:space-between; gap:20px; padding-bottom:14px; margin-bottom:22px; border-bottom:2px solid var(--accent); flex-wrap:wrap; }
+.cat-block.rust .cat-block-head{ border-bottom-color: var(--rust); }
+.cat-block-head h2{ display:flex; align-items:center; gap:12px; font-family: var(--serif); font-style:italic; font-weight:400; font-size:30px; line-height:1.1; }
+.cat-block-head h2 a:hover{ color: var(--accent-ink); }
+.cat-block.rust .cat-block-head h2 a:hover{ color: var(--rust-ink); }
+.cat-block-head .cb-desc{ font-size:13.5px; color: var(--text-secondary); line-height:1.6; max-width:420px; flex:1; min-width:220px; }
+.cat-split{ display:grid; grid-template-columns: 1.25fr 1fr; gap:24px; align-items:start; }
+.cat-split .stack{ display:flex; flex-direction:column; gap:12px; }
+/* a regra base do .cb-pillar vive em PostCard.astro, junto do card que a
+   usa: a etiqueta aparece tambem na pagina de categoria, onde este bloco
+   nao e carregado. Aqui fica so a variante rust. */
+.cat-block.rust .cb-pillar{ color: var(--rust-ink); background: rgba(193,87,58,0.14); }
+@media (max-width:1080px){ .cat-split{ grid-template-columns:1fr; } }
+@media (max-width:620px){ .cat-block-head h2{ font-size:25px; } }
+</style>

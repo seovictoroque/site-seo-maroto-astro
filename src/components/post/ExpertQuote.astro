@@ -1,0 +1,69 @@
+---
+/**
+ * OPINIAO DE ESPECIALISTA.
+ *
+ * Card escuro dentro do artigo. Obrigatorio nome e cargo.
+ *
+ * REGRA QUE NAO SE NEGOCIA: citacao de terceiro so entra com link para a
+ * fonte original dentro de .ex-role. Nunca publicar citacao de terceiro sem
+ * fonte verificavel. Por isso `sourceUrl` existe no schema.
+ *
+ * O bloco e fixo do template de post e nao deve virar opcional: e ele que
+ * separa o conteudo daqui de um post generico.
+ */
+interface Props {
+  name: string;
+  role: string;
+  quote: string;
+  photo?: string;
+  cite?: string;
+  sourceUrl?: string;
+  sourceLabel?: string;
+}
+const { name, role, quote, photo, cite, sourceUrl, sourceLabel } = Astro.props;
+
+// o cargo pode trazer um link de fonte; quando traz, o rotulo sai do texto
+const roleBefore = sourceLabel ? role.replace(sourceLabel, '').trimEnd() : role;
+---
+
+<figure class="expert">
+  <span class="ex-mark" aria-hidden="true">&ldquo;</span>
+  <blockquote cite={cite}>{quote}</blockquote>
+  <figcaption>
+    {photo && (
+      <span class="ex-photo">
+        <img src={photo} width="400" height="400" alt="" loading="lazy" decoding="async" />
+      </span>
+    )}
+    <span class="ex-who">
+      <span class="ex-name">{name}</span>
+      <span class="ex-role">
+        {sourceUrl ? (
+          <>{roleBefore} <a href={sourceUrl}>{sourceLabel}</a></>
+        ) : (
+          role
+        )}
+      </span>
+    </span>
+  </figcaption>
+</figure>
+
+<style is:global>
+/* 10. OPINIAO DE ESPECIALISTA --------------------------------------------
+  Bloco reservado para citacao de gente de fora. Sempre com nome, cargo e,
+  quando houver, link para a fonte da declaracao.
+  ------------------------------------------------------------------------ */
+.expert{ position:relative; background: linear-gradient(150deg, #201608, #14100A 65%); border:1px solid rgba(216,182,138,0.24); border-radius:18px; padding:38px 40px 32px; margin:40px 0; overflow:hidden; }
+.expert::before{ content:''; position:absolute; top:-140px; left:-60px; width:420px; height:340px; background: radial-gradient(ellipse at center, rgba(217,164,65,0.16), transparent 68%); pointer-events:none; }
+.expert > *{ position:relative; }
+.expert .ex-mark{ font-family: var(--serif); font-style:italic; font-size:64px; line-height:.6; color: var(--accent); opacity:.5; display:block; margin-bottom:10px; }
+.expert blockquote{ font-family: var(--serif); font-style:italic; font-weight:400; font-size:24px; line-height:1.42; color:#F0E4CF; margin:0; }
+.expert figcaption{ display:flex; align-items:center; gap:13px; margin-top:26px; padding-top:22px; border-top:1px solid rgba(216,182,138,0.16); }
+.expert .ex-photo{ width:44px; height:44px; border-radius:50%; overflow:hidden; flex-shrink:0; border:1px solid rgba(216,182,138,0.26); background:#251A0F; }
+.expert .ex-photo img{ width:100%; height:100%; object-fit:cover; }
+.expert .ex-who{ display:flex; flex-direction:column; gap:3px; }
+.expert .ex-name{ font-size:14.5px; font-weight:600; color:#F0E4CF; }
+.expert .ex-role{ font-family: var(--mono); font-size:11.5px; color:#9A8260; line-height:1.5; }
+.expert .ex-role a{ color:#B39A78; text-decoration:underline; text-underline-offset:3px; }
+.expert .ex-role a:hover{ color: var(--accent); }
+</style>
