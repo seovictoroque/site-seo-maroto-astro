@@ -1,0 +1,27 @@
+---
+/**
+ * AS 12 ETAPAS EM TRES COLUNAS, secao roadmap da home.
+ *
+ * Resumo navegavel do roteiro que a /escolinha desenha inteiro. Cada coluna
+ * e um grupo de quatro etapas, ligadas pelo conector pontilhado vertical, o
+ * mesmo padrao de espinha usado no resto do site.
+ *
+ * A coluna de IA e a unica com o rust, seguindo a regra do design system: o
+ * rust marca conteudo de IA, GEO e AEO, e nada mais.
+ */
+import { gruposRoadmap, etapasDoGrupo } from '../../data/roadmap';
+---
+
+<div class="rm">
+  {gruposRoadmap.map((grupo) => (
+    <div class:list={['rm-stage', grupo.variante === 'rust' && 'ai']}>
+      <span class="rm-kicker">{grupo.kicker}</span>
+      <h3>{grupo.titulo}</h3>
+      <ul class="rm-list">
+        {etapasDoGrupo(grupo.chave).map((etapa) => (
+          <li><a href={etapa.href}>{etapa.numero}. {etapa.titulo}</a></li>
+        ))}
+      </ul>
+    </div>
+  ))}
+</div>

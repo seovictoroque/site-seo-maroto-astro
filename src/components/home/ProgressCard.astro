@@ -1,0 +1,71 @@
+---
+/**
+ * CARTAO DE PROGRESSO DO ROTEIRO, o lado direito do hero da home.
+ *
+ * Mostra as primeiras etapas do roadmap com caixa de marcar e uma barra com
+ * a porcentagem concluida. E estatico no HTML: o estado inicial vem de
+ * `etapasConcluidasPadrao`, e o roadmap-progress.ts assume depois, se houver
+ * progresso gravado no navegador.
+ *
+ * A barra e a porcentagem saem do MESMO calculo, entao nao tem como o numero
+ * escrito discordar do desenho. Os data-* existem para o script achar as
+ * partes sem depender da ordem do markup.
+ */
+import { etapasRoadmap, tituloCurto, etapasConcluidasPadrao } from '../../data/roadmap';
+import Icon from '../layout/Icon.astro';
+
+interface Props {
+  /** quantas etapas aparecem no cartao. O resto fica atras do link do rodape. */
+  visiveis?: number;
+  concluidas?: number;
+}
+
+const { visiveis = 6, concluidas = etapasConcluidasPadrao } = Astro.props;
+
+const total = etapasRoadmap.length;
+
+/**
+ * O `feita` e calculado AQUI, no frontmatter, e nao dentro do map do
+ * template. O compilador do Astro le `<=` no meio de uma expressao JSX como
+ * abertura de tag e quebra o build com "Unable to assign attributes when
+ * using <> Fragment shorthand syntax".
+ */
+const etapas = etapasRoadmap.slice(0, visiveis).map((etapa) => ({
+  ...etapa,
+  feita: etapa.numero <= concluidas,
+}));
+
+/** a barra usa a fracao exata, o rotulo usa o inteiro: 2 de 12 e 16,67% e "17%" */
+const fracao = total > 0 ? (concluidas / total) * 100 : 0;
+const largura = `${fracao.toFixed(2)}%`;
+const rotulo = `${Math.round(fracao)}%`;
+---
+
+<div class="progress-card" data-progresso data-total={total}>
+  <div class="pc-top">
+    <span class="pc-title">seu progresso no roteiro</span>
+    <span class="pc-pct" data-progresso-pct>{rotulo}</span>
+  </div>
+
+  <div
+    class="pc-bar"
+    role="img"
+    aria-label={`${concluidas} de ${total} etapas concluídas, ${rotulo} do roteiro`}
+    data-progresso-bar
+  >
+    <i style={`width:${largura}`}></i>
+  </div>
+
+  <ul class="pc-steps">
+    {etapas.map((etapa) => (
+      <li class:list={[etapa.feita && 'done']} data-etapa={etapa.numero}>
+        <span class="pc-n">{String(etapa.numero).padStart(2, '0')}</span>
+        <span class="pc-box" aria-hidden="true"><Icon set="ui" name="check" strokeWidth={3.4} /></span>
+        <a href={etapa.href}>{tituloCurto(etapa)}</a>
+        {etapa.feita && <span class="sr-only">concluída</span>}
+      </li>
+    ))}
+  </ul>
+
+  <a class="pc-more" href="/escolinha">ver as {total} etapas e os 60+ itens de ação</a>
+</div>
