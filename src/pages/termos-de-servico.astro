@@ -1,0 +1,98 @@
+---
+/**
+ * Termos de servico. Texto base para modelagem: ainda precisa de revisao
+ * juridica, CNPJ e razao social antes de ir ao ar.
+ *
+ * O sumario lateral e o corpo saem do mesmo HTML de origem, sem alteracao de
+ * texto. O que mudou na migracao:
+ * - o breadcrumb virou o componente Breadcrumb.astro, e o BreadcrumbList do
+ *   JSON-LD sai da MESMA lista `crumbs`, entao o marcado e o visivel nao tem
+ *   como divergir
+ * - o CSS saiu do arquivo e virou page-kit.css, compartilhado com as outras
+ *   paginas institucionais
+ * - o JS de menu mora no Header, nao existe script proprio aqui
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/layout/Breadcrumb.astro';
+import { breadcrumbNode, webPageNode } from '../lib/schema';
+import '../styles/page-kit.css';
+
+const crumbs = [{ href: '/', label: 'Home' }, { label: 'Termos de serviço' }];
+
+/** Bate com o `.legal-updated` visivel no corpo da pagina. */
+const atualizadoEm = '2026-09-06';
+---
+
+<BaseLayout
+  title="Termos de serviço | SEO Maroto"
+  description="Regras de uso do site, das ferramentas gratuitas e dos serviços contratados do SEO Maroto."
+  path="/termos-de-servico"
+  schema={[
+    webPageNode({ path: '/termos-de-servico', name: 'Termos de serviço', dateModified: atualizadoEm }),
+    breadcrumbNode(crumbs),
+  ]}
+>
+<div class="bg-field"></div>
+<main id="conteudo">
+<Breadcrumb items={crumbs} />
+
+<div class="eyebrow-wrap">
+  <span class="eyebrow">Documento legal</span>
+</div>
+
+<div class="hero">
+  <h1 class="hero-title">Termos de <em>serviço</em></h1>
+  <p class="hero-sub">As regras de uso do site, das ferramentas gratuitas e dos serviços contratados. Curto o suficiente para ser lido de verdade.</p>
+</div>
+
+<div class="legal">
+  <aside class="legal-toc">
+    <h2>Nesta página</h2>
+    <ul><li><a href="#aceite">Aceite</a></li><li><a href="#o-que-e">O que o site oferece</a></li><li><a href="#uso">Uso permitido</a></li><li><a href="#proibido">Uso proibido</a></li><li><a href="#ferramentas">Ferramentas e limites</a></li><li><a href="#conteudo">Conteúdo e propriedade intelectual</a></li><li><a href="#contribuicoes">Suas contribuições</a></li><li><a href="#servicos">Serviços contratados</a></li><li><a href="#garantias">Ausência de garantia de resultado</a></li><li><a href="#responsabilidade">Limitação de responsabilidade</a></li><li><a href="#links">Links de terceiros</a></li><li><a href="#suspensao">Suspensão de acesso</a></li><li><a href="#alteracoes">Alterações</a></li><li><a href="#foro">Lei aplicável e foro</a></li></ul>
+  </aside>
+  <div class="legal-body">
+    <p class="legal-updated">Última atualização: 6 de setembro de 2026</p>
+    <div class="legal-note"><p>Resumo rápido: use, estude e aplique à vontade, com crédito. Não abuse das ferramentas, não republique conteúdo inteiro sem combinar e entenda que ninguém pode garantir posição no Google.</p></div>
+    <h2 id="aceite">1. Aceite</h2>
+    <p>Ao acessar o seomaroto.com.br, usar qualquer ferramenta ou enviar um formulário, você concorda com estes termos. Se não concordar com algum ponto, não use o site.</p>
+    <h2 id="o-que-e">2. O que o site oferece</h2>
+    <ul><li>Conteúdo editorial sobre SEO: artigos, guias, estudos de caso e roteiro de estudo.</li><li>Ferramentas gratuitas de análise, oferecidas no estado em que se encontram.</li><li>Newsletter por e-mail, mediante inscrição voluntária.</li><li>Serviços profissionais de consultoria e treinamento, contratados à parte por proposta específica.</li></ul>
+    <h2 id="uso">3. Uso permitido</h2>
+    <p>Você pode ler, estudar, aplicar no seu trabalho e no de clientes, citar trechos com atribuição e link, e usar as ferramentas em projetos próprios ou de terceiros que você atenda profissionalmente.</p>
+    <h2 id="proibido">4. Uso proibido</h2>
+    <ul><li>Automatizar requisições em volume que degrade o serviço para outras pessoas.</li><li>Tentar burlar limite de uso, autenticação ou qualquer medida de segurança.</li><li>Republicar conteúdo integral sem autorização prévia por escrito.</li><li>Usar as ferramentas contra sistema de terceiro sem autorização do responsável por ele.</li><li>Apresentar o conteúdo daqui como próprio, inclusive em curso ou material pago.</li><li>Qualquer uso que viole a lei brasileira.</li></ul>
+    <h2 id="ferramentas">5. Ferramentas e limites</h2>
+    <p>As ferramentas são gratuitas e podem ter limite de execução, ficar indisponíveis para manutenção ou ser descontinuadas a qualquer momento, sem aviso prévio e sem que isso gere direito a indenização.</p>
+    <p>O resultado de uma ferramenta é uma leitura automatizada de sinais públicos. Ele apoia a decisão, não a substitui.</p>
+    <h2 id="conteudo">6. Conteúdo e propriedade intelectual</h2>
+    <p>Os textos, marcas, ilustrações e a identidade visual do SEO Maroto pertencem ao seu titular e são protegidos pela legislação de direito autoral e propriedade industrial.</p>
+    <p>Citação com atribuição e link é bem-vinda. Reprodução integral, tradução ou adaptação para material de terceiro exige autorização prévia por escrito. Código publicado em repositório aberto segue a licença declarada no próprio repositório, que prevalece sobre esta seção.</p>
+    <h2 id="contribuicoes">7. Suas contribuições</h2>
+    <p>Ao enviar comentário, sugestão, correção, issue ou pull request, você declara ter direito sobre o material enviado e concede autorização não exclusiva para que ele seja publicado e utilizado no contexto do projeto, com o devido crédito quando aplicável.</p>
+    <h2 id="servicos">8. Serviços contratados</h2>
+    <p>Consultoria, auditoria e treinamento são regidos pela proposta comercial específica aceita entre as partes, que define escopo, prazo, preço e condições de pagamento. Em caso de conflito entre a proposta e estes termos, a proposta prevalece para aquela contratação.</p>
+    <h2 id="garantias">9. Ausência de garantia de resultado</h2>
+    <p>SEO depende de fatores fora do controle de qualquer prestador, incluindo mudança de algoritmo, ação da concorrência e decisão interna do seu time. Por isso não há e não pode haver garantia de posição, de volume de tráfego ou de receita. Quem garante primeira posição está vendendo outra coisa.</p>
+    <h2 id="responsabilidade">10. Limitação de responsabilidade</h2>
+    <p>O site e as ferramentas são fornecidos no estado em que se encontram. Na máxima extensão permitida pela lei, não respondemos por lucro cessante, perda de dados ou dano indireto decorrente do uso do site ou da aplicação de recomendações publicadas gratuitamente.</p>
+    <p>Para serviços contratados, a responsabilidade observa o previsto na proposta e na legislação aplicável.</p>
+    <h2 id="links">11. Links de terceiros</h2>
+    <p>O site cita e linka fontes externas. Não controlamos esse conteúdo e não respondemos por ele. Link não significa endosso comercial, e conteúdo patrocinado, quando existir, é identificado como tal.</p>
+    <h2 id="suspensao">12. Suspensão de acesso</h2>
+    <p>Podemos bloquear acesso, por endereço IP ou por conta, de quem descumprir estes termos, especialmente em caso de abuso automatizado das ferramentas.</p>
+    <h2 id="alteracoes">13. Alterações</h2>
+    <p>Estes termos podem mudar. A data de atualização no topo indica a versão vigente, e o uso continuado do site após a mudança significa concordância com o novo texto.</p>
+    <h2 id="foro">14. Lei aplicável e foro</h2>
+    <p>Aplica-se a legislação brasileira. Fica eleito o foro da comarca de Itapetininga, São Paulo, para dirimir controvérsias, salvo quando a lei determinar foro diverso, como nas relações de consumo.</p>
+  </div>
+</div>
+
+<section class="cta-band">
+  <div class="cta-inner">
+    <h2>Vai contratar alguma coisa?</h2>
+    <p>Serviço fechado tem proposta própria, com escopo e preço por escrito. Começa com uma conversa de meia hora.</p>
+    <div class="hero-actions"><a class="btn btn-primary" href="/solucoes/agendar">Agendar um bate-papo</a><a class="btn btn-ghost" href="/politica-de-privacidade">Ler a privacidade</a></div>
+  </div>
+</section>
+</main>
+</BaseLayout>

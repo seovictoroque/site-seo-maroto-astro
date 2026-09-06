@@ -1,0 +1,155 @@
+---
+/**
+ * NEWSLETTER.
+ *
+ * ATENCAO: o formulario ainda nao envia nada. O submit e barrado pelo
+ * newsletter-form.ts ate existir endpoint de inscricao, e as tres edicoes
+ * listadas sao exemplo de formato, com href "#".
+ *
+ * Migrada de newsletter.html. Nenhum texto foi reescrito. O que mudou:
+ * - o breadcrumb virou Breadcrumb.astro, e o BreadcrumbList sai da MESMA
+ *   lista `crumbs` que a pagina renderiza
+ * - o FAQ virou FaqSection.astro, e o FAQPage sai da MESMA lista `faq`
+ * - o CSS saiu do arquivo: o compartilhado esta em page-kit.css
+ * - o que so esta pagina usa esta em styles/pages/newsletter.css
+ * - o JS de menu e de FAQ virou modulo importado, nada inline
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/layout/Breadcrumb.astro';
+import FaqSection from '../components/page/FaqSection.astro';
+import type { FaqItem } from '../lib/faq';
+import { breadcrumbNode, faqNode } from '../lib/schema';
+
+import '../styles/page-kit.css';
+import '../styles/pages/newsletter.css';
+
+const crumbs = [{ href: '/', label: 'Home' }, { label: 'Newsletter' }];
+
+const faq: FaqItem[] = [
+  {
+    question: 'Com que frequência chega?',
+    answer:
+      'Uma vez por semana, sempre no mesmo dia. Se em alguma semana eu não tiver nada útil para dizer, você não recebe nada. Prefiro pular a encher caixa de entrada.',
+  },
+  {
+    question: 'O que exatamente vem na edição?',
+    answer:
+      'O que mudou em busca na semana, com fonte, uma leitura do que aquilo significa na prática e uma tarefa pequena que dá para executar em menos de uma hora.',
+  },
+  {
+    question: 'Vocês vendem a lista?',
+    answer:
+      'Não, nunca. Seu e-mail serve para enviar a newsletter e nada mais. O detalhe está na <a href="/politica-de-privacidade">política de privacidade</a>.',
+  },
+  {
+    question: 'Como cancelo?',
+    answer:
+      'Link de cancelamento em toda edição, com um clique e sem tela de retenção perguntando se você tem certeza.',
+  },
+  {
+    question: 'Tem conteúdo pago escondido?',
+    answer:
+      'Não. Tudo que vai na newsletter é gratuito, e boa parte vira post público depois.',
+  },
+];
+---
+
+<BaseLayout
+  title="Newsletter semanal de SEO, sem enrolação | SEO Maroto"
+  description="Uma edição por semana com o que mudou em busca, o que aquilo significa e uma tarefa para executar em menos de uma hora."
+  path="/newsletter"
+  schema={[
+    faqNode('/newsletter', faq),
+    breadcrumbNode(crumbs),
+  ]}
+>
+<div class="bg-field"></div>
+<main id="conteudo">
+<Breadcrumb items={crumbs} />
+
+<div class="eyebrow-wrap">
+  <span class="eyebrow">Uma edição por semana, sem enrolação</span>
+</div>
+
+<div class="hero">
+  <h1 class="hero-title">A newsletter que não te ensina o que é <em>meta description</em></h1>
+  <p class="hero-sub">O que mudou em busca na semana, o que aquilo significa na prática e uma tarefa pequena para você executar antes da próxima edição.</p>
+  <div class="hero-meta"><span><b>1x</b> por semana</span><span><b>5 min</b> de leitura</span><span><b>1 clique</b> para cancelar</span></div>
+</div>
+
+<form class="inline-form" id="formNewsletter">
+  <label class="visually-hidden" for="nl-email">Seu e-mail</label>
+  <input id="nl-email" type="email" placeholder="seu@email.com.br" autocomplete="email">
+  <button class="btn btn-primary" type="submit">Assinar</button>
+</form>
+<p class="form-note">Sem spam, sem sequência de venda automática. Cancelamento em um clique.</p>
+
+<div class="section-head">
+  <h2>O que você recebe</h2>
+</div>
+
+<div class="card-grid">
+  <a class="card" href="#">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></div>
+    <h3>O que mudou</h3>
+    <p>Atualização de algoritmo, mudança de SERP, novidade em ferramenta. Com fonte, sem boato reciclado de LinkedIn.</p>
+    <div class="card-tags"></div>
+  </a>
+  <a class="card" href="#">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+    <h3>O que isso significa</h3>
+    <p>A leitura prática: quem é afetado, quem não é e o que vale monitorar nas próximas semanas.</p>
+    <div class="card-tags"></div>
+  </a>
+  <a class="card" href="#">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+    <h3>O que fazer</h3>
+    <p>Uma tarefa executável em menos de uma hora, com o passo a passo. Sem lição de casa impossível.</p>
+    <div class="card-tags"></div>
+  </a>
+</div>
+
+<div class="section-head">
+  <h2>Últimas edições</h2>
+  <p>Para você ver o formato antes de entregar o e-mail.</p>
+</div>
+
+<div class="list-rows">
+  <div class="row-item">
+    <div class="row-date">edição 41</div>
+    <div class="row-body"><h3>O canonical que aponta para redirect</h3><p>Por que esse erro é tão comum em ecommerce e como encontrar todos de uma vez.</p></div>
+    <span class="row-tag">ler</span>
+  </div>
+  <div class="row-item">
+    <div class="row-date">edição 40</div>
+    <div class="row-body"><h3>Seu conteúdo é citável por IA?</h3><p>Três características do trecho que os modelos escolhem citar, com exemplo real.</p></div>
+    <span class="row-tag">ler</span>
+  </div>
+  <div class="row-item">
+    <div class="row-date">edição 39</div>
+    <div class="row-body"><h3>Paginação: o guia que resolve</h3><p>O que fazer com página 2 em diante depois que o rel next morreu.</p></div>
+    <span class="row-tag">ler</span>
+  </div>
+</div>
+
+<section class="cta-band">
+  <div class="cta-inner">
+    <h2>Entra na lista</h2>
+    <p>Se a primeira edição não te ensinar nada, cancela. Eu prefiro assim do que ter uma lista grande e morta.</p>
+    <div class="hero-actions"><a class="btn btn-primary" href="#">Assinar a newsletter</a><a class="btn btn-ghost" href="/comunidade">Ver a comunidade</a></div>
+  </div>
+</section>
+
+<FaqSection items={faq} />
+</main>
+</BaseLayout>
+
+<script>
+  import { initFaqAccordion } from '../scripts/faq-accordion';
+  initFaqAccordion('.faq');
+  import { initFormSemEndpoint } from '../scripts/form-sem-endpoint';
+  initFormSemEndpoint('#formNewsletter');
+</script>

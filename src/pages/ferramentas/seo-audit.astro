@@ -1,0 +1,208 @@
+---
+/**
+ * SEO AUDIT, a pagina da ferramenta.
+ *
+ * Campo de URL, exemplo de resultado com nota e achados, o que ela verifica,
+ * faixa de chamada e FAQ.
+ *
+ * ATENCAO: o painel de resultado e ESTATICO, um exemplo de saida. A
+ * auditoria de verdade ainda nao existe, e o formulario nao envia nada.
+ *
+ * Migrada de ferramentas-seo-audit.html. Nenhum texto foi reescrito. O que mudou:
+ * - o breadcrumb virou Breadcrumb.astro, e o BreadcrumbList sai da MESMA
+ *   lista `crumbs` que a pagina renderiza
+ * - o FAQ virou FaqSection.astro, e o FAQPage sai da MESMA lista `faq`
+ * - o CSS saiu do arquivo: o compartilhado esta em page-kit.css
+ * - o que so esta pagina usa esta em styles/pages/seo-audit.css
+ * - o JS de menu e de FAQ virou modulo importado, nada inline
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/layout/Breadcrumb.astro';
+import FaqSection from '../../components/page/FaqSection.astro';
+import type { FaqItem } from '../../lib/faq';
+import { abs, breadcrumbNode, faqNode } from '../../lib/schema';
+import { site } from '../../data/site';
+
+import '../../styles/page-kit.css';
+import '../../styles/pages/seo-audit.css';
+
+const crumbs = [{ href: '/', label: 'Home' }, { href: '/ferramentas', label: 'Ferramentas' }, { label: 'SEO Audit' }];
+
+const faq: FaqItem[] = [
+  {
+    question: 'A auditoria roda em site com login?',
+    answer:
+      'Não. A ferramenta acessa a página como um visitante anônimo, então área logada, staging protegido e página bloqueada no robots.txt ficam de fora.',
+  },
+  {
+    question: 'Quantas URLs ela analisa?',
+    answer:
+      'Na versão pública, a URL informada mais até 50 URLs internas alcançadas a partir dela. Para catálogo inteiro, o caminho é uma <a href="/solucoes">auditoria por escopo</a>.',
+  },
+  {
+    question: 'O score é o que importa?',
+    answer:
+      'Não. O score serve para comparar a mesma página ao longo do tempo. Site com 92 e arquitetura errada perde para site com 71 e estrutura correta.',
+  },
+  {
+    question: 'Dá para exportar?',
+    answer:
+      'Dá. O resultado sai em texto separado por tabulação, pronto para colar em planilha, e em JSON para quem quiser automatizar.',
+  },
+  {
+    question: 'Vocês guardam a URL auditada?',
+    answer:
+      'Só o registro técnico de execução, por tempo curto, para controlar abuso. Detalhe na <a href="/politica-de-privacidade">política de privacidade</a>.',
+  },
+];
+---
+
+<BaseLayout
+  title="SEO Audit: auditoria técnica gratuita de qualquer URL | SEO Maroto"
+  description="Auditoria técnica de SEO gratuita e sem cadastro. Cola a URL e recebe o que corrigir primeiro, em ordem de impacto."
+  path="/ferramentas/seo-audit"
+  schema={[
+    {
+      '@type': 'SoftwareApplication',
+      '@id': `${abs('/ferramentas/seo-audit')}#app`,
+      name: 'SEO Audit',
+      applicationCategory: 'DeveloperApplication',
+      operatingSystem: 'Web',
+      url: abs('/ferramentas/seo-audit'),
+      description: 'Auditoria técnica de SEO gratuita, com problemas ordenados por impacto.',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'BRL' },
+      publisher: { '@id': `${site.url}/#org` },
+    },
+    faqNode('/ferramentas/seo-audit', faq),
+    breadcrumbNode(crumbs),
+  ]}
+>
+<div class="bg-field"></div>
+<main id="conteudo">
+<Breadcrumb items={crumbs} />
+
+<div class="eyebrow-wrap">
+  <span class="eyebrow">Ferramenta gratuita, sem cadastro</span>
+</div>
+
+<div class="hero">
+  <h1 class="hero-title">SEO Audit: o que está <em>quebrado</em> no seu site, em ordem de impacto</h1>
+  <p class="hero-sub">Cola a URL, espera uns segundos e recebe a lista do que corrigir primeiro. Sem relatório de 80 páginas que ninguém lê até o fim.</p>
+  <div class="hero-meta"><span><b>6</b> grupos de checagem</span><span><b>50</b> URLs por execução</span><span><b>~15s</b> por auditoria</span></div>
+</div>
+
+<div class="panel">
+  <div class="panel-box">
+    <form class="tool-form" onsubmit="return false;">
+      <label class="visually-hidden" for="audit-url">URL para auditar</label>
+      <input id="audit-url" type="url" placeholder="https://seusite.com.br/pagina" autocomplete="url">
+      <button class="btn btn-primary" type="submit">Auditar</button>
+    </form>
+    <p class="tool-hint">Exemplo de resultado abaixo. A auditoria de verdade roda no clique, sem cadastro e sem enviar a URL para lugar nenhum além do nosso servidor.</p>
+  </div>
+</div>
+
+<div class="section-head">
+  <h2>Exemplo de resultado</h2>
+  <p>É assim que a saída aparece depois da execução.</p>
+</div>
+
+<div class="panel">
+  <div class="panel-box result">
+    <div class="result-head">
+      <div class="score"><span class="score-num">71</span><span class="score-lbl">score técnico</span></div>
+      <div class="score-meta">
+        <p><b>seusite.com.br/categoria/tenis</b></p>
+        <p>48 URLs rastreadas, 6 problemas críticos, 11 avisos</p>
+      </div>
+      <a class="btn btn-ghost" href="#">Copiar como tabela</a>
+    </div>
+    <ul class="findings">
+      <li class="crit"><span class="sev">crítico</span><div><h4>14 URLs com canonical apontando para página redirecionada</h4><p>O Google segue o canonical, cai em um 301 e ignora o sinal. Aponte o canonical para a URL final de status 200.</p></div></li>
+      <li class="crit"><span class="sev">crítico</span><div><h4>Paginação a partir da página 2 com noindex</h4><p>Produtos que só aparecem depois da primeira página deixam de ser descobertos. Remova o noindex e mantenha os links rastreáveis.</p></div></li>
+      <li class="warn"><span class="sev">alto</span><div><h4>9 títulos duplicados entre filtros de cor</h4><p>Filtros geram URLs distintas com o mesmo title. Ou diferencia o title, ou consolida com canonical para a categoria mãe.</p></div></li>
+      <li class="warn"><span class="sev">alto</span><div><h4>LCP de campo em 3,8s no mobile</h4><p>A imagem principal da categoria entra sem prioridade de carregamento. Sirva em WebP com dimensão declarada e prioridade alta.</p></div></li>
+      <li class="info"><span class="sev">médio</span><div><h4>Sem dados estruturados de ItemList</h4><p>A categoria lista produtos e não declara isso. É o tipo de sinal barato de implementar que ajuda a ser citado.</p></div></li>
+    </ul>
+  </div>
+</div>
+
+<div class="section-head">
+  <h2>O que é auditado</h2>
+  <p>Seis grupos, do que derruba o site ao que dá vantagem.</p>
+</div>
+
+<div class="panel">
+  <div class="panel-box">
+    <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Grupo</th><th>O que é verificado</th><th>Peso</th></tr></thead>
+      <tbody><tr><td><b style="color:var(--text-primary)">Indexação</b></td><td>robots.txt, meta robots, canonical, cadeia de redirect, status HTTP, presença no sitemap</td><td><span class="tag">crítico</span></td></tr><tr><td><b style="color:var(--text-primary)">Arquitetura</b></td><td>profundidade de clique, links internos recebidos, órfãs, paginação, faceted navigation</td><td><span class="tag">alto</span></td></tr><tr><td><b style="color:var(--text-primary)">Conteúdo</b></td><td>title, description, hierarquia de headings, duplicidade, thin content, canibalização</td><td><span class="tag">alto</span></td></tr><tr><td><b style="color:var(--text-primary)">Dados estruturados</b></td><td>JSON-LD presente, tipos aplicáveis, erros de sintaxe, campos obrigatórios ausentes</td><td><span class="tag">médio</span></td></tr><tr><td><b style="color:var(--text-primary)">Core Web Vitals</b></td><td>LCP, INP, CLS de campo e de laboratório, peso da página, render blocking</td><td><span class="tag">médio</span></td></tr><tr><td><b style="color:var(--text-primary)">GEO/AEO</b></td><td>clareza de resposta, entidades declaradas, citabilidade do trecho, bloqueio de crawler de IA</td><td><span class="tag">novo</span></td></tr></tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<div class="section-head">
+  <h2>Como usar sem se enganar</h2>
+</div>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-num">01</div>
+    <div class="step-body"><h3>Audite a página que importa</h3><p>Não comece pela home. Comece pelo template que gera receita, categoria no ecommerce ou artigo no portal, porque o erro ali se repete em milhares de URLs.</p></div>
+  </div>
+  <div class="step">
+    <div class="step-num">02</div>
+    <div class="step-body"><h3>Corrija de cima para baixo</h3><p>A lista já vem ordenada. Resolver um crítico vale mais do que zerar dez avisos cosméticos.</p></div>
+  </div>
+  <div class="step">
+    <div class="step-num">03</div>
+    <div class="step-body"><h3>Reaudite depois do deploy</h3><p>Guarde o score antes e depois. É a forma mais barata de provar para o time de desenvolvimento que a correção fez efeito.</p></div>
+  </div>
+</div>
+
+<div class="section-head">
+  <h2>Ferramentas que combinam com essa</h2>
+</div>
+
+<div class="card-grid">
+  <a class="card" href="/ferramentas/aeo-geo-checker">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="13" rx="3"/><path d="M12 3v4"/><path d="M9 13h.01M15 13h.01"/><path d="M9.5 17h5"/></svg></div>
+    <h3>AEO/GEO Checker</h3>
+    <p>Mostra se a sua página está preparada para ser citada por ChatGPT, Perplexity e AI Overviews.</p>
+    <div class="card-tags"><span class="tag">geo/aeo</span><span class="tag on">no ar</span></div>
+  </a>
+  <a class="card" href="/ferramentas/gerador-de-schema">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/></svg></div>
+    <h3>Gerador de schema</h3>
+    <p>Monta o JSON-LD dos tipos que realmente valem a pena, já validado, pronto para colar no template.</p>
+    <div class="card-tags"><span class="tag">dados estruturados</span><span class="tag on">no ar</span></div>
+  </a>
+  <a class="card" href="/ferramentas/simulador-serp">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.8"/></svg></div>
+    <h3>Simulador SERP</h3>
+    <p>Preview de título e descrição em pixel, no desktop e no mobile, para você parar de escrever no escuro.</p>
+    <div class="card-tags"><span class="tag">conteúdo</span><span class="tag on">no ar</span></div>
+  </a>
+</div>
+
+<section class="cta-band">
+  <div class="cta-inner">
+    <h2>Auditoria apontou coisa demais?</h2>
+    <p>Quando a lista é maior do que o time consegue absorver, o problema deixa de ser diagnóstico e vira priorização. Isso dá para resolver em meia hora de conversa.</p>
+    <div class="hero-actions"><a class="btn btn-primary" href="/solucoes/agendar">Agendar um bate-papo</a><a class="btn btn-ghost" href="/ferramentas">Ver todas as ferramentas</a></div>
+  </div>
+</section>
+
+<FaqSection items={faq} />
+</main>
+</BaseLayout>
+
+<script>
+  import { initFaqAccordion } from '../../scripts/faq-accordion';
+  initFaqAccordion('.faq');
+</script>

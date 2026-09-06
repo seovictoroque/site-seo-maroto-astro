@@ -1,0 +1,109 @@
+---
+/**
+ * Politica de privacidade. Texto base para modelagem: ainda precisa de
+ * revisao juridica, CNPJ, razao social, e-mail do encarregado e a lista real
+ * de terceiros antes de ir ao ar.
+ *
+ * O sumario lateral e o corpo saem do mesmo HTML de origem, sem alteracao de
+ * texto. O que mudou na migracao:
+ * - o breadcrumb virou o componente Breadcrumb.astro, e o BreadcrumbList do
+ *   JSON-LD sai da MESMA lista `crumbs`, entao o marcado e o visivel nao tem
+ *   como divergir
+ * - o CSS saiu do arquivo e virou page-kit.css, compartilhado com as outras
+ *   paginas institucionais
+ * - o JS de menu mora no Header, nao existe script proprio aqui
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/layout/Breadcrumb.astro';
+import { breadcrumbNode, webPageNode } from '../lib/schema';
+import '../styles/page-kit.css';
+
+const crumbs = [{ href: '/', label: 'Home' }, { label: 'Política de privacidade' }];
+
+/** Bate com o `.legal-updated` visivel no corpo da pagina. */
+const atualizadoEm = '2026-09-06';
+---
+
+<BaseLayout
+  title="Política de privacidade | SEO Maroto"
+  description="O que o SEO Maroto coleta, por que coleta, com quem compartilha e como você exerce seus direitos previstos na LGPD."
+  path="/politica-de-privacidade"
+  schema={[
+    webPageNode({ path: '/politica-de-privacidade', name: 'Política de privacidade', dateModified: atualizadoEm }),
+    breadcrumbNode(crumbs),
+  ]}
+>
+<div class="bg-field"></div>
+<main id="conteudo">
+<Breadcrumb items={crumbs} />
+
+<div class="eyebrow-wrap">
+  <span class="eyebrow">Documento legal</span>
+</div>
+
+<div class="hero">
+  <h1 class="hero-title">Política de <em>privacidade</em></h1>
+  <p class="hero-sub">O que o SEO Maroto coleta, por que coleta e o que você pode exigir a respeito. Em português de gente, sem parágrafo de 400 palavras.</p>
+</div>
+
+<div class="legal">
+  <aside class="legal-toc">
+    <h2>Nesta página</h2>
+    <ul><li><a href="#quem-somos">Quem somos</a></li><li><a href="#dados">Dados que coletamos</a></li><li><a href="#finalidade">Para que usamos</a></li><li><a href="#base-legal">Base legal</a></li><li><a href="#compartilhamento">Com quem compartilhamos</a></li><li><a href="#retencao">Por quanto tempo guardamos</a></li><li><a href="#direitos">Seus direitos</a></li><li><a href="#seguranca">Segurança</a></li><li><a href="#menores">Crianças e adolescentes</a></li><li><a href="#mudancas">Mudanças nesta política</a></li><li><a href="#contato">Como falar conosco</a></li></ul>
+  </aside>
+  <div class="legal-body">
+    <p class="legal-updated">Última atualização: 6 de setembro de 2026</p>
+    <div class="legal-note"><p>Resumo rápido: coletamos o mínimo, usamos para responder você e fazer as ferramentas funcionarem, não vendemos sua base e você pode pedir exclusão quando quiser.</p></div>
+    <h2 id="quem-somos">1. Quem somos</h2>
+    <p>O SEO Maroto (seomaroto.com.br) é um site de conteúdo, ferramentas gratuitas e serviços de consultoria em SEO, mantido por Victor Roque.</p>
+    <p>Para os efeitos da Lei Geral de Proteção de Dados (Lei 13.709/2018), somos o <strong>controlador</strong> dos dados pessoais tratados neste site.</p>
+    <h2 id="dados">2. Dados que coletamos</h2>
+    <p>Coletamos o mínimo necessário para o site funcionar e para responder você. Em resumo:</p>
+    <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Categoria</th><th>O que é</th><th>Quando coletamos</th></tr></thead>
+      <tbody>
+        <tr><td>Dados de contato</td><td>Nome, e-mail, site e a mensagem que você escreve</td><td>Quando você usa um formulário de contato ou de agendamento</td></tr>
+        <tr><td>Dados de assinatura</td><td>E-mail e status da inscrição</td><td>Quando você assina a newsletter</td></tr>
+        <tr><td>Dados de uso</td><td>Páginas visitadas, origem da visita, tipo de dispositivo, de forma agregada</td><td>Automaticamente, se você aceitar cookies de análise</td></tr>
+        <tr><td>Dados técnicos</td><td>Endereço IP, user agent e registro de execução das ferramentas</td><td>Automaticamente, para segurança e prevenção de abuso</td></tr>
+        <tr><td>URLs analisadas</td><td>O endereço que você informa a uma ferramenta do site</td><td>Quando você executa uma ferramenta</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>Não pedimos e não queremos dado sensível. Não faça upload nem envie por formulário informação de saúde, biometria, convicção religiosa, opinião política ou qualquer categoria especial prevista no artigo 5º da LGPD.</p>
+    <h2 id="finalidade">3. Para que usamos</h2>
+    <ul><li>Responder a mensagem que você enviou e dar andamento a uma proposta comercial.</li><li>Enviar a newsletter, quando você pediu para recebê-la.</li><li>Fazer as ferramentas funcionarem e evitar uso abusivo, como automação em massa.</li><li>Entender de forma agregada quais conteúdos são úteis, para escrever mais do que funciona.</li><li>Cumprir obrigação legal ou regulatória quando aplicável.</li></ul>
+    <p>Não vendemos, alugamos nem cedemos sua base de contato para terceiros. Não usamos seus dados para treinar modelo de inteligência artificial.</p>
+    <h2 id="base-legal">4. Base legal</h2>
+    <ul><li><strong>Consentimento</strong>, para newsletter e para cookies de análise e marketing.</li><li><strong>Execução de contrato ou procedimentos preliminares</strong>, para atendimento comercial e prestação de serviço.</li><li><strong>Legítimo interesse</strong>, para segurança do site, prevenção de fraude e melhoria do conteúdo, sempre com avaliação de impacto sobre seus direitos.</li><li><strong>Cumprimento de obrigação legal</strong>, quando a lei exigir guarda de registro.</li></ul>
+    <h2 id="compartilhamento">5. Com quem compartilhamos</h2>
+    <p>Compartilhamos dados apenas com operadores que fazem o site funcionar, e apenas no que for necessário:</p>
+    <ul><li>Hospedagem e CDN, para servir as páginas.</li><li>Plataforma de envio de e-mail, para entregar a newsletter e as respostas.</li><li>Ferramenta de análise de audiência, com dado agregado.</li><li>Plataforma de agendamento, quando você marca uma conversa.</li><li>Autoridade pública, apenas mediante ordem legal válida.</li></ul>
+    <p>Alguns desses fornecedores operam fora do Brasil. Nesses casos, a transferência internacional acontece com cláusulas contratuais e garantias compatíveis com o artigo 33 da LGPD.</p>
+    <h2 id="retencao">6. Por quanto tempo guardamos</h2>
+    <ul><li>Mensagens de contato: até 2 anos após o último contato.</li><li>Dados de assinatura da newsletter: enquanto você estiver inscrito, mais 6 meses de registro do cancelamento.</li><li>Registro técnico das ferramentas: até 90 dias.</li><li>Dados de cliente e documentos fiscais: pelo prazo exigido pela legislação aplicável.</li></ul>
+    <h2 id="direitos">7. Seus direitos</h2>
+    <p>A LGPD garante a você, a qualquer momento e sem custo, o direito de:</p>
+    <ul><li>Confirmar se tratamos seus dados e acessar o que temos.</li><li>Corrigir dado incompleto, inexato ou desatualizado.</li><li>Pedir anonimização, bloqueio ou eliminação de dado desnecessário ou excessivo.</li><li>Pedir portabilidade a outro fornecedor.</li><li>Revogar o consentimento e cancelar a newsletter quando quiser.</li><li>Se opor a tratamento fundado em legítimo interesse.</li><li>Peticionar perante a Autoridade Nacional de Proteção de Dados.</li></ul>
+    <p>Para exercer qualquer um deles, escreva pelo <a href="/contato">formulário de contato</a>. Respondemos em até 15 dias, e podemos pedir confirmação de identidade antes de liberar informação.</p>
+    <h2 id="seguranca">8. Segurança</h2>
+    <p>O site roda sob HTTPS, o acesso administrativo é restrito e os dados de formulário trafegam criptografados. Nenhum sistema é imune, então, se acontecer incidente com risco relevante, comunicamos você e a ANPD nos prazos da lei.</p>
+    <h2 id="menores">9. Crianças e adolescentes</h2>
+    <p>O conteúdo é dirigido a público profissional adulto. Não coletamos intencionalmente dado de menor de 18 anos. Se identificarmos coleta desse tipo, o dado é eliminado.</p>
+    <h2 id="mudancas">10. Mudanças nesta política</h2>
+    <p>Quando o texto mudar, a data de atualização no topo muda junto. Alteração relevante é avisada por aqui e, para quem assina, também por e-mail.</p>
+    <h2 id="contato">11. Como falar conosco</h2>
+    <p>Dúvida sobre privacidade, pedido de exclusão ou exercício de direito: use o <a href="/contato">formulário de contato</a> selecionando o assunto correspondente.</p>
+  </div>
+</div>
+
+<section class="cta-band">
+  <div class="cta-inner">
+    <h2>Ainda ficou dúvida?</h2>
+    <p>Privacidade só serve se você entender o que assinou. Pergunta que a gente responde em português.</p>
+    <div class="hero-actions"><a class="btn btn-primary" href="/contato">Falar com a gente</a><a class="btn btn-ghost" href="/politica-de-cookies">Ver política de cookies</a></div>
+  </div>
+</section>
+</main>
+</BaseLayout>

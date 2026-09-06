@@ -1,0 +1,96 @@
+---
+/**
+ * Politica de cookies. Texto base para modelagem: ainda precisa de revisao
+ * juridica e da lista real de cookies de terceiro antes de ir ao ar.
+ *
+ * O sumario lateral e o corpo saem do mesmo HTML de origem, sem alteracao de
+ * texto. O que mudou na migracao:
+ * - o breadcrumb virou o componente Breadcrumb.astro, e o BreadcrumbList do
+ *   JSON-LD sai da MESMA lista `crumbs`, entao o marcado e o visivel nao tem
+ *   como divergir
+ * - o CSS saiu do arquivo e virou page-kit.css, compartilhado com as outras
+ *   paginas institucionais
+ * - o JS de menu mora no Header, nao existe script proprio aqui
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/layout/Breadcrumb.astro';
+import { breadcrumbNode, webPageNode } from '../lib/schema';
+import '../styles/page-kit.css';
+
+const crumbs = [{ href: '/', label: 'Home' }, { label: 'Política de cookies' }];
+
+/** Bate com o `.legal-updated` visivel no corpo da pagina. */
+const atualizadoEm = '2026-09-06';
+---
+
+<BaseLayout
+  title="Política de cookies | SEO Maroto"
+  description="Quais cookies o SEO Maroto usa, para que servem e como desligar os que você não quiser."
+  path="/politica-de-cookies"
+  schema={[
+    webPageNode({ path: '/politica-de-cookies', name: 'Política de cookies', dateModified: atualizadoEm }),
+    breadcrumbNode(crumbs),
+  ]}
+>
+<div class="bg-field"></div>
+<main id="conteudo">
+<Breadcrumb items={crumbs} />
+
+<div class="eyebrow-wrap">
+  <span class="eyebrow">Documento legal</span>
+</div>
+
+<div class="hero">
+  <h1 class="hero-title">Política de <em>cookies</em></h1>
+  <p class="hero-sub">Quais cookies o site usa, para que servem e como desligar o que você não quiser. Sem banner que esconde o botão de recusar.</p>
+</div>
+
+<div class="legal">
+  <aside class="legal-toc">
+    <h2>Nesta página</h2>
+    <ul><li><a href="#o-que-sao">O que são cookies</a></li><li><a href="#categorias">Categorias que usamos</a></li><li><a href="#lista">Lista de cookies</a></li><li><a href="#terceiros">Cookies de terceiros</a></li><li><a href="#gerenciar">Como gerenciar</a></li><li><a href="#navegador">Configuração no navegador</a></li><li><a href="#consequencias">O que muda se você recusar</a></li><li><a href="#atualizacoes">Atualizações</a></li></ul>
+  </aside>
+  <div class="legal-body">
+    <p class="legal-updated">Última atualização: 6 de setembro de 2026</p>
+    <div class="legal-note"><p>Resumo rápido: o essencial roda sempre, análise só com o seu aceite, marketing não usamos, e recusar não quebra nada do site.</p></div>
+    <h2 id="o-que-sao">1. O que são cookies</h2>
+    <p>Cookies são arquivos pequenos que um site grava no seu navegador para lembrar informação entre uma página e outra. Também usamos tecnologias equivalentes, como armazenamento local, e tudo o que está escrito aqui vale para elas.</p>
+    <h2 id="categorias">2. Categorias que usamos</h2>
+    <ul><li><strong>Necessários</strong>: fazem o site funcionar, guardam sua escolha de consentimento e protegem formulários contra abuso. Não podem ser desligados.</li><li><strong>Preferência</strong>: lembram ajustes seus, como progresso marcado na escolinha.</li><li><strong>Análise</strong>: medem de forma agregada quais páginas são lidas, para decidir o que escrever depois. Só rodam com o seu aceite.</li><li><strong>Marketing</strong>: hoje não usamos. Se um dia passarmos a usar, esta página muda antes, e o consentimento é pedido separadamente.</li></ul>
+    <h2 id="lista">3. Lista de cookies</h2>
+    <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Nome</th><th>Categoria</th><th>Para que serve</th><th>Duração</th></tr></thead>
+      <tbody>
+        <tr><td>sm_consent</td><td>Necessário</td><td>Guarda a sua escolha no aviso de cookies</td><td>6 meses</td></tr>
+        <tr><td>sm_session</td><td>Necessário</td><td>Mantém o estado da navegação e protege formulários</td><td>Sessão</td></tr>
+        <tr><td>sm_progress</td><td>Preferência</td><td>Lembra as etapas marcadas na escolinha</td><td>12 meses</td></tr>
+        <tr><td>sm_theme</td><td>Preferência</td><td>Guarda ajustes de exibição</td><td>12 meses</td></tr>
+        <tr><td>_ga e derivados</td><td>Análise</td><td>Medição agregada de audiência</td><td>até 24 meses</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>A lista é revisada periodicamente. Se um cookie novo entrar, ele aparece aqui antes de passar a rodar.</p>
+    <h2 id="terceiros">4. Cookies de terceiros</h2>
+    <p>Ferramenta de análise de audiência e player de vídeo incorporado podem gravar cookies próprios, sob as políticas dos respectivos fornecedores. Conteúdo incorporado só carrega depois do seu aceite de cookies de análise.</p>
+    <h2 id="gerenciar">5. Como gerenciar</h2>
+    <p>No primeiro acesso você escolhe o que aceitar, com o botão de recusar no mesmo nível visual do de aceitar. Para mudar depois, use o painel abaixo a qualquer momento.</p>
+    <div class="legal-note" style="border-left-color:var(--rust)"><p><strong>Preferências de cookies.</strong> O painel de consentimento é aberto pelo link do rodapé, em qualquer página. Sua escolha vale por 6 meses ou até você mudar.</p></div>
+    <h2 id="navegador">6. Configuração no navegador</h2>
+    <p>Você também pode bloquear ou apagar cookies direto no navegador. Os caminhos mudam a cada versão, mas a opção fica sempre na área de privacidade e segurança das configurações, em Chrome, Firefox, Safari e Edge.</p>
+    <h2 id="consequencias">7. O que muda se você recusar</h2>
+    <p>Praticamente nada. O conteúdo e as ferramentas continuam funcionando. Você perde apenas a memória de preferência, como o progresso marcado na escolinha, e deixa de entrar na medição agregada de audiência.</p>
+    <h2 id="atualizacoes">8. Atualizações</h2>
+    <p>A data no topo indica a versão vigente. Mudança que envolva categoria nova de cookie pede consentimento de novo, sem aproveitar o aceite anterior.</p>
+  </div>
+</div>
+
+<section class="cta-band">
+  <div class="cta-inner">
+    <h2>Quer o detalhe do que fazemos com dado?</h2>
+    <p>A política de privacidade explica o que é coletado, por quanto tempo fica guardado e como pedir exclusão.</p>
+    <div class="hero-actions"><a class="btn btn-primary" href="/politica-de-privacidade">Ler a privacidade</a><a class="btn btn-ghost" href="/contato">Falar com a gente</a></div>
+  </div>
+</section>
+</main>
+</BaseLayout>

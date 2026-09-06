@@ -1,0 +1,213 @@
+---
+/**
+ * SOBRE.
+ *
+ * Quem escreve, por que o site existe e como o trabalho acontece.
+ *
+ * O Person do JSON-LD NAO e um no novo: ele referencia o mesmo @id usado no
+ * autor de cada post e no publisher do WebSite. No HTML de origem era uma
+ * segunda pessoa, com os mesmos dados e sem @id, o que dava duas entidades
+ * diferentes para o buscador.
+ *
+ * Migrada de sobre.html. Nenhum texto foi reescrito. O que mudou:
+ * - o breadcrumb virou Breadcrumb.astro, e o BreadcrumbList sai da MESMA
+ *   lista `crumbs` que a pagina renderiza
+ * - o FAQ virou FaqSection.astro, e o FAQPage sai da MESMA lista `faq`
+ * - o CSS saiu do arquivo: o compartilhado esta em page-kit.css
+ * - o JS de menu e de FAQ virou modulo importado, nada inline
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/layout/Breadcrumb.astro';
+import FaqSection from '../components/page/FaqSection.astro';
+import type { FaqItem } from '../lib/faq';
+import { abs, breadcrumbNode, faqNode, personId, personNode } from '../lib/schema';
+import { site } from '../data/site';
+import { authors } from '../data/authors';
+
+import '../styles/page-kit.css';
+
+const crumbs = [{ href: '/', label: 'Home' }, { label: 'Sobre' }];
+
+const victor = authors.find((a) => a.slug === 'victor-roque')!;
+
+const faq: FaqItem[] = [
+  {
+    question: 'Você aceita projeto freelance?',
+    answer:
+      'Aceito, dependendo do escopo e da agenda. O caminho é a <a href="/solucoes/agendar">conversa de 30 minutos</a>.',
+  },
+  {
+    question: 'Por que SEO Maroto?',
+    answer:
+      'Porque maroto é quem resolve com o que tem na mão, sem inventar complicação para parecer inteligente. É como eu gosto de trabalhar.',
+  },
+  {
+    question: 'Dá aula?',
+    answer:
+      'Dou treinamento fechado para times in-house. Curso gravado e vendido em lançamento com contagem regressiva não é o meu ramo.',
+  },
+  {
+    question: 'Posso republicar o conteúdo do site?',
+    answer:
+      'Pode citar e linkar à vontade. Republicação integral, só com combinação prévia pelo <a href="/contato">contato</a>.',
+  },
+];
+---
+
+<BaseLayout
+  title="Sobre o SEO Maroto e o Victor Roque | SEO Maroto"
+  description="Quem escreve, por que o site existe e como eu trabalho. Cerca de dez anos de SEO, de ecommerce in-house a cliente enterprise."
+  path="/sobre"
+  schema={[
+    personNode(victor),
+    {
+      '@type': 'AboutPage',
+      '@id': `${abs('/sobre')}#page`,
+      url: abs('/sobre'),
+      name: 'Sobre o SEO Maroto',
+      inLanguage: site.lang,
+      isPartOf: { '@id': `${site.url}/#website` },
+      mainEntity: { '@id': personId(victor.slug) },
+      about: {
+        '@type': 'Place',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Itapetininga',
+          addressRegion: 'SP',
+          addressCountry: 'BR',
+        },
+      },
+    },
+    faqNode('/sobre', faq),
+    breadcrumbNode(crumbs),
+  ]}
+>
+<div class="bg-field"></div>
+<main id="conteudo">
+<Breadcrumb items={crumbs} />
+
+<div class="eyebrow-wrap">
+  <span class="eyebrow">Sobre o site e sobre quem escreve</span>
+</div>
+
+<div class="hero">
+  <h1 class="hero-title">SEO sem enrolação, feito por quem <em>coloca a mão</em></h1>
+  <p class="hero-sub">Meu nome é Victor Roque. Faço SEO há cerca de dez anos, aprendi na tentativa e erro e continuo aprendendo assim. O SEO Maroto é onde eu publico o que já testei.</p>
+  <div class="hero-meta"><span><b>~10</b> anos de SEO</span><span><b>Itapetininga</b> São Paulo</span><span><b>0</b> guru envolvido</span></div>
+  <div class="hero-actions"><a class="btn btn-primary" href="/solucoes/agendar">Falar comigo</a><a class="btn btn-ghost" href="/ferramentas">Ver as ferramentas</a></div>
+</div>
+
+<div class="about">
+  <p>Eu trabalho com busca orgânica desde antes de a sigla GEO existir, e boa parte do que sei veio de quebrar site em produção e ter que consertar rápido. Passei por ecommerce in-house, por agência com vários clientes ao mesmo tempo e hoje toco SEO para clientes enterprise, o que basicamente significa negociar prioridade com muita gente antes de uma linha de código mudar.</p>
+  <p>O SEO Maroto existe porque eu cansei de repetir as mesmas explicações em call e de ver conteúdo bom escondido atrás de captura de e-mail. Aqui as ferramentas são abertas, o roteiro de estudo é gratuito e os estudos de caso mostram o número real, inclusive quando o número é ruim.</p>
+  <p class="tagline">Sem guru, sem firula, sem prometer primeira posição em três semanas.</p>
+</div>
+
+<div class="section-head">
+  <h2>Como cheguei aqui</h2>
+  <p>Resumo honesto, sem inflar cargo.</p>
+</div>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-num">01</div>
+    <div class="step-body"><h3>O começo, sem plano de carreira</h3><p>Comecei mexendo em site por curiosidade e descobri que dava para prever de onde vinha a visita. Sem faculdade de marketing, sem curso caro, muito log e muito erro.</p></div>
+  </div>
+  <div class="step">
+    <div class="step-num">02</div>
+    <div class="step-body"><h3>Ecommerce por dentro</h3><p>Fui SEO in-house de ecommerce de calçados, onde aprendi na marca que arquitetura de catálogo e faceted navigation decidem mais receita do que qualquer post de blog.</p></div>
+  </div>
+  <div class="step">
+    <div class="step-num">03</div>
+    <div class="step-body"><h3>Agência e escala</h3><p>Depois vieram vários clientes de ecommerce ao mesmo tempo, catálogo pesado de SKU e a lição de que processo repetível vale mais do que insight isolado.</p></div>
+  </div>
+  <div class="step">
+    <div class="step-num">04</div>
+    <div class="step-body"><h3>Enterprise e time grande</h3><p>Hoje toco estratégia e execução de SEO para clientes enterprise, junto com desenvolvimento, conteúdo e produto, que é onde a correção realmente acontece.</p></div>
+  </div>
+  <div class="step">
+    <div class="step-num">05</div>
+    <div class="step-body"><h3>O SEO Maroto</h3><p>O site nasceu para publicar o que eu já explicava repetidamente em call: o que funciona, o que não funciona e o que ninguém mede direito.</p></div>
+  </div>
+</div>
+
+<div class="section-head">
+  <h2>No que eu acredito</h2>
+  <p>Quatro princípios que valem para tudo que sai daqui.</p>
+</div>
+
+<div class="card-grid two">
+  <a class="card" href="#">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></div>
+    <h3>Dado ou não aconteceu</h3>
+    <p>Se não dá para medir antes e depois, é opinião. Opinião pode ser útil, mas entra com essa etiqueta.</p>
+    <div class="card-tags"></div>
+  </a>
+  <a class="card" href="#">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></div>
+    <h3>Prioridade acima de completude</h3>
+    <p>Lista de 300 problemas é fácil de gerar e impossível de executar. O trabalho difícil é dizer o que fazer primeiro.</p>
+    <div class="card-tags"></div>
+  </a>
+  <a class="card" href="#">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></div>
+    <h3>Explicar para quem implementa</h3>
+    <p>Recomendação que o time de desenvolvimento não entende não vira código. Escrever bem faz parte do trabalho técnico.</p>
+    <div class="card-tags"></div>
+  </a>
+  <a class="card" href="#">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></div>
+    <h3>Mostrar o que deu errado</h3>
+    <p>Estudo de caso que só tem gráfico subindo é propaganda. O aprendizado costuma estar no que falhou.</p>
+    <div class="card-tags"></div>
+  </a>
+</div>
+
+<div class="section-head">
+  <h2>Onde me achar</h2>
+</div>
+
+<div class="card-grid">
+  <a class="card" href="/contato">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4.5" width="20" height="15" rx="2.5"/><path d="M2.5 7l9.5 6.5L21.5 7"/></svg></div>
+    <h3>Contato direto</h3>
+    <p>Proposta, dúvida, correção de algo que escrevi errado. Respondo em até dois dias úteis.</p>
+    <div class="card-tags"><span class="tag">e-mail</span></div>
+  </a>
+  <a class="card" href="/comunidade">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12c-.688 0-1.25.561-1.25 1.25 0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg></div>
+    <h3>Comunidade</h3>
+    <p>Conversa técnica do dia a dia, com gente que trabalha com isso.</p>
+    <div class="card-tags"><span class="tag">reddit</span></div>
+  </a>
+  <a class="card" href="/newsletter">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2.5H6.5a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8z"/><path d="M14 2.5V8h5.5"/><path d="M15.5 13.5h-7M15.5 17.5h-7M10.5 9.5h-2"/></svg></div>
+    <h3>Newsletter</h3>
+    <p>Uma edição por semana, do que mudou e do que fazer a respeito.</p>
+    <div class="card-tags"><span class="tag">semanal</span></div>
+  </a>
+</div>
+
+<section class="cta-band">
+  <div class="cta-inner">
+    <h2>Quer trabalhar junto?</h2>
+    <p>Meia hora de conversa costuma resolver mais do que três e-mails de escopo. Sem compromisso e sem apresentação institucional.</p>
+    <div class="hero-actions"><a class="btn btn-primary" href="/solucoes/agendar">Agendar um bate-papo</a><a class="btn btn-ghost" href="/solucoes">Ver as soluções</a></div>
+  </div>
+</section>
+
+<FaqSection items={faq} />
+</main>
+</BaseLayout>
+
+<script>
+  import { initFaqAccordion } from '../scripts/faq-accordion';
+  initFaqAccordion('.faq');
+</script>

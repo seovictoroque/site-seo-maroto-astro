@@ -1,0 +1,215 @@
+---
+/**
+ * INDICE DAS FERRAMENTAS GRATUITAS.
+ *
+ * Hero, filtro por chip, grade com as dez ferramentas, como funciona em tres
+ * passos, faixa de chamada e FAQ.
+ *
+ * O ItemList do JSON-LD sai de `navItems`, a MESMA fonte do mega menu e do
+ * rodape. No HTML de origem ele era uma lista escrita a mao com dez URLs, ou
+ * seja, uma terceira copia da mesma coisa para sair de sincronia.
+ *
+ * Migrada de ferramentas.html. Nenhum texto foi reescrito. O que mudou:
+ * - o breadcrumb virou Breadcrumb.astro, e o BreadcrumbList sai da MESMA
+ *   lista `crumbs` que a pagina renderiza
+ * - o FAQ virou FaqSection.astro, e o FAQPage sai da MESMA lista `faq`
+ * - o CSS saiu do arquivo: o compartilhado esta em page-kit.css
+ * - o JS de menu e de FAQ virou modulo importado, nada inline
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/layout/Breadcrumb.astro';
+import FaqSection from '../../components/page/FaqSection.astro';
+import type { FaqItem } from '../../lib/faq';
+import { abs, breadcrumbNode, faqNode } from '../../lib/schema';
+import { site } from '../../data/site';
+import { navItems } from '../../data/navigation';
+
+import '../../styles/page-kit.css';
+
+const crumbs = [{ href: '/', label: 'Home' }, { label: 'Ferramentas' }];
+
+/** As dez ferramentas, na ordem do mega menu. Fonte unica de verdade. */
+const ferramentas = navItems.find((i) => i.href === '/ferramentas')?.children ?? [];
+
+const faq: FaqItem[] = [
+  {
+    question: 'As ferramentas são gratuitas mesmo?',
+    answer:
+      'São. Todas as ferramentas que estão no ar rodam sem cadastro, sem cartão e sem período de teste. Se em algum momento alguma delas passar a ter um limite, o limite fica escrito na própria página da ferramenta, não escondido no rodapé.',
+  },
+  {
+    question: 'Vocês guardam as URLs que eu testo?',
+    answer:
+      'Guardamos apenas o log técnico necessário para a ferramenta funcionar e para evitar abuso, por tempo curto. Nada é vendido, nada vira lista de prospecção. O detalhe está na <a href="/politica-de-privacidade">política de privacidade</a>.',
+  },
+  {
+    question: 'Dá para usar em site de cliente?',
+    answer:
+      'Dá, e é para isso que elas existem. O único pedido é bom senso com volume: são ferramentas mantidas por uma pessoa, não uma API corporativa.',
+  },
+  {
+    question: 'Por que algumas estão marcadas como em breve?',
+    answer:
+      'Porque estão em construção e eu prefiro avisar antes do que entregar uma coisa pela metade. Quem assina a <a href="/newsletter">newsletter</a> recebe o aviso quando cada uma entra no ar.',
+  },
+  {
+    question: 'Encontrei um bug. Onde reclamo?',
+    answer:
+      'No <a href="/contato">contato</a> ou direto na issue do repositório. Bug reportado com URL de exemplo é bug corrigido rápido.',
+  },
+];
+---
+
+<BaseLayout
+  title="Ferramentas de SEO gratuitas e sem cadastro | SEO Maroto"
+  description="10 ferramentas de SEO gratuitas: auditoria técnica, gerador de schema, simulador de SERP, checker de GEO/AEO e mais. Sem cadastro e sem plano pago."
+  path="/ferramentas"
+  schema={[
+    {
+      '@type': 'CollectionPage',
+      '@id': `${abs('/ferramentas')}#page`,
+      url: abs('/ferramentas'),
+      name: 'Ferramentas de SEO gratuitas',
+      inLanguage: site.lang,
+      isPartOf: { '@id': `${site.url}/#website` },
+      mainEntity: {
+        '@type': 'ItemList',
+        itemListElement: ferramentas.map((f, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: f.label,
+          url: abs(f.href),
+        })),
+      },
+    },
+    faqNode('/ferramentas', faq),
+    breadcrumbNode(crumbs),
+  ]}
+>
+<div class="bg-field"></div>
+<main id="conteudo">
+<Breadcrumb items={crumbs} />
+
+<div class="eyebrow-wrap">
+  <span class="eyebrow">10 ferramentas, sem cadastro</span>
+</div>
+
+<div class="hero">
+  <h1 class="hero-title">Ferramentas de SEO que <em>resolvem</em>, não que impressionam</h1>
+  <p class="hero-sub">Cada uma foi feita para responder uma pergunta específica do dia a dia. Sem dashboard inútil, sem exportação travada atrás de plano pago.</p>
+  <div class="hero-meta"><span><b>10</b> ferramentas</span><span><b>7</b> no ar</span><span><b>0</b> cadastros</span></div>
+  <div class="hero-actions"><a class="btn btn-primary" href="/ferramentas/seo-audit">Começar pelo SEO Audit</a><a class="btn btn-ghost" href="/solucoes">Ver as soluções</a></div>
+</div>
+
+<div class="chips"><a class="chip" href="#todas" aria-current="true">Todas</a><a class="chip" href="#tecnico">Técnico</a><a class="chip" href="#conteudo">Conteúdo</a><a class="chip" href="#geo">GEO/AEO</a><a class="chip" href="#negocio">Negócio</a><a class="chip" href="#estudo">Estudo</a></div>
+
+<div id="todas"></div>
+<div class="card-grid">
+  <a class="card" href="/ferramentas/seo-audit">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+    <h3>SEO Audit</h3>
+    <p>Roda uma auditoria técnica na URL e devolve o que está quebrado, em ordem de impacto, sem relatório de 80 páginas.</p>
+    <div class="card-tags"><span class="tag on">técnico</span><span class="tag on">no ar</span></div>
+  </a>
+  <a class="card" href="/ferramentas/seo-roadmap">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3.5 3 6v15l6-2.5 6 2.5 6-2.5V3.5L15 6z"/><path d="M9 3.5v15M15 6v15"/></svg></div>
+    <h3>SEO Roadmap</h3>
+    <p>O roteiro do zero ao avançado em 12 etapas, com itens de ação para marcar conforme você avança.</p>
+    <div class="card-tags"><span class="tag">estudo</span><span class="tag on">no ar</span></div>
+  </a>
+  <a class="card" href="/ferramentas/aeo-geo-checker">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="13" rx="3"/><path d="M12 3v4"/><path d="M9 13h.01M15 13h.01"/><path d="M9.5 17h5"/></svg></div>
+    <h3>AEO/GEO Checker</h3>
+    <p>Mostra se a sua página está preparada para ser citada por ChatGPT, Perplexity e AI Overviews.</p>
+    <div class="card-tags"><span class="tag">geo/aeo</span><span class="tag on">no ar</span></div>
+  </a>
+  <a class="card" href="/ferramentas/gerador-de-schema">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/></svg></div>
+    <h3>Gerador de schema</h3>
+    <p>Monta o JSON-LD dos tipos que realmente valem a pena, já validado, pronto para colar no template.</p>
+    <div class="card-tags"><span class="tag">dados estruturados</span><span class="tag on">no ar</span></div>
+  </a>
+  <a class="card" href="/ferramentas/simulador-serp">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.8"/></svg></div>
+    <h3>Simulador SERP</h3>
+    <p>Preview de título e descrição em pixel, no desktop e no mobile, para você parar de escrever no escuro.</p>
+    <div class="card-tags"><span class="tag">conteúdo</span><span class="tag on">no ar</span></div>
+  </a>
+  <a class="card" href="/ferramentas/teste-status-http">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18z"/></svg></div>
+    <h3>Teste de status HTTP</h3>
+    <p>Segue a cadeia de redirects até o fim e mostra cada salto, com o código e o tempo de resposta.</p>
+    <div class="card-tags"><span class="tag">técnico</span><span class="tag on">no ar</span></div>
+  </a>
+  <a class="card" href="/ferramentas/extrator-de-sitemap">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="5" rx="1.5"/><rect x="2" y="16" width="6" height="5" rx="1.5"/><rect x="16" y="16" width="6" height="5" rx="1.5"/><path d="M12 8v4M5 16v-4h14v4"/></svg></div>
+    <h3>Extrator de sitemap</h3>
+    <p>Puxa todas as URLs de um sitemap, inclusive os aninhados, e devolve em lista pronta para planilha.</p>
+    <div class="card-tags"><span class="tag">técnico</span><span class="tag on">no ar</span></div>
+  </a>
+  <a class="card" href="/ferramentas/trafego-vs-receita">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18V6l6 5 3-4 3 4 6-5v12z"/></svg></div>
+    <h3>Tráfego vs receita</h3>
+    <p>Traduz sessão orgânica em dinheiro, para a conversa com a diretoria parar de ser sobre posição média.</p>
+    <div class="card-tags"><span class="tag">negócio</span><span class="tag soon">em breve</span></div>
+  </a>
+  <a class="card" href="/ferramentas/rastreador-de-entidades">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="M6.6 7.4 10 10.3M17.4 7.4 14 10.3M6.6 16.6 10 13.7M17.4 16.6 14 13.7"/></svg></div>
+    <h3>Rastreador de entidades</h3>
+    <p>Identifica as entidades que o Google associa ao seu conteúdo e aponta as que estão faltando.</p>
+    <div class="card-tags"><span class="tag">geo/aeo</span><span class="tag soon">em breve</span></div>
+  </a>
+  <a class="card" href="/ferramentas/monitoramento-de-indexacao">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 12 18.4 5.6"/></svg></div>
+    <h3>Monitoramento de indexação</h3>
+    <p>Acompanha o que entra e o que cai do índice, com alerta quando a queda deixa de ser ruído.</p>
+    <div class="card-tags"><span class="tag">técnico</span><span class="tag soon">em breve</span></div>
+  </a>
+</div>
+
+<div class="section-head">
+  <h2>Como elas foram pensadas</h2>
+  <p>Três regras que valem para toda ferramenta publicada aqui.</p>
+</div>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-num">01</div>
+    <div class="step-body"><h3>Uma pergunta por ferramenta</h3><p>Ferramenta que faz tudo não faz nada direito. Cada uma aqui responde uma pergunta só, e responde rápido.</p></div>
+  </div>
+  <div class="step">
+    <div class="step-num">02</div>
+    <div class="step-body"><h3>Resultado priorizado, não listado</h3><p>Não adianta cuspir 300 avisos. O que aparece primeiro é o que muda o resultado primeiro, e o resto fica recolhido.</p></div>
+  </div>
+  <div class="step">
+    <div class="step-num">03</div>
+    <div class="step-body"><h3>Saída que sai daqui</h3><p>Todo resultado pode ser copiado em texto ou tabela, para colar em planilha, ticket ou apresentação sem retrabalho.</p></div>
+  </div>
+</div>
+
+<section class="cta-band">
+  <div class="cta-inner">
+    <h2>Falta alguma ferramenta?</h2>
+    <p>Se você faz a mesma tarefa manual toda semana, me conta. Boa parte do que está nessa lista nasceu de um pedido assim.</p>
+    <div class="hero-actions"><a class="btn btn-primary" href="/contato">Sugerir uma ferramenta</a><a class="btn btn-ghost" href="/newsletter">Receber os lançamentos</a></div>
+  </div>
+</section>
+
+<FaqSection items={faq} />
+</main>
+</BaseLayout>
+
+<script>
+  import { initFaqAccordion } from '../../scripts/faq-accordion';
+  initFaqAccordion('.faq');
+</script>
