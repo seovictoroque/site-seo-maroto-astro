@@ -39,3 +39,7 @@ temp/
 *.bak
 *.orig
 rascunho/
+
+# Gerados pelo build na raiz, ver astro.config.mjs
+htaccess
+robots.txt
