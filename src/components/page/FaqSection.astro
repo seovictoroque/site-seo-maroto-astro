@@ -1,0 +1,51 @@
+---
+/**
+ * FAQ EM ACORDEAO das paginas institucionais e de ferramentas.
+ *
+ * A lista `items` e a UNICA fonte: daqui saem o acordeao visivel e o FAQPage
+ * do JSON-LD, montado com faqNode(path, items) na propria pagina. No HTML de
+ * origem eram dois blocos escritos a mao, um visivel e um em script, com um
+ * comentario pedindo para lembrar de mudar os dois. Nao tem mais como
+ * divergirem.
+ *
+ * O primeiro item nasce aberto de proposito: sem JavaScript o CSS deixa todas
+ * as respostas visiveis, e com JavaScript o faq-accordion.ts assume o
+ * controle. A pagina e legivel nos dois casos.
+ *
+ * A resposta aceita HTML (links, enfase), por isso vai com set:html. Para o
+ * schema, faqNode tira as tags.
+ */
+import Icon from '../layout/Icon.astro';
+import type { FaqItem } from '../../lib/faq';
+
+interface Props {
+  items: FaqItem[];
+  title?: string;
+  id?: string;
+}
+
+const { items, title = 'Perguntas frequentes', id = 'perguntas-frequentes' } = Astro.props;
+---
+
+<section class="faq" id={id} aria-labelledby={`${id}-titulo`}>
+  <h2 id={`${id}-titulo`}>{title}</h2>
+  <div class="faq-list">
+    {items.map((item, i) => (
+      <div class="faq-item" data-open={i === 0 ? 'true' : 'false'}>
+        <button
+          class="faq-q"
+          type="button"
+          id={`${id}-q${i}`}
+          aria-expanded={i === 0 ? 'true' : 'false'}
+          aria-controls={`${id}-a${i}`}
+        >
+          {item.question}
+          <Icon set="ui" name="caret" strokeWidth={2} />
+        </button>
+        <div class="faq-a" id={`${id}-a${i}`} role="region" aria-labelledby={`${id}-q${i}`}>
+          <div class="faq-a-inner"><p set:html={item.answer} /></div>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

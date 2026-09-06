@@ -52,6 +52,18 @@ export function breadcrumbNode(items: { label: string; href?: string }[]): Recor
   };
 }
 
+/**
+ * A resposta pode conter HTML inline, porque a MESMA lista alimenta o
+ * acordeao visivel em FaqSection.astro. O schema quer texto puro, entao as
+ * tags saem aqui, no unico lugar onde isso importa.
+ */
+function semTags(html: string): string {
+  return html
+    .replace(/<[^>]+>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 export function faqNode(id: string, items: { question: string; answer: string }[]): Record<string, unknown> {
   return {
     '@type': 'FAQPage',
@@ -59,7 +71,7 @@ export function faqNode(id: string, items: { question: string; answer: string }[
     mainEntity: items.map((f) => ({
       '@type': 'Question',
       name: f.question,
-      acceptedAnswer: { '@type': 'Answer', text: f.answer },
+      acceptedAnswer: { '@type': 'Answer', text: semTags(f.answer) },
     })),
   };
 }
@@ -98,6 +110,26 @@ export function profilePageNode(author: Author, path: string): Record<string, un
     name: `${author.name}, ${author.role.split(',')[0]}`,
     inLanguage: site.lang,
     mainEntity: { '@id': personId(author.slug) },
+    isPartOf: { '@id': websiteId },
+  };
+}
+
+/**
+ * WebPage simples, para as paginas que nao sao artigo, perfil nem colecao.
+ * As tres paginas legais usam so isso mais o BreadcrumbList.
+ */
+export function webPageNode(opts: {
+  path: string;
+  name: string;
+  dateModified: string;
+}): Record<string, unknown> {
+  return {
+    '@type': 'WebPage',
+    '@id': `${abs(opts.path)}#page`,
+    url: abs(opts.path),
+    name: opts.name,
+    inLanguage: site.lang,
+    dateModified: opts.dateModified,
     isPartOf: { '@id': websiteId },
   };
 }
