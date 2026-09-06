@@ -15,7 +15,6 @@ export type NavIconName =
   | 'escolinha'
   | 'comunidade'
   | 'sobre'
-  | 'agenda'
   | 'newsletter'
   | 'contato'
   | 'blog';
@@ -77,7 +76,6 @@ export const navItems: NavItem[] = [
   },
   { href: '/comunidade', label: 'Comunidade', icon: 'comunidade' },
   { href: '/sobre', label: 'Sobre', icon: 'sobre' },
-  { href: '/agenda', label: 'Agenda', icon: 'agenda' },
   { href: '/newsletter', label: 'Newsletter', icon: 'newsletter' },
   { href: '/contato', label: 'Contato', icon: 'contato' },
   { href: '/blog', label: 'Blog', icon: 'blog' },
@@ -144,7 +142,6 @@ export const footerColumns = [
     links: [
       { href: '/comunidade', label: 'Comunidade' },
       { href: '/sobre', label: 'Sobre' },
-      { href: '/agenda', label: 'Agenda' },
       { href: '/contato', label: 'Contato' },
       { href: '/contato', label: 'FAQ' },
     ],
