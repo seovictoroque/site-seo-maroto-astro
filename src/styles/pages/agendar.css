@@ -1,0 +1,140 @@
+/* SO A /solucoes/agendar USA ESTE ARQUIVO.
+   Agendador, card de formulario, par de colunas, hero de duas colunas e card
+   de apresentacao. Extraido de solucoes-agendar.html sem alterar valor
+   nenhum.
+
+   O .about-card tambem aparece na /contato: quando aquela pagina for migrada,
+   este bloco vira componente compartilhado em vez de ser copiado. */
+
+/* AGENDADOR ============================================================= */
+.booker{ display:grid; grid-template-columns:minmax(0,1fr) 214px; background: var(--bg-elev); border:1px solid var(--border-strong); border-radius:16px; overflow:hidden; box-shadow: 0 22px 60px rgba(0,0,0,0.4); }
+.bk-strip{ grid-column:1 / -1; display:flex; align-items:center; gap:8px 20px; flex-wrap:wrap; padding:15px 24px; border-bottom:1px solid var(--border); background: var(--bg-elev-2); }
+.bk-strip .bk-ev{ font-family: var(--serif); font-style:italic; font-size:19px; color: var(--text-primary); margin-right:auto; }
+.bk-strip span{ display:inline-flex; align-items:center; gap:7px; font-family: var(--mono); font-size:11.5px; color: var(--text-secondary); }
+.bk-strip svg{ width:14px; height:14px; color: var(--accent); flex-shrink:0; }
+
+.bk-cal{ padding:24px; }
+.bk-head{ display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:20px; flex-wrap:wrap; }
+.bk-head h3{ font-size:15.5px; font-weight:600; }
+.bk-nav{ display:flex; align-items:center; gap:6px; }
+.bk-nav button{ width:30px; height:30px; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); border-radius:8px; background:none; color: var(--text-secondary); cursor:pointer; transition: color .15s ease, border-color .15s ease; }
+.bk-nav button:hover{ color: var(--accent); border-color: var(--border-strong); }
+.bk-nav button svg{ width:15px; height:15px; }
+.bk-month{ font-family: var(--mono); font-size:12.5px; color: var(--text-primary); min-width:132px; text-align:center; }
+.bk-week{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-bottom:8px; }
+.bk-week span{ text-align:center; font-family: var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color: var(--text-muted); }
+.bk-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+/* variante util: sem sabado e domingo, cinco colunas */
+.booker.uteis .bk-week, .booker.uteis .bk-grid{ grid-template-columns:repeat(5,1fr); }
+.bk-day{ aspect-ratio:1/1; width:100%; max-width:46px; justify-self:center; display:flex; align-items:center; justify-content:center; border-radius:50%; border:1px solid transparent; font-family: var(--mono); font-size:13px; background:none; }
+.bk-day.off{ color: var(--text-muted); opacity:.45; }
+.bk-day.empty{ border:none; }
+.bk-day.free{ color: var(--accent); background: rgba(217,164,65,0.10); border-color: rgba(217,164,65,0.24); cursor:pointer; font-weight:500; transition: background .15s ease, color .15s ease, border-color .15s ease; }
+.bk-day.free:hover{ background: rgba(217,164,65,0.2); border-color: var(--accent); }
+.bk-day.free.is-sel{ background: var(--accent); color:#2B1704; border-color: var(--accent); font-weight:600; }
+.bk-day:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.bk-tz{ font-family: var(--mono); font-size:11px; color: var(--text-muted); margin-top:18px; line-height:1.6; }
+
+.bk-slots{ border-left:1px solid var(--border); display:flex; flex-direction:column; padding:24px 18px; }
+.bk-day-label{ font-size:13.5px; font-weight:600; color: var(--text-primary); margin-bottom:14px; }
+.bk-slot-list{ display:flex; flex-direction:column; gap:8px; max-height:288px; overflow-y:auto; padding-right:6px; margin-bottom:18px; }
+.bk-slot-list::-webkit-scrollbar{ width:5px; }
+.bk-slot-list::-webkit-scrollbar-thumb{ background: var(--border-strong); border-radius:3px; }
+.bk-slot{ padding:11px 14px; border:1px solid var(--border-strong); border-radius:9px; background: var(--bg-elev-2); color: var(--accent); font-family: var(--mono); font-size:13px; cursor:pointer; text-align:center; transition: background .15s ease, color .15s ease, border-color .15s ease; }
+.bk-slot:hover{ border-color: var(--accent); background: rgba(217,164,65,0.12); }
+.bk-slot.is-sel{ background: var(--accent); color:#2B1704; border-color: var(--accent); font-weight:600; }
+.bk-slot:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.bk-confirm{ width:100%; margin-top:auto; padding-left:12px; padding-right:12px; font-size:13px; white-space:nowrap; }
+.bk-note{ font-size:11.5px; color: var(--text-muted); line-height:1.6; margin-top:12px; text-align:center; }
+
+/* variante de largura cheia, quando o agendador ocupa a secao inteira */
+.booker.full{ grid-template-columns:minmax(0,1fr) 380px; }
+/* o calendario nao estica junto com a coluna: ele fica numa calha propria
+   de 520px, centralizada, senao os circulos de dia ficam espalhados e o
+   bloco parece um campo vazio com numeros soltos */
+.booker.full .bk-cal{ padding:28px 30px; }
+.booker.full .bk-cal > *{ width:100%; max-width:470px; margin-left:auto; margin-right:auto; }
+.booker.full .bk-day{ max-width:56px; }
+.booker.full .bk-grid, .booker.full .bk-week{ gap:7px; }
+.booker.full .bk-slots{ padding:28px 26px; }
+.booker.full .bk-slot-list{ display:grid; grid-template-columns:1fr 1fr; gap:10px; max-height:none; padding-right:0; }
+.booker.full .bk-slot{ padding:14px; }
+.booker.full .bk-day-label{ font-size:14.5px; margin-bottom:16px; }
+.booker.full .bk-strip{ padding:17px 30px; }
+@media (max-width:900px){ .booker.full{ grid-template-columns:1fr; } }
+
+@media (max-width:720px){
+  .booker{ grid-template-columns:1fr; }
+  .bk-slots{ border-left:none; border-top:1px solid var(--border); }
+  .bk-slot-list{ max-height:none; display:grid; grid-template-columns:repeat(auto-fill,minmax(92px,1fr)); }
+  .bk-strip .bk-ev{ width:100%; margin-right:0; }
+}
+
+/* CARD DE FORMULARIO ==================================================== */
+.write-card{ background: var(--bg-elev); border:1px solid var(--border-strong); border-radius:16px; padding:26px 24px; box-shadow: 0 22px 60px rgba(0,0,0,0.35); }
+.write-card .btn{ width:100%; }
+.write-card .hint{ font-size:12px; color: var(--text-muted); margin-top:16px; line-height:1.65; }
+.write-card .hint a{ color: var(--accent); }
+
+/* PAR DE COLUNAS GENERICO =============================================== */
+.duo{ max-width:1220px; margin:0 auto; padding:70px 28px 0; display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:30px; align-items:stretch; }
+.duo.wide-left{ grid-template-columns:minmax(0,1.55fr) minmax(0,1fr); }
+/* as duas metades terminam na mesma linha: a coluna vira flex e o card
+   de formulario estica, com o campo .grow absorvendo a folga */
+.duo > *{ display:flex; flex-direction:column; }
+.duo .write-card, .duo .booker{ flex:1; }
+.duo .write-card form{ height:100%; display:flex; flex-direction:column; }
+/* o textarea entra baixo e cresce pelo flex: assim a altura natural do
+   formulario nao empurra a linha do grid, e quem manda na altura e o card
+   mais alto do par */
+.duo .field.grow{ flex:1; display:flex; flex-direction:column; min-height:0; }
+.duo .field.grow textarea{ flex:1; min-height:96px; }
+@media (max-width:1100px){
+  .duo{ grid-template-columns:1fr; gap:44px; }
+  .duo .field.grow{ flex:none; }
+  .duo .field.grow textarea{ flex:none; }
+}
+
+
+
+/* HERO DE DUAS COLUNAS ==================================================
+   Usado na /contato e na /solucoes/agendar. A variante .rtl joga o texto
+   para a direita e o card para a esquerda, e volta a ordem natural no
+   empilhamento, para o texto continuar sendo o primeiro no mobile. */
+.hero-split{ max-width:1180px; margin:0 auto; padding:56px 28px 0; display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; }
+.hs-left .eyebrow{ margin-bottom:22px; }
+.hs-left h1.hero-title{ margin:0 0 20px; max-width:none; text-align:left; font-size: clamp(34px,4.4vw,52px); }
+.hs-left .hero-sub{ margin:0; max-width:520px; text-align:left; }
+.hs-left .hero-meta{ justify-content:flex-start; gap:14px 26px; }
+.hs-left .hero-actions{ justify-content:flex-start; }
+.hero-split.rtl .hs-left{ order:2; }
+.hero-split.rtl .hs-right{ order:1; }
+
+/* CARD DE APRESENTACAO =================================================== */
+.meet-h{ font-family: var(--serif); font-style:italic; font-weight:400; font-size:30px; margin-bottom:8px; }
+.meet-sub{ font-size:13.5px; color: var(--text-secondary); line-height:1.7; margin-bottom:20px; max-width:460px; }
+.about-card{ background: var(--bg-elev); border:1px solid var(--border-strong); border-radius:16px; padding:28px 26px; box-shadow: 0 22px 60px rgba(0,0,0,0.35); }
+/* height:auto obrigatorio: o atributo height da imagem vence o aspect-ratio */
+.about-photo{ width:104px; height:auto; aspect-ratio:1/1; object-fit:cover; border-radius:50%; border:1px solid var(--border-strong); display:block; margin-bottom:18px; }
+.about-card h3{ font-family: var(--serif); font-style:italic; font-weight:400; font-size:27px; margin-bottom:10px; }
+.about-role{ font-family: var(--mono); font-size:11.5px; color: var(--accent); line-height:1.75; margin-bottom:18px; padding-bottom:18px; border-bottom:1px solid var(--border); }
+.about-text{ font-size:13.5px; color: var(--text-secondary); line-height:1.8; }
+.about-text + .about-text{ margin-top:13px; }
+.about-actions{ display:flex; gap:10px; margin-top:22px; flex-wrap:wrap; }
+
+@media (max-width:960px){
+  .hero-split{ grid-template-columns:1fr; gap:40px; padding-top:44px; }
+  .hero-split.rtl .hs-left, .hero-split.rtl .hs-right{ order:0; }
+  .hs-left{ text-align:center; }
+  .hs-left h1.hero-title, .hs-left .hero-sub{ text-align:center; margin-left:auto; margin-right:auto; }
+  .hs-left .hero-meta, .hs-left .hero-actions{ justify-content:center; }
+  .meet-sub{ max-width:none; }
+}
+@media (max-width:1100px){
+  .about-card{ display:grid; grid-template-columns:104px 1fr; gap:0 24px; align-items:start; }
+  .about-photo{ grid-row:1 / span 5; margin-bottom:0; }
+}
+@media (max-width:560px){
+  .about-card{ grid-template-columns:1fr; }
+  .about-photo{ grid-row:auto; margin-bottom:16px; }
+}

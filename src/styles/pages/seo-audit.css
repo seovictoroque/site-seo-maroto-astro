@@ -1,0 +1,29 @@
+/* SO A /ferramentas/seo-audit USA ESTE ARQUIVO.
+   Campo de URL da ferramenta e o painel de resultado com nota e achados.
+   Extraido de ferramentas-seo-audit.html sem alterar valor nenhum. */
+
+.visually-hidden{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+.tool-form{ display:flex; gap:10px; }
+.tool-form input{ flex:1; background: var(--bg-elev-2); border:1px solid var(--border-strong); border-radius:9px; padding:13px 15px; font-size:14px; color: var(--text-primary); font-family: var(--mono); }
+.tool-form input:focus{ outline:none; border-color: var(--accent); }
+.tool-hint{ font-size:12.5px; color: var(--text-muted); margin-top:12px; line-height:1.65; }
+@media (max-width:560px){ .tool-form{ flex-direction:column; } }
+
+.result-head{ display:flex; align-items:center; gap:22px; padding-bottom:20px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+.score{ display:flex; flex-direction:column; align-items:center; min-width:96px; }
+.score-num{ font-family: var(--serif); font-style:italic; font-size:46px; line-height:1; color: var(--accent); }
+.score-lbl{ font-family: var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color: var(--text-muted); margin-top:6px; }
+.score-meta{ flex:1; min-width:200px; }
+.score-meta p{ font-size:13.5px; color: var(--text-secondary); line-height:1.7; }
+.score-meta b{ color: var(--text-primary); font-family: var(--mono); font-size:13px; }
+.findings{ list-style:none; display:flex; flex-direction:column; }
+.findings li{ display:grid; grid-template-columns:88px 1fr; gap:16px; padding:18px 0; border-bottom:1px solid var(--border); }
+.findings li:last-child{ border-bottom:none; padding-bottom:0; }
+.sev{ font-family: var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; padding:5px 8px; border-radius:5px; height:fit-content; text-align:center; }
+.findings .crit .sev{ color: var(--rust); border:1px solid rgba(193,87,58,0.4); background: rgba(193,87,58,0.12); }
+.findings .warn .sev{ color: var(--accent); border:1px solid rgba(217,164,65,0.34); background: rgba(217,164,65,0.1); }
+.findings .info .sev{ color: var(--text-muted); border:1px solid var(--border); }
+.findings h4{ font-size:14.5px; font-weight:600; margin-bottom:6px; line-height:1.4; }
+.findings p{ font-size:13.5px; color: var(--text-secondary); line-height:1.7; }
+@media (max-width:560px){ .findings li{ grid-template-columns:1fr; gap:9px; } .sev{ justify-self:start; } }
+

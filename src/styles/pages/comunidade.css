@@ -1,0 +1,8 @@
+/* SO A /comunidade USA ESTE ARQUIVO. */
+
+/* nota que entra na mesma grade dos cards, para ficar lado a lado com um
+   deles e alinhada em altura */
+.card-note{ background: var(--bg-elev); border:1px solid var(--border-strong); border-radius:14px; padding:24px 26px; display:flex; flex-direction:column; justify-content:center; }
+.card-note h3{ font-size:15.5px; font-weight:600; margin-bottom:12px; }
+.card-note p{ font-size:13.5px; color: var(--text-secondary); line-height:1.75; }
+.card-note p + p{ margin-top:12px; }
