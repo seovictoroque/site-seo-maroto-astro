@@ -1,10 +1,10 @@
-/* SO A /solucoes/agendar USA ESTE ARQUIVO.
+/* AS DUAS PAGINAS DE CONVERSAO USAM ESTE ARQUIVO: /contato e /solucoes/agendar.
    Agendador, card de formulario, par de colunas, hero de duas colunas e card
-   de apresentacao. Extraido de solucoes-agendar.html sem alterar valor
-   nenhum.
+   de apresentacao. Extraido de solucoes-agendar.html sem alterar valor nenhum.
 
-   O .about-card tambem aparece na /contato: quando aquela pagina for migrada,
-   este bloco vira componente compartilhado em vez de ser copiado. */
+   Mexeu aqui, mudou nas duas paginas. E de proposito: o .about-card e o
+   .booker sao os mesmos componentes nas duas, e no HTML de origem eram duas
+   copias que precisavam ser editadas juntas na mao. */
 
 /* AGENDADOR ============================================================= */
 .booker{ display:grid; grid-template-columns:minmax(0,1fr) 214px; background: var(--bg-elev); border:1px solid var(--border-strong); border-radius:16px; overflow:hidden; box-shadow: 0 22px 60px rgba(0,0,0,0.4); }

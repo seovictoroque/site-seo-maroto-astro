@@ -15,7 +15,7 @@
  *   lista `crumbs` que a pagina renderiza
  * - o FAQ virou FaqSection.astro, e o FAQPage sai da MESMA lista `faq`
  * - o CSS saiu do arquivo: o compartilhado esta em page-kit.css
- * - o que so esta pagina usa esta em styles/pages/agendar.css
+ * - o que so esta pagina usa esta em styles/pages/conversao.css
  * - o JS de menu e de FAQ virou modulo importado, nada inline
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -25,7 +25,7 @@ import type { FaqItem } from '../../lib/faq';
 import { abs, breadcrumbNode, faqNode, personId } from '../../lib/schema';
 
 import '../../styles/page-kit.css';
-import '../../styles/pages/agendar.css';
+import '../../styles/pages/conversao.css';
 
 const crumbs = [{ href: '/', label: 'Home' }, { href: '/solucoes', label: 'Soluções' }, { label: 'Agendar' }];
 

@@ -1,0 +1,337 @@
+---
+/**
+ * CONTATO.
+ *
+ * Hero com a cena do notebook, agenda mais quem responde, formulario mais
+ * localizacao, cards de atalho e FAQ.
+ *
+ * PADRAO DAS PAGINAS DE CONVERSAO, o mesmo da /solucoes/agendar: conteudo
+ * emparelhado em duas colunas, nao empilhado. Cada metade tem o proprio
+ * h2.meet-h e p.meet-sub alinhados a esquerda, e o conteudo mora num card com
+ * a mesma casca. Nao usar .section-head centralizado dentro dessas secoes.
+ *
+ * A cena do notebook e desenhada so em HTML e CSS, sem imagem de fundo e sem
+ * asset de terceiro, e o avatar do participante e uma silhueta generica em
+ * SVG, de proposito: nao entra foto de pessoa real sem autorizacao.
+ *
+ * ATENCAO: o agendador nao marca nada. Ele e a mesma composicao da
+ * /solucoes/agendar, com dados estaticos de setembro de 2026, e o
+ * agendador.ts so faz a selecao visual. O formulario tambem nao envia: o
+ * submit e barrado pelo form-sem-endpoint.ts ate existir endpoint.
+ *
+ * Migrada de contato.html. Nenhum texto foi reescrito. O que mudou:
+ * - o breadcrumb virou Breadcrumb.astro, e o BreadcrumbList sai da MESMA
+ *   lista `crumbs` que a pagina renderiza
+ * - o FAQ virou FaqSection.astro, e o FAQPage sai da MESMA lista `faq`
+ * - o CSS saiu do arquivo: page-kit.css, conversao.css (que ela divide com a
+ *   /solucoes/agendar) e styles/pages/contato.css
+ * - o JS de menu, FAQ, agendador e formulario virou modulo importado
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/layout/Breadcrumb.astro';
+import FaqSection from '../components/page/FaqSection.astro';
+import type { FaqItem } from '../lib/faq';
+import { abs, breadcrumbNode, faqNode } from '../lib/schema';
+import { site } from '../data/site';
+import '../styles/page-kit.css';
+import '../styles/pages/conversao.css';
+import '../styles/pages/contato.css';
+
+const crumbs = [{ href: '/', label: 'Home' }, { label: 'Contato' }];
+
+const faq: FaqItem[] = [
+  {
+    question: 'Em quanto tempo você responde?',
+    answer:
+      'Até dois dias úteis. Se passar disso, provavelmente a mensagem caiu em spam, então pode insistir sem constrangimento.',
+  },
+  {
+    question: 'Prefiro marcar direto na agenda',
+    answer:
+      'Pode. O bloco de agenda desta página mostra os horários, e a confirmação chega por e-mail com o link da chamada. Se nenhum horário servir, escreve no formulário que eu proponho outros.',
+  },
+  {
+    question: 'Faço uma pergunta técnica por aqui?',
+    answer:
+      'Pode, mas o <a href="/comunidade">fórum da comunidade no Reddit</a> costuma responder mais rápido e a resposta fica registrada para outras pessoas.',
+  },
+  {
+    question: 'Quero propor uma parceria ou patrocínio',
+    answer:
+      'Manda o contexto pelo formulário escolhendo o assunto correspondente. Aceito poucos, e nunca conteúdo pago disfarçado de post editorial.',
+  },
+  {
+    question: 'Achei um erro em um artigo',
+    answer:
+      'Ótimo, me conta qual e onde. Correção com fonte entra rápido e o artigo passa a registrar a data da atualização.',
+  },
+];
+---
+
+<BaseLayout
+  title="Contato | SEO Maroto"
+  description="Fale com o Victor Roque: formulário, agenda para marcar uma conversa de 30 minutos e onde eu estou, em Itapetininga, São Paulo."
+  path="/contato"
+  schema={[
+    {
+      '@type': 'ContactPage',
+      '@id': `${abs('/contato')}#page`,
+      url: abs('/contato'),
+      name: 'Contato',
+      inLanguage: site.lang,
+      isPartOf: { '@id': `${site.url}/#website` },
+      mainEntity: { '@id': `${site.url}/#org` },
+    },
+    faqNode('/contato', faq),
+    breadcrumbNode(crumbs),
+  ]}
+>
+<div class="bg-field"></div>
+<main id="conteudo">
+<Breadcrumb items={crumbs} />
+
+<section class="hero-split">
+  <div class="hs-left">
+    <span class="eyebrow">Resposta em até dois dias úteis</span>
+    <h1 class="hero-title">Fala comigo, <em>sem formulário de 14 campos</em></h1>
+    <p class="hero-sub">Proposta de projeto, convite para evento ou podcast, sugestão de ferramenta ou correção de algo que eu escrevi errado. Tudo chega no mesmo lugar, e quem responde sou eu.</p>
+    <div class="hero-meta"><span><b>2</b> dias úteis de prazo</span><span><b>30 min</b> de conversa gratuita</span><span><b>0</b> robô de atendimento</span></div>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#agenda">Marcar uma conversa</a>
+      <a class="btn btn-ghost" href="#formulario">Prefiro escrever</a>
+    </div>
+  </div>
+
+  <!-- CENA DO NOTEBOOK
+       Composicao propria, desenhada so em HTML e CSS, sem imagem de fundo e sem
+       asset de terceiro: notebook com o agendador na tela, badge de calendario a
+       esquerda, badge de camera a direita, participante em cima e o tile de video
+       do Victor embaixo. As manchas .blob e o .squiggle sao decorativos.
+       O avatar de cima e uma silhueta generica de proposito: nao usar foto de
+       pessoa real sem autorizacao. Trocar por foto licenciada quando houver. -->
+  <div class="hs-right">
+    <div class="nb-scene" role="img" aria-label="Ilustração de um notebook com a tela de agendamento aberta, o participante da chamada acima e Victor Roque na janela de vídeo">
+      <span class="blob b1" aria-hidden="true"></span>
+      <span class="blob b2" aria-hidden="true"></span>
+      <span class="dotfield" aria-hidden="true"></span>
+      <svg class="squiggle" viewBox="0 0 140 150" fill="none" aria-hidden="true"><path d="M18 46C6 26 26 6 52 8c30 2 40 22 64 20 20-2 22 20 6 30-18 11-40 4-46 20-6 16 18 22 14 38-4 16-30 20-44 8" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+      <div class="nb">
+        <div class="nb-lid">
+          <div class="nb-screen">
+            <span class="nb-wave" aria-hidden="true"></span>
+            <span class="nb-cam" aria-hidden="true"></span>
+            <div class="nb-app">
+              <div class="nb-rail">
+                <span class="nb-logo">SM</span>
+                <p class="nb-ev">Bate-papo</p>
+                <p class="nb-line"><i class="dot"></i>30 min</p>
+                <p class="nb-line"><i class="dot"></i>Chamada de vídeo</p>
+                <p class="nb-line"><i class="dot"></i>Gratuito</p>
+              </div>
+              <div class="nb-pick">
+                <p class="nb-h">Selecione data e horário</p>
+                <div class="nb-week"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div>
+                <div class="nb-grid"><span class="nb-d"></span><span class="nb-d"></span><span class="nb-d free"></span><span class="nb-d free"></span><span class="nb-d free"></span><span class="nb-d"></span><span class="nb-d"></span><span class="nb-d"></span><span class="nb-d free"></span><span class="nb-d free"></span><span class="nb-d free"></span><span class="nb-d free"></span><span class="nb-d"></span><span class="nb-d"></span><span class="nb-d"></span><span class="nb-d free"></span><span class="nb-d free is-sel"></span><span class="nb-d free"></span><span class="nb-d free"></span><span class="nb-d"></span><span class="nb-d"></span><span class="nb-d"></span><span class="nb-d free"></span><span class="nb-d free"></span><span class="nb-d free"></span><span class="nb-d free"></span><span class="nb-d"></span><span class="nb-d"></span><span class="nb-d"></span><span class="nb-d free"></span><span class="nb-d free"></span><span class="nb-d"></span><span class="nb-d"></span><span class="nb-d"></span><span class="nb-d"></span></div>
+                <p class="nb-foot">Fuso de Brasília, UTC-3</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="nb-base"><span></span></div>
+      </div>
+
+      <span class="nb-badge cal" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="17" rx="3"/><path d="M16 2.5v4M8 2.5v4M3 10h18"/><path d="M8.5 14h2M13.5 14h2M8.5 17.5h2"/></svg></span>
+      <span class="nb-badge cam" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="13" height="12" rx="3"/><path d="M15.5 10.5 21.5 7v10l-6-3.5z"/></svg></span>
+
+      <div class="nb-guest">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <circle cx="32" cy="24" r="11" fill="currentColor" opacity=".85"/>
+          <path d="M10 60c0-12 10-19 22-19s22 7 22 19z" fill="currentColor" opacity=".85"/>
+        </svg>
+      </div>
+
+      <figure class="nb-tile">
+        <img src="/img/autor/perfil-victor-roque-400.webp" width="400" height="400"
+             alt="Victor Roque" loading="lazy" decoding="async">
+        <figcaption>Victor</figcaption>
+        <div class="nb-ctrl">
+          <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2.5" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3.5"/></svg></i>
+          <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="13" height="12" rx="3"/><path d="M15.5 10.5 21.5 7v10l-6-3.5z"/></svg></i>
+          <i class="rec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 16.5v-2.2a1 1 0 0 0-.7-1 12 12 0 0 0-4.6 0 1 1 0 0 0-.7 1v2.2"/><path d="M2.6 12.4a13 13 0 0 1 18.8 0"/></svg></i>
+        </div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="meet solo" id="agenda">
+
+  <div class="meet-cal">
+    <h2 class="meet-h">Minha agenda</h2>
+    <p class="meet-sub">Horários livres em fuso de Brasília. Escolha o dia e a hora, ou use o formulário logo abaixo.</p>
+
+    <!-- COMPONENTE DE AGENDAMENTO
+         Marcacao propria, no tema do site, com o mesmo fluxo do Calendly.
+         Os dados sao estaticos, e o JS so troca a selecao visual.
+         Para plugar o Calendly depois, apague a div.booker inteira e use
+         <div class="calendly-inline-widget" data-url="https://calendly.com/SEU-USUARIO/30min"
+              style="min-width:320px;height:700px"></div>
+         mais o script de https://assets.calendly.com/assets/external/widget.js -->
+    <div class="booker uteis full">
+      <div class="bk-strip">
+        <span class="bk-ev">Bate-papo de 30 minutos</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>30 min</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="13" height="12" rx="2.5"/><path d="M15.5 10.5 21.5 7v10l-6-3.5z"/></svg>Vídeo</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.6 6.4.8-4.7 4.3 1.2 6.3L12 17l-5.5 3 1.2-6.3L3 9.4l6.4-.8z"/></svg>Gratuito</span>
+      </div>
+
+      <div class="bk-cal">
+        <div class="bk-head">
+          <h3>Escolha a data</h3>
+          <div class="bk-nav">
+            <button type="button" aria-label="Mês anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+            <span class="bk-month">Setembro 2026</span>
+            <button type="button" aria-label="Próximo mês"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+          </div>
+        </div>
+        <div class="bk-week"><span>seg</span><span>ter</span><span>qua</span><span>qui</span><span>sex</span></div>
+        <div class="bk-grid">
+          <span class="bk-day empty" aria-hidden="true"></span>
+          <span class="bk-day off">1</span>
+          <span class="bk-day off">2</span>
+          <span class="bk-day off">3</span>
+          <span class="bk-day off">4</span>
+          <button type="button" class="bk-day free" data-dia="7" aria-pressed="false">7</button>
+          <button type="button" class="bk-day free" data-dia="8" aria-pressed="false">8</button>
+          <button type="button" class="bk-day free" data-dia="9" aria-pressed="false">9</button>
+          <button type="button" class="bk-day free" data-dia="10" aria-pressed="false">10</button>
+          <button type="button" class="bk-day free" data-dia="11" aria-pressed="false">11</button>
+          <button type="button" class="bk-day free" data-dia="14" aria-pressed="false">14</button>
+          <button type="button" class="bk-day free is-sel" data-dia="15" aria-pressed="true">15</button>
+          <button type="button" class="bk-day free" data-dia="16" aria-pressed="false">16</button>
+          <button type="button" class="bk-day free" data-dia="17" aria-pressed="false">17</button>
+          <button type="button" class="bk-day free" data-dia="18" aria-pressed="false">18</button>
+          <button type="button" class="bk-day free" data-dia="21" aria-pressed="false">21</button>
+          <button type="button" class="bk-day free" data-dia="22" aria-pressed="false">22</button>
+          <button type="button" class="bk-day free" data-dia="23" aria-pressed="false">23</button>
+          <button type="button" class="bk-day free" data-dia="24" aria-pressed="false">24</button>
+          <button type="button" class="bk-day free" data-dia="25" aria-pressed="false">25</button>
+          <button type="button" class="bk-day free" data-dia="28" aria-pressed="false">28</button>
+          <button type="button" class="bk-day free" data-dia="29" aria-pressed="false">29</button>
+          <button type="button" class="bk-day free" data-dia="30" aria-pressed="false">30</button>
+          <span class="bk-day empty" aria-hidden="true"></span>
+          <span class="bk-day empty" aria-hidden="true"></span>
+        </div>
+        <p class="bk-tz">Fuso de Brasília, UTC-3. Atendimento de segunda a sexta, dias em destaque têm horário livre.</p>
+      </div>
+
+      <div class="bk-slots">
+        <p class="bk-day-label" id="bkDia">Terça, 15 de setembro</p>
+        <div class="bk-slot-list">
+          <button type="button" class="bk-slot" aria-pressed="false">09:00</button>
+          <button type="button" class="bk-slot" aria-pressed="false">09:30</button>
+          <button type="button" class="bk-slot is-sel" aria-pressed="true">10:00</button>
+          <button type="button" class="bk-slot" aria-pressed="false">11:00</button>
+          <button type="button" class="bk-slot" aria-pressed="false">11:30</button>
+          <button type="button" class="bk-slot" aria-pressed="false">14:00</button>
+          <button type="button" class="bk-slot" aria-pressed="false">14:30</button>
+          <button type="button" class="bk-slot" aria-pressed="false">15:00</button>
+          <button type="button" class="bk-slot" aria-pressed="false">16:00</button>
+          <button type="button" class="bk-slot" aria-pressed="false">17:00</button>
+        </div>
+        <button class="btn btn-primary bk-confirm" type="button">Confirmar horário</button>
+        <p class="bk-note">A confirmação chega por e-mail com o link da chamada.</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="duo">
+
+  <div class="write-form" id="formulario">
+    <h2 class="meet-h">Ou escreve por aqui</h2>
+    <p class="meet-sub">Quanto mais contexto, melhor a resposta. Duas ou três linhas já ajudam.</p>
+    <div class="write-card">
+      <form id="formContato">
+        <div class="field"><label for="ct-nome">Nome</label><input id="ct-nome" type="text" autocomplete="name"></div>
+        <div class="field"><label for="ct-email">E-mail</label><input id="ct-email" type="email" autocomplete="email"></div>
+        <div class="field"><label for="ct-assunto">Assunto</label><select id="ct-assunto"><option>Projeto ou consultoria</option><option>Treinamento para time</option><option>Convite para evento ou podcast</option><option>Sugestão de ferramenta</option><option>Correção em um conteúdo</option><option>Imprensa</option><option>Outro</option></select></div>
+        <div class="field grow"><label for="ct-msg">Mensagem</label><textarea id="ct-msg" placeholder="Contexto, site e o que está travando."></textarea></div>
+        <button class="btn btn-primary" type="submit">Enviar mensagem</button>
+        <p class="hint">Ao enviar você concorda com a <a href="/politica-de-privacidade">política de privacidade</a>. Seu e-mail é usado só para responder essa mensagem.</p>
+      </form>
+    </div>
+  </div>
+
+  <aside class="write-local">
+    <h2 class="meet-h">Onde eu estou</h2>
+    <p class="meet-sub">Base em Itapetininga, interior de São Paulo. O trabalho é remoto, e presencial sob combinação.</p>
+    <div class="local">
+      <div class="local-map">
+        <!-- COMPONENTE DE MAPA
+             Embed do Google Maps sem chave de API. Para trocar a cidade, mude o
+             parametro q. Para um endereco exato, use q=Rua+Exemplo,+123,+Itapetininga. -->
+        <iframe title="Mapa de Itapetininga, São Paulo"
+                src="https://maps.google.com/maps?q=Itapetininga,%20SP,%20Brasil&amp;z=12&amp;output=embed"
+                loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <div class="local-info">
+        <h3>Itapetininga, SP</h3>
+        <ul class="local-list">
+          <li><span>Atendimento</span><b>Remoto para todo o Brasil</b></li>
+          <li><span>Presencial</span><b>Grande São Paulo e região de Sorocaba, sob combinação</b></li>
+          <li><span>Fuso</span><b>Brasília, UTC-3</b></li>
+          <li><span>Horário</span><b>Segunda a sexta, 9h às 18h</b></li>
+          <li><span>Idiomas</span><b>Português e inglês</b></li>
+        </ul>
+        <p class="local-note">Não tem escritório aberto ao público. Para encontro presencial, combine antes pelo formulário.</p>
+      </div>
+    </div>
+  </aside>
+
+</section>
+
+<div class="section-head">
+  <h2>Talvez seja mais rápido por aqui</h2>
+</div>
+
+<div class="card-grid">
+  <a class="card" href="/comunidade">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12c-.688 0-1.25.561-1.25 1.25 0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg></div>
+    <h3>Dúvida técnica</h3>
+    <p>No fórum a resposta costuma vir de mais de uma pessoa, e fica registrada para os próximos.</p>
+    <div class="card-tags"></div>
+  </a>
+  <a class="card" href="/solucoes/agendar">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M16 2.5v4M8 2.5v4M3 10h18"/></svg></div>
+    <h3>Quer contratar</h3>
+    <p>Meia hora de conversa resolve mais do que uma troca longa de e-mail.</p>
+    <div class="card-tags"></div>
+  </a>
+  <a class="card" href="/ferramentas">
+    <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+    <h3>Bug em ferramenta</h3>
+    <p>Se der erro, me manda a URL testada junto. Sem ela, fica difícil reproduzir.</p>
+    <div class="card-tags"></div>
+  </a>
+</div>
+
+<FaqSection items={faq} />
+</main>
+</BaseLayout>
+
+<script>
+  import { initFaqAccordion } from '../scripts/faq-accordion';
+  import { initAgendador } from '../scripts/agendador';
+  import { initFormSemEndpoint } from '../scripts/form-sem-endpoint';
+  initFaqAccordion('.faq');
+  initAgendador();
+  initFormSemEndpoint('#formContato');
+</script>
