@@ -11,8 +11,8 @@
 
 export type NavIconName =
   | 'ferramentas'
-  | 'solucoes'
   | 'escolinha'
+  | 'cases'
   | 'comunidade'
   | 'sobre'
   | 'newsletter'
@@ -55,23 +55,24 @@ export const navItems: NavItem[] = [
     ],
   },
   {
-    href: '/solucoes',
-    label: 'Soluções',
-    icon: 'solucoes',
+    href: '/escolinha-seo',
+    label: 'Escolinha SEO',
+    icon: 'escolinha',
     children: [
-      { href: '/solucoes/agendar', label: 'Agende um bate-papo', hint: '30 min, sem enrolação' },
-      { href: '/solucoes/treinamento', label: 'Treinamento SEO', hint: 'para times in-house' },
+      { href: '/escolinha-seo/iniciante', label: 'Escolinha SEO para iniciantes', hint: 'fundamentos de SEO' },
+      { href: '/escolinha-seo/tecnica', label: 'Escolinha SEO Técnico', hint: 'crawl, indexação, CWV' },
+      { href: '/escolinha-seo/geo-aeo', label: 'Escolinha SEO para LLMs', hint: 'otimização para IAs, GEO e AEO' },
     ],
   },
   {
-    href: '/escolinha',
-    label: 'Escolinha',
-    icon: 'escolinha',
+    href: '/cases',
+    label: 'Cases',
+    icon: 'cases',
     children: [
-      { href: '/escolinha/iniciante', label: 'Trilha iniciante', hint: 'fundamentos de SEO' },
-      { href: '/escolinha/tecnica', label: 'Trilha técnica', hint: 'crawl, indexação, CWV' },
-      { href: '/escolinha/geo-aeo', label: 'Trilha GEO/AEO', hint: 'otimização para IA' },
-      { href: '/estudos-de-caso', label: 'Estudos de caso', hint: 'o que deu certo e o que não' },
+      { href: '/cases/marketplace-indexacao', label: 'Marketplace, 400 mil URLs', hint: '12% para 71% de indexação' },
+      { href: '/cases/saas-b2b-receita-organica', label: 'SaaS B2B, ticket alto', hint: 'menos tráfego, 2,3x mais receita' },
+      { href: '/cases/editorial-core-web-vitals', label: 'Portal editorial', hint: 'LCP de 4,8s para 1,9s' },
+      { href: '/cases', label: 'Ver todos os cases', hint: 'problema, número e método aberto' },
     ],
   },
   { href: '/comunidade', label: 'Comunidade', icon: 'comunidade' },
@@ -84,10 +85,10 @@ export const navItems: NavItem[] = [
 /**
  * Redes sociais do header, do painel mobile e do rodape.
  *
- * GitHub e X vieram do `sameAs` do JSON-LD da home e do README de origem, que
- * traziam a URL real. Os tres com href '#' continuam como estavam no HTML:
- * trocar pela URL real antes de publicar, ou tirar o item da lista. Perfil
- * inventado em rede social e o tipo de erro que derruba a confianca do grafo.
+ * Todas as URLs sao perfis reais do @seomaroto, confirmadas pelo Victor. O
+ * GitHub continua no handle antigo (seovictoroque) porque e a conta de codigo,
+ * nao o perfil da marca. Perfil inventado em rede social e o tipo de erro que
+ * derruba a confianca do grafo: so entra aqui URL que abre.
  */
 export interface SocialLink {
   href: string;
@@ -97,11 +98,10 @@ export interface SocialLink {
 
 export const socialLinks: SocialLink[] = [
   { href: 'https://github.com/seovictoroque', label: 'GitHub', icon: 'github' },
-  { href: 'https://x.com/seovictoroque', label: 'X (Twitter)', icon: 'x' },
-  // TODO: URLs reais pendentes, vieram como href="#" do HTML de origem
-  { href: '#', label: 'Substack', icon: 'substack' },
-  { href: '#', label: 'Reddit', icon: 'reddit' },
-  { href: '#', label: 'YouTube', icon: 'youtube' },
+  { href: 'https://x.com/seomaroto', label: 'X (Twitter)', icon: 'x' },
+  { href: 'https://substack.com/@seomaroto', label: 'Substack', icon: 'substack' },
+  { href: 'https://www.reddit.com/user/seomaroto/', label: 'Reddit', icon: 'reddit' },
+  { href: 'https://www.youtube.com/@seomaroto', label: 'YouTube', icon: 'youtube' },
 ];
 
 /** Colunas de links do rodape. */
@@ -124,9 +124,11 @@ export const footerColumns = [
   {
     title: 'Soluções',
     links: [
-      { href: '/solucoes/agendar', label: 'Agende um bate-papo' },
-      { href: '/solucoes/treinamento', label: 'Treinamentos' },
-      { href: '/escolinha', label: 'Escolinha' },
+      { href: '/escolinha-seo', label: 'Escolinha SEO' },
+      { href: '/escolinha-seo/iniciante', label: 'Escolinha SEO iniciantes' },
+      { href: '/escolinha-seo/tecnica', label: 'Escolinha SEO Técnico' },
+      { href: '/escolinha-seo/geo-aeo', label: 'Escolinha GEO/AEO' },
+      { href: '/contato', label: 'Agende um bate-papo' },
     ],
   },
   {
@@ -134,7 +136,7 @@ export const footerColumns = [
     links: [
       { href: '/blog', label: 'Blog' },
       { href: '/newsletter', label: 'Newsletter' },
-      { href: '/estudos-de-caso', label: 'Estudos de caso' },
+      { href: '/cases', label: 'Cases' },
     ],
   },
   {

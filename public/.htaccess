@@ -26,7 +26,20 @@ DirectorySlash Off
   RewriteRule ^(.*)$ $1/index.html [L]
 </IfModule>
 
-ErrorDocument 404 /404/index.html
+# ==========================================================================
+# Pagina 404 personalizada.
+#
+# ATENCAO: o build.format e 'directory', entao toda pagina sai como
+# pasta/index.html. A 404 e a UNICA excecao: o Astro sempre grava ela como
+# /404.html na raiz do dist, nunca como /404/index.html.
+#
+# Apontar o ErrorDocument para um caminho que nao existe faz o Apache cair
+# na pagina padrao dele, aquela "404 Not Found, The resource requested could
+# not be found on this server". Foi exatamente o que acontecia antes.
+#
+# Confira depois de todo build: dist/404.html tem que existir.
+# ==========================================================================
+ErrorDocument 404 /404.html
 
 # ==========================================================================
 # Cache. Asset com hash no nome pode ser imutavel, HTML nunca.

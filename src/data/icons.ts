@@ -14,7 +14,6 @@
 
 export const navIcons = {
   ferramentas: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
-  solucoes: '<rect x="2.5" y="7.5" width="19" height="13" rx="2.5"/><path d="M8.5 7.5V5.5a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v2"/><path d="M2.5 12.5h19"/>',
   escolinha: '<path d="M22 10v6"/><path d="M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 2.5 9 2.5 12 0v-5"/>',
   comunidade: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
   sobre: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
@@ -22,6 +21,7 @@ export const navIcons = {
   newsletter: '<rect x="2" y="4.5" width="20" height="15" rx="2.5"/><path d="M2.5 7l9.5 6.5L21.5 7"/>',
   contato: '<path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.5 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5 8.5 8.5 0 0 1 12.5 3 8.5 8.5 0 0 1 21 11.5z"/>',
   blog: '<path d="M14 2.5H6.5a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8z"/><path d="M14 2.5V8h5.5"/><path d="M15.5 13.5h-7M15.5 17.5h-7M10.5 9.5h-2"/>',
+  cases: '<path d="M3.5 3v16a2 2 0 0 0 2 2h15"/><path d="M7.5 16l4-4.5 3 2.5 5-5.5"/><path d="M16 8.5h3.5V12"/>',
 } as const;
 
 export const uiIcons = {

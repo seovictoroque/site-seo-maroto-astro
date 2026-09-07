@@ -10,7 +10,7 @@
  * Um array JSON com os numeros das etapas concluidas, ex: [1,2,5].
  * Aceita tambem um numero puro, ex: 3, que significa "as tres primeiras".
  *
- * A /escolinha ainda nao grava nada. Quando ela gravar, precisa usar esta
+ * A /escolinha-seo ainda nao grava nada. Quando ela gravar, precisa usar esta
  * mesma chave e este mesmo formato, definidos em src/data/roadmap.ts.
  */
 import { chaveProgresso } from '../data/roadmap';

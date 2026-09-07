@@ -1,11 +1,11 @@
 ---
 /**
- * HOME DO SITE, variante focada em Escolinha e roadmap.
+ * HOME DO SITE, variante focada em Escolinha SEO e roadmap.
  *
  * Secoes, na ordem:
  * 1. Hero com o cartao de progresso do roteiro de 12 etapas
  * 2. Numeros do projeto
- * 3. Escolinha, as tres trilhas
+ * 3. Escolinha SEO, as tres trilhas
  * 4. Roadmap, as 12 etapas em tres colunas
  * 5. Ultimos textos do blog
  * 6. Estudos de caso com antes e depois
@@ -53,7 +53,7 @@ const faq = [
     "answer": "Gratuitas e sem cadastro. Você roda, vê o resultado na tela e vai embora se quiser. O código da maioria delas está aberto no GitHub, então dá para conferir o que cada uma faz com os seus dados, que é nada além de processar e devolver."
   },
   {
-    "question": "Preciso saber programar para seguir a Escolinha?",
+    "question": "Preciso saber programar para seguir a Escolinha SEO?",
     "answer": "Na trilha iniciante, não. Na trilha técnica, ajuda muito ler HTML e entender uma requisição HTTP, mas o conteúdo explica o necessário no caminho. Ninguém precisa virar dev, só parar de tratar o navegador como caixa preta."
   },
   {
@@ -90,15 +90,15 @@ const ultimosPosts = (await allPosts()).slice(0, 3);
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <span class="eyebrow">escolinha, roteiro aberto</span>
+      <span class="eyebrow">escolinha seo, roteiro aberto</span>
       <h1>O roteiro completo para virar <em>profissional de SEO</em>.</h1>
       <p class="hero-sub">{totalEtapas} etapas, do fundamento técnico até GEO/AEO, na ordem em que as coisas fazem sentido de verdade. Você marca o que já sabe e o progresso fica salvo no seu navegador.</p>
 
       <div class="hero-actions">
-        <a class="btn btn-primary" href="/escolinha">Começar do zero
+        <a class="btn btn-primary" href="/escolinha-seo">Começar do zero
           <Icon set="ui" name="arrow" strokeWidth={2.2} />
         </a>
-        <a class="btn btn-ghost" href="/escolinha/tecnica">Já sei o básico, pular para a técnica</a>
+        <a class="btn btn-ghost" href="/escolinha-seo/tecnica">Já sei o básico, pular para a técnica</a>
       </div>
       <p class="hero-note">Gratuito, sem cadastro, sem e-mail obrigatório. Código do roteiro aberto no GitHub.</p>
     </div>
@@ -125,11 +125,11 @@ const ultimosPosts = (await allPosts()).slice(0, 3);
   <div class="wrap">
     <div class="head-row">
       <div class="section-head">
-        <span class="eyebrow">escolinha</span>
+        <span class="eyebrow">escolinha seo</span>
         <h2 id="h-escolinha">A trilha para virar profissional de SEO</h2>
         <p>Roteiro gratuito e de código aberto, em três etapas, na ordem em que as coisas fazem sentido de verdade.</p>
       </div>
-      <a class="link-more" href="/escolinha">ver o roteiro inteiro
+      <a class="link-more" href="/escolinha-seo">ver o roteiro inteiro
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
     </div>
@@ -140,21 +140,21 @@ const ultimosPosts = (await allPosts()).slice(0, 3);
         <h3>Iniciante</h3>
         <p>Como a busca funciona por dentro, antes de mexer em qualquer coisa. Sem isso, o resto vira chute com nome bonito.</p>
         <div class="trail-nodes"><span>rastreamento</span><span>indexação</span><span>intenção de busca</span><span>on-page</span><span>métricas</span></div>
-        <a class="btn btn-ghost" href="/escolinha/iniciante">Começar do zero</a>
+        <a class="btn btn-ghost" href="/escolinha-seo/iniciante">Começar do zero</a>
       </div>
       <div class="trail">
         <span class="trail-step">etapa 02</span>
         <h3>Técnica</h3>
         <p>Onde o SEO deixa de ser palpite e vira engenharia. Log, render, arquitetura de informação e performance.</p>
         <div class="trail-nodes"><span>análise de log</span><span>JavaScript SEO</span><span>Core Web Vitals</span><span>schema</span><span>internacional</span></div>
-        <a class="btn btn-ghost" href="/escolinha/tecnica">Ir para a técnica</a>
+        <a class="btn btn-ghost" href="/escolinha-seo/tecnica">Ir para a técnica</a>
       </div>
       <div class="trail ai">
         <span class="trail-step">etapa 03</span>
         <h3>GEO e AEO</h3>
         <p>O que muda quando a resposta é gerada e não listada. Entidades, citabilidade e conteúdo que a máquina consegue reaproveitar.</p>
         <div class="trail-nodes"><span>entidades</span><span>citabilidade</span><span>AI Overviews</span><span>llms.txt</span><span>medição</span></div>
-        <a class="btn btn-rust" href="/escolinha/geo-aeo">Entrar no GEO/AEO</a>
+        <a class="btn btn-rust" href="/escolinha-seo/geo-aeo">Entrar no GEO/AEO</a>
       </div>
     </div>
   </div>
@@ -169,7 +169,7 @@ const ultimosPosts = (await allPosts()).slice(0, 3);
         <h2 id="h-roadmap">As {totalEtapas} etapas, na ordem</h2>
         <p>O mapa inteiro numa tela. Cada etapa abre com os itens de ação e o material de estudo, e o que você marcar fica salvo.</p>
       </div>
-      <a class="link-more" href="/escolinha">abrir o roadmap interativo
+      <a class="link-more" href="/escolinha-seo">abrir o roadmap interativo
         <Icon set="ui" name="arrow" strokeWidth={2.2} />
       </a>
     </div>
@@ -230,27 +230,27 @@ const ultimosPosts = (await allPosts()).slice(0, 3);
         <h2 id="h-cases">Número na mesa, método aberto</h2>
         <p>Sempre no mesmo formato: problema, diagnóstico, hipótese, implementação, resultado e o que eu aprendi errando.</p>
       </div>
-      <a class="link-more" href="/estudos-de-caso">todos os casos
+      <a class="link-more" href="/cases">todos os casos
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
     </div>
 
     <div class="case-grid">
-      <a class="case-card" href="/estudos-de-caso/marketplace-indexacao">
+      <a class="case-card" href="/cases/marketplace-indexacao">
         <span class="case-seg">marketplace, 400 mil URLs</span>
         <h3>De 12% para 71% de páginas indexadas em cinco meses</h3>
         <div class="case-delta"><span>12%</span><span aria-hidden="true">&rsaquo;</span><span class="to">71%</span></div>
         <p>O sitemap listava tudo, o servidor respondia 200 em página vazia e o Google desistiu. A saída foi cortar o inventário, não aumentar.</p>
         <span class="link-more">ler o caso completo</span>
       </a>
-      <a class="case-card" href="/estudos-de-caso/saas-b2b-receita-organica">
+      <a class="case-card" href="/cases/saas-b2b-receita-organica">
         <span class="case-seg">SaaS B2B, ticket alto</span>
         <h3>Menos tráfego, 2,3x mais receita vinda do orgânico</h3>
         <div class="case-delta"><span>1x</span><span aria-hidden="true">&rsaquo;</span><span class="to">2,3x</span></div>
         <p>Cortamos 140 posts de topo de funil que não convertiam nada e realocamos o esforço em 20 páginas de comparação e alternativa.</p>
         <span class="link-more">ler o caso completo</span>
       </a>
-      <a class="case-card" href="/estudos-de-caso/editorial-core-web-vitals">
+      <a class="case-card" href="/cases/editorial-core-web-vitals">
         <span class="case-seg">portal editorial</span>
         <h3>LCP de 4,8s para 1,9s sem trocar de framework</h3>
         <div class="case-delta"><span>4,8s</span><span aria-hidden="true">&rsaquo;</span><span class="to">1,9s</span></div>
@@ -272,7 +272,7 @@ const ultimosPosts = (await allPosts()).slice(0, 3);
         <p>Aqui isso não é hype de LinkedIn. É teste com amostra, critério declarado e resultado publicado, inclusive quando o resultado é morno.</p>
         <div class="geo-cta">
           <a class="btn btn-rust" href="/ferramentas/aeo-geo-checker">Rodar o AEO/GEO Checker</a>
-          <a class="btn btn-ghost" href="/escolinha/geo-aeo">Ver a trilha</a>
+          <a class="btn btn-ghost" href="/escolinha-seo/geo-aeo">Ver a trilha</a>
         </div>
       </div>
       <ul class="geo-list">
@@ -304,7 +304,7 @@ const ultimosPosts = (await allPosts()).slice(0, 3);
         <p>Eu me sinto endividado, por que mudei a realidade da minha familia fazendo SEO. Gostaria de ajudar de forma honesta quem está começando ou tenha de alguma maneira o interesse nesses assuntos. Aqui eu vou publicar o que testei, com o número que deu, o que não funcionou e o que eu faria diferente. Se algo mudar de opinião com dado novo, o texto é atualizado e a mudança fica registrada.</p>
         <p class="sig">Eu crio, e tomo café.</p>
         <div class="about-cta">
-          <a class="btn btn-primary" href="/solucoes/agendar">Agendar um bate-papo de 30 min</a>
+          <a class="btn btn-primary" href="/contato">Agendar um bate-papo de 30 min</a>
           <a class="btn btn-ghost" href="/sobre">Sobre o projeto</a>
         </div>
       </div>

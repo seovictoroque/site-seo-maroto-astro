@@ -1,4 +1,4 @@
-/* AS DUAS PAGINAS DE CONVERSAO USAM ESTE ARQUIVO: /contato e /solucoes/agendar.
+/* A PAGINA DE CONVERSAO DO SITE USA ESTE ARQUIVO: /contato.
    Agendador, card de formulario, par de colunas, hero de duas colunas e card
    de apresentacao. Extraido de solucoes-agendar.html sem alterar valor nenhum.
 
@@ -98,7 +98,7 @@
 
 
 /* HERO DE DUAS COLUNAS ==================================================
-   Usado na /contato e na /solucoes/agendar. A variante .rtl joga o texto
+   Usado na /contato. A variante .rtl joga o texto
    para a direita e o card para a esquerda, e volta a ordem natural no
    empilhamento, para o texto continuar sendo o primeiro no mobile. */
 .hero-split{ max-width:1180px; margin:0 auto; padding:56px 28px 0; display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; }

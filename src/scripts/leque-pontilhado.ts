@@ -1,5 +1,5 @@
 /**
- * LEQUE PONTILHADO da Escolinha.
+ * LEQUE PONTILHADO da Escolinha SEO.
  *
  * Desenha, em SVG, as curvas que ligam cada etapa do roteiro aos seus
  * subtopicos. As curvas sao calculadas a partir da posicao real dos elementos

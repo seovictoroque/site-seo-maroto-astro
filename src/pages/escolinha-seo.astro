@@ -40,7 +40,7 @@ const faq = [
   },
   {
     "question": "O roteiro é gratuito mesmo?",
-    "answer": "É. Todo o conteúdo da Escolinha e as ferramentas do site são gratuitos e de código aberto. Sem funil escondido, sem curso de cinco mil reais esperando no final."
+    "answer": "É. Todo o conteúdo da Escolinha SEO e as ferramentas do site são gratuitos e de código aberto. Sem funil escondido, sem curso de cinco mil reais esperando no final."
   },
   {
     "question": "Por onde eu começo se estou do zero absoluto?",
@@ -48,15 +48,15 @@ const faq = [
   }
 ];
 
-const crumbs = [{ label: 'Home', href: '/' }, { label: 'Escolinha' }];
+const crumbs = [{ label: 'Home', href: '/' }, { label: 'Escolinha SEO' }];
 ---
 
 <BaseLayout
   title="Roadmap de SEO: do zero ao avançado em 12 etapas | SEO Maroto"
   description="O roteiro completo para aprender SEO em 12 etapas, dos fundamentos ao GEO/AEO, com o que estudar e o que fazer em cada uma. Gratuito e sem cadastro."
-  path="/escolinha"
+  path="/escolinha-seo"
   ogDescription="O roteiro completo para aprender SEO em 12 etapas, dos fundamentos ao GEO/AEO. Gratuito e sem cadastro."
-  schema={[faqNode('/escolinha', faq), breadcrumbNode(crumbs)]}
+  schema={[faqNode('/escolinha-seo', faq), breadcrumbNode(crumbs)]}
 >
 <div class="bg-field"></div>
 <main id="conteudo">
@@ -348,7 +348,7 @@ const crumbs = [{ label: 'Home', href: '/' }, { label: 'Escolinha' }];
       <button class="faq-q" type="button" id="faq-q4" aria-expanded="false" aria-controls="faq-a4">O roteiro é gratuito mesmo?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
       <div class="faq-a" id="faq-a4" role="region" aria-labelledby="faq-q4">
         <div class="faq-a-inner">
-        <p>É. Todo o conteúdo da Escolinha e as ferramentas do site são gratuitos e de código aberto. Sem funil escondido, sem curso de cinco mil reais esperando no final.</p>
+        <p>É. Todo o conteúdo da Escolinha SEO e as ferramentas do site são gratuitos e de código aberto. Sem funil escondido, sem curso de cinco mil reais esperando no final.</p>
         </div>
       </div>
     </div>
@@ -365,33 +365,6 @@ const crumbs = [{ label: 'Home', href: '/' }, { label: 'Escolinha' }];
 
 {/* O FAQPage do JSON-LD saiu daqui: agora e montado a partir da mesma
     lista `faq` do frontmatter que a pagina renderiza. */}
-
-<div class="community">
-  <h2>Junte-se à comunidade</h2>
-  <p>O SEO Roadmap é mantido pela comunidade e visitado por milhares de profissionais todos os meses.</p>
-  <div class="stats">
-    <div class="stat">
-      <div class="num">28K</div>
-      <div class="lbl">GitHub Stars</div>
-      <a class="cta" href="#" aria-label="★ Star no GitHub">★ Star</a>
-    </div>
-    <div class="stat">
-      <div class="num">12.4K</div>
-      <div class="lbl">Seguidores no X</div>
-      <a class="cta" href="#" aria-label="Seguir no X (Twitter)">Seguir</a>
-    </div>
-    <div class="stat">
-      <div class="num">8.2K</div>
-      <div class="lbl">Assinantes da newsletter</div>
-      <a class="cta" href="#" aria-label="Assinar no Substack">Assinar</a>
-    </div>
-    <div class="stat">
-      <div class="num">9.3K</div>
-      <div class="lbl">Comunidade Reddit</div>
-      <a class="cta" href="#" aria-label="Ver mais votados no Reddit">Ver mais votados</a>
-    </div>
-  </div>
-</div>
 
 </main>
 </BaseLayout>
@@ -503,22 +476,11 @@ h1.hero-title em{ font-style:italic; color: var(--accent); }
 .faq.js .faq-a{ display:grid; grid-template-rows:0fr; transition: grid-template-rows .3s ease; }
 .faq.js .faq-item[data-open="true"] .faq-a{ grid-template-rows:1fr; }
 
-
 @media (max-width:560px){
   .faq{ padding:64px 20px 0; }
   .faq-q{ font-size:14.5px; padding:18px 2px; }
   .faq-a-inner p{ padding-right:8px; }
 }
-
-.community{ text-align:center; padding:80px 20px; }
-.community h2{ font-family: var(--serif); font-style:italic; font-weight:400; font-size:34px; margin-bottom:12px; }
-.community p{ color: var(--text-secondary); font-size:14.5px; margin-bottom:40px; }
-.stats{ display:flex; justify-content:center; align-items:flex-start; gap:32px 42px; flex-wrap:wrap; }
-.stat .num{ font-family: var(--serif); font-style:italic; font-size:42px; line-height:1.1; color: var(--accent); }
-.stat .lbl{ font-size:13px; color: var(--text-secondary); margin-bottom:14px; font-family: var(--mono); }
-.stat .cta{ display:inline-block; background: var(--bg-elev); border:1px solid var(--border); border-radius:8px; padding:8px 16px; font-size:12.5px; color: var(--text-primary); transition: color .15s ease, border-color .15s ease, background .15s ease; }
-.stat .cta:hover{ color: var(--accent); border-color: var(--border-strong); background: var(--bg-elev-2); }
-.stat .cta:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
 
 @media (max-width:880px){
   .row{ grid-template-columns:1fr; gap:10px; }
@@ -528,6 +490,5 @@ h1.hero-title em{ font-style:italic; color: var(--accent); }
   .spine-line{ display:none; }
   .fan{ display:none; }
   .triple-cluster{ flex-direction:column; }
-  .stats{ gap:30px; }
 }
 </style>

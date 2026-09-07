@@ -1,7 +1,7 @@
 /**
  * FORMULARIO SEM ENDPOINT.
  *
- * A newsletter e o formulario alternativo da /solucoes/agendar ainda nao tem
+ * A newsletter e o formulario alternativo da /contato ainda nao tem
  * para onde enviar, entao o submit e barrado aqui em vez de num
  * `onsubmit="return false"` inline no HTML. Quando o endpoint existir, e
  * aqui que o envio entra, e este comentario sai junto.
