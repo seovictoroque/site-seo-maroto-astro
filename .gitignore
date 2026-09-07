@@ -40,6 +40,9 @@ temp/
 *.orig
 rascunho/
 
+# Pacotes de deploy gerados a partir do dist, nunca versionar
+dist-*.zip
+
 # Gerados pelo build na raiz, ver astro.config.mjs
 htaccess
 robots.txt
