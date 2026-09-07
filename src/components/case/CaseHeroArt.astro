@@ -1,0 +1,340 @@
+---
+/**
+ * CAPA DO CASE, desenhada em SVG inline.
+ *
+ * Uma cena por tipo de problema, nao uma arte generica: a capa de um case
+ * precisa mostrar o que aconteceu, senao e so enfeite ocupando o lugar mais
+ * nobre da pagina.
+ *
+ * SVG inline de proposito, o mesmo criterio do PostHeroArt: nao pesa
+ * requisicao, nao disputa o LCP e acompanha a paleta sem precisar de arquivo
+ * novo a cada tema.
+ *
+ * As grades sao GERADAS no frontmatter, nao digitadas: a cena de indexacao
+ * tem 80 quadradinhos, e escrever 80 <rect> a mao e como o desenho para de
+ * bater com o numero que ele ilustra na primeira revisao.
+ *
+ * QUANDO ENTRAR IMAGEM DE VERDADE
+ * Preencha o campo `image` do frontmatter do case. O ideal aqui e o print do
+ * grafico real (Search Console, CrUX, o painel de receita), com o eixo
+ * inteiro visivel. Ate la, o desenho ilustra a forma do resultado sem fingir
+ * ser captura de tela.
+ */
+interface Props {
+  art: 'indexacao' | 'poda' | 'performance';
+  /** so para compor o title/desc acessivel com o numero real do case */
+  before: string;
+  after: string;
+  /** dentro do card da listagem, sem sombra e com padding menor */
+  mini?: boolean;
+}
+
+const { art, before, after, mini = false } = Astro.props;
+
+/*
+ * ID UNICO POR INSTANCIA.
+ *
+ * O <title> e o <desc> do SVG sao ligados por aria-labelledby, e a pagina de
+ * case passou a ter ate tres desenhos: a capa do hero mais os relacionados.
+ * Com id fixo, os tres apontariam para o mesmo texto e o HTML sairia com id
+ * duplicado, que e erro de validacao e confunde leitor de tela.
+ */
+const seq = ((globalThis as any).__csArtSeq = ((globalThis as any).__csArtSeq ?? 0) + 1);
+const uid = `csArt${seq}`;
+const idT = `${uid}T`;
+const idD = `${uid}D`;
+
+/** grade de paginas: 10 colunas por 5 linhas, com as `acesas` primeiras */
+function grade(x0: number, y0: number, acesas: number) {
+  const out = [];
+  for (let i = 0; i < 50; i++) {
+    out.push({
+      x: x0 + (i % 10) * 18,
+      y: y0 + Math.floor(i / 10) * 18,
+      on: i < acesas,
+    });
+  }
+  return out;
+}
+
+const antes = grade(38, 92, 6);   // 12% de 50
+const depois = grade(298, 92, 36); // 71% de 50
+
+/** pontos de uma linha do grafico da cena de poda */
+const linha = (vals: number[], x0: number, larg: number, base: number, alt: number) =>
+  vals.map((v, i) => `${x0 + (i * larg) / (vals.length - 1)},${base - v * alt}`).join(' ');
+
+const trafego = linha([0.86, 0.9, 0.72, 0.55, 0.44, 0.4], 60, 400, 250, 150);
+const receita = linha([0.2, 0.24, 0.35, 0.52, 0.74, 0.92], 60, 400, 250, 150);
+
+/*
+ * Cascata de performance, num EIXO DE TEMPO de verdade.
+ *
+ * A primeira versao desenhou as barras com larguras soltas e cravou as duas
+ * marcas de LCP em x fixo. Resultado: a linha de 4,8s ficou flutuando depois
+ * do fim de todas as barras, e o desenho dizia o contrario do texto, porque
+ * nada ali explicava o que empurrava o LCP.
+ *
+ * Agora cada barra tem inicio e fim EM SEGUNDOS, e a posicao em x sai da
+ * mesma escala que posiciona as marcas. As tres barras de terceiro sao as
+ * unicas que passam de 2s, entao tirar as tres puxa a linha de chegada de
+ * 4,8s para 1,9s, que e exatamente o que o case conta.
+ */
+const ESCALA_S = 5.5;
+const x0 = 60;
+const larguraEixo = 400;
+const emX = (seg: number) => x0 + (seg / ESCALA_S) * larguraEixo;
+
+const cascata = [
+  { de: 0.0, ate: 1.2, t: false },
+  { de: 0.2, ate: 4.7, t: true },
+  { de: 0.4, ate: 1.3, t: false },
+  { de: 0.7, ate: 4.4, t: true },
+  { de: 0.9, ate: 1.6, t: false },
+  { de: 1.1, ate: 3.9, t: true },
+  { de: 1.3, ate: 1.85, t: false },
+];
+
+/* ==========================================================================
+   CENAS REDUZIDAS, para o card.
+   Nao sao a cena grande com zoom out: sao outro desenho.
+   Encolher a versao de 520 para 260 divide por dois o tamanho de cada rotulo,
+   e a legenda em mono de 9px vira borrao. Aqui a letra miuda sai inteira e
+   fica so a forma do resultado, que e o que um card precisa comunicar. O
+   numero exato ja esta escrito ao lado, no proprio card.
+
+   O viewBox tem a largura real do bloco (260), entao 1 unidade = 1px e o
+   texto que sobra e desenhado no tamanho em que sera lido.
+   ========================================================================== */
+const gradeMini = (x0: number, acesas: number) =>
+  Array.from({ length: 25 }, (_, i) => ({
+    x: x0 + (i % 5) * 21,
+    y: 44 + Math.floor(i / 5) * 21,
+    on: i < acesas,
+  }));
+
+const miniAntes = gradeMini(14, 3);   // 12% de 25
+const miniDepois = gradeMini(152, 18); // 72% de 25
+
+const miniTrafego = linha([0.85, 0.88, 0.7, 0.52, 0.42, 0.38], 22, 216, 156, 96);
+const miniReceita = linha([0.18, 0.22, 0.34, 0.52, 0.75, 0.94], 22, 216, 156, 96);
+
+const emXmini = (seg: number) => 22 + (seg / ESCALA_S) * 214;
+const cascataMini = [
+  { de: 0.0, ate: 1.2, t: false },
+  { de: 0.2, ate: 4.7, t: true },
+  { de: 0.5, ate: 1.5, t: false },
+  { de: 0.8, ate: 4.3, t: true },
+  { de: 1.1, ate: 3.9, t: true },
+];
+---
+
+<figure class:list={['cs-art', mini && 'mini']}>
+{mini ? (
+  <>
+    {art === 'indexacao' && (
+      <svg viewBox="0 0 260 190" role="img" aria-labelledby={`${idT} ${idD}`}>
+        <title id={idT}>Cobertura do catálogo antes e depois</title>
+        <desc id={idD}>Duas grades de páginas. Na primeira, poucas indexadas, {before}. Na segunda, a maioria, {after}.</desc>
+        <g font-family="JetBrains Mono, monospace" font-size="10" fill="#9A8260">
+          <text x="14" y="26">antes</text>
+          <text x="152" y="26">depois</text>
+        </g>
+        {miniAntes.map((c) => (
+          <rect x={c.x} y={c.y} width="15" height="15" rx="3.5"
+                fill={c.on ? '#D9A441' : '#241A10'}
+                stroke={c.on ? 'none' : 'rgba(216,182,138,0.16)'} />
+        ))}
+        {miniDepois.map((c) => (
+          <rect x={c.x} y={c.y} width="15" height="15" rx="3.5"
+                fill={c.on ? '#D9A441' : '#241A10'}
+                stroke={c.on ? 'none' : 'rgba(216,182,138,0.16)'} />
+        ))}
+        <path d="M122 92h18M133 85l8 7-8 7" fill="none" stroke="#9A8260" stroke-width="1.7"
+              stroke-linecap="round" stroke-linejoin="round" />
+        <text x="14" y="176" font-family="JetBrains Mono, monospace" font-size="9" fill="#6E5A42">
+          cada quadrado = 4% do catálogo
+        </text>
+      </svg>
+    )}
+
+    {art === 'poda' && (
+      <svg viewBox="0 0 260 190" role="img" aria-labelledby={`${idT} ${idD}`}>
+        <title id={idT}>Tráfego caindo e receita subindo</title>
+        <desc id={idD}>Duas curvas no mesmo período: sessões descem, receita orgânica sobe de {before} para {after}.</desc>
+        <g stroke="rgba(216,182,138,0.12)"><path d="M22 90h216M22 156h216" /></g>
+        <path d="M22 46v110h216" fill="none" stroke="rgba(216,182,138,0.28)" />
+        <polyline points={miniTrafego} fill="none" stroke="#6E5A42" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5" />
+        <polyline points={miniReceita} fill="none" stroke="#D9A441" stroke-width="2.8"
+                  stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="238" cy="66" r="4" fill="#D9A441" />
+        <g font-family="JetBrains Mono, monospace" font-size="10">
+          <text x="22" y="34" fill="#6E5A42">sessões</text>
+          <text x="90" y="34" fill="#D9A441">receita</text>
+          <text x="22" y="176" fill="#6E5A42">jan</text>
+          <text x="238" y="176" fill="#6E5A42" text-anchor="end">jul</text>
+        </g>
+      </svg>
+    )}
+
+    {art === 'performance' && (
+      <svg viewBox="0 0 260 190" role="img" aria-labelledby={`${idT} ${idD}`}>
+        <title id={idT}>Cascata de carregamento antes e depois</title>
+        <desc id={idD}>Três scripts de terceiro são os únicos que passam de dois segundos. Sem eles, o LCP sai de {before} para {after}.</desc>
+        {cascataMini.map((b, i) => (
+          <rect x={emXmini(b.de)} y={46 + i * 22} width={emXmini(b.ate) - emXmini(b.de)} height="10" rx="5"
+                fill={b.t ? 'rgba(193,87,58,0.6)' : 'rgba(110,90,66,0.55)'} />
+        ))}
+        <g stroke="#C1573A" stroke-width="1.5" stroke-dasharray="4 4">
+          <path d={`M${emXmini(4.8)} 36v122`} />
+        </g>
+        <g stroke="#D9A441" stroke-width="2">
+          <path d={`M${emXmini(1.9)} 36v122`} />
+        </g>
+        <g font-family="JetBrains Mono, monospace" font-size="10">
+          <text x={emXmini(1.9) + 5} y="30" fill="#D9A441">{after}</text>
+          <text x={emXmini(4.8) + 4} y="30" fill="#DD7A5C" text-anchor="end">{before}</text>
+          <text x="22" y="176" fill="#6E5A42">3 scripts de terceiro</text>
+        </g>
+      </svg>
+    )}
+  </>
+) : (
+<>
+  {art === 'indexacao' && (
+    <svg viewBox="0 0 520 320" role="img" aria-labelledby={`${idT} ${idD}`}>
+      <title id={idT}>Cobertura do catálogo antes e depois</title>
+      <desc id={idD}>
+        Duas grades de cinquenta páginas cada. Na primeira, seis estão indexadas, {before} do catálogo.
+        Na segunda, trinta e seis estão indexadas, {after}, depois de o inventário ser cortado.
+      </desc>
+
+      <g font-family="JetBrains Mono, monospace" font-size="9" fill="#9A8260">
+        <text x="38" y="52">ANTES</text>
+        <text x="298" y="52">DEPOIS</text>
+      </g>
+      <g font-family="JetBrains Mono, monospace" font-size="11">
+        <text x="38" y="74" fill="#6E5A42">{before} de 400 mil URLs</text>
+        <text x="298" y="74" fill="#D9A441">{after} de 96 mil URLs</text>
+      </g>
+
+      {antes.map((c) => (
+        <rect x={c.x} y={c.y} width="13" height="13" rx="3"
+              fill={c.on ? '#D9A441' : '#241A10'}
+              stroke={c.on ? 'none' : 'rgba(216,182,138,0.16)'} />
+      ))}
+      {depois.map((c) => (
+        <rect x={c.x} y={c.y} width="13" height="13" rx="3"
+              fill={c.on ? '#D9A441' : '#241A10'}
+              stroke={c.on ? 'none' : 'rgba(216,182,138,0.16)'} />
+      ))}
+
+      <path d="M252 130h22M266 122l10 8-10 8" fill="none" stroke="#9A8260" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round" />
+
+      <g font-family="JetBrains Mono, monospace" font-size="9" fill="#6E5A42">
+        <text x="38" y="216">cada quadrado = 2% do catálogo</text>
+      </g>
+      <path d="M38 236h444" stroke="rgba(216,182,138,0.16)" />
+      <g font-family="JetBrains Mono, monospace" font-size="10">
+        <text x="38" y="262" fill="#9A8260">o inventário encolheu</text>
+        <text x="482" y="262" fill="#F0E4CF" text-anchor="end">400 mil → 96 mil URLs</text>
+        <text x="38" y="288" fill="#9A8260">orçamento de rastreio</text>
+        <text x="482" y="288" fill="#F0E4CF" text-anchor="end">3,2x mais páginas úteis por dia</text>
+      </g>
+    </svg>
+  )}
+
+  {art === 'poda' && (
+    <svg viewBox="0 0 520 320" role="img" aria-labelledby={`${idT} ${idD}`}>
+      <title id={idT}>Tráfego caindo e receita subindo no mesmo período</title>
+      <desc id={idD}>
+        Duas curvas no mesmo eixo de tempo. A de sessões desce, a de receita orgânica sobe
+        de {before} para {after}, e as duas se cruzam no meio do período.
+      </desc>
+
+      <g stroke="rgba(216,182,138,0.12)">
+        <path d="M60 100h400M60 175h400M60 250h400" />
+      </g>
+      <path d="M60 60v190h400" fill="none" stroke="rgba(216,182,138,0.28)" />
+
+      <polyline points={trafego} fill="none" stroke="#6E5A42" stroke-width="2.4"
+                stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5" />
+      <polyline points={receita} fill="none" stroke="#D9A441" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round" />
+      <circle cx="460" cy="112" r="4.5" fill="#D9A441" />
+      <circle cx="460" cy="190" r="4" fill="#6E5A42" />
+
+      <g font-family="JetBrains Mono, monospace" font-size="10">
+        <text x="60" y="46" fill="#9A8260">sessões</text>
+        <rect x="112" y="38" width="16" height="3" rx="1.5" fill="#6E5A42" />
+        <text x="150" y="46" fill="#D9A441">receita orgânica</text>
+        <rect x="252" y="38" width="16" height="3" rx="1.5" fill="#D9A441" />
+        <text x="60" y="272" fill="#6E5A42">jan</text>
+        <text x="460" y="272" fill="#6E5A42" text-anchor="end">jul</text>
+      </g>
+
+      <g font-family="JetBrains Mono, monospace" font-size="10">
+        <text x="60" y="300" fill="#9A8260">140 posts podados</text>
+        <text x="460" y="300" fill="#F0E4CF" text-anchor="end">20 páginas de comparação no lugar</text>
+      </g>
+    </svg>
+  )}
+
+  {art === 'performance' && (
+    <svg viewBox="0 0 520 320" role="img" aria-labelledby={`${idT} ${idD}`}>
+      <title id={idT}>Cascata de carregamento antes e depois</title>
+      <desc id={idD}>
+        Barras de requisição em cascata. Três delas, de scripts de terceiro, respondem por
+        metade do tempo de bloqueio. Removidas, a marca de LCP sai de {before} para {after}.
+      </desc>
+
+      {cascata.map((b, i) => (
+        <rect x={emX(b.de)} y={58 + i * 22} width={emX(b.ate) - emX(b.de)} height="11" rx="5.5"
+              fill={b.t ? 'rgba(193,87,58,0.6)' : 'rgba(110,90,66,0.55)'} />
+      ))}
+
+      {/* as duas linhas de chegada, na mesma escala das barras */}
+      <g stroke="#C1573A" stroke-width="1.6" stroke-dasharray="5 4">
+        <path d={`M${emX(4.8)} 44v176`} />
+      </g>
+      <g stroke="#D9A441" stroke-width="2">
+        <path d={`M${emX(1.9)} 44v176`} />
+      </g>
+      <g font-family="JetBrains Mono, monospace" font-size="10">
+        <text x={emX(4.8) + 6} y="38" fill="#DD7A5C" text-anchor="end">LCP {before}</text>
+        <text x={emX(1.9) + 6} y="38" fill="#D9A441">LCP {after}</text>
+      </g>
+
+      {/* eixo de tempo, para as barras nao virarem enfeite sem unidade */}
+      <path d={`M${x0} 220h${larguraEixo}`} stroke="rgba(216,182,138,0.22)" />
+      <g font-family="JetBrains Mono, monospace" font-size="9" fill="#6E5A42">
+        {[0, 1, 2, 3, 4, 5].map((seg) => (
+          <text x={emX(seg)} y="236" text-anchor="middle">{seg}s</text>
+        ))}
+      </g>
+
+      <path d="M60 256h422" stroke="rgba(216,182,138,0.16)" />
+      <g font-family="JetBrains Mono, monospace" font-size="10">
+        <rect x="60" y="270" width="11" height="8" rx="4" fill="rgba(193,87,58,0.6)" />
+        <text x="80" y="278" fill="#9A8260">3 scripts de terceiro, os únicos que passam de 2s</text>
+        <text x="60" y="302" fill="#9A8260">URLs em "Bom" no relatório</text>
+        <text x="482" y="302" fill="#F0E4CF" text-anchor="end">18% → 84%</text>
+      </g>
+    </svg>
+  )}
+</>
+)}
+</figure>
+
+<style is:global>
+/* Mesma casca do .ph-art do post: painel escuro dentro do tema claro do
+   artigo, servindo de ancora de contraste no alto da pagina. */
+.cs-art{ background:#14100A; border:1px solid rgba(216,182,138,0.20); border-radius:18px; padding:24px; box-shadow: 0 26px 60px rgba(60,40,14,0.18); }
+.cs-art svg{ width:100%; height:auto; display:block; }
+
+/* dentro do card a capa perde a sombra e encolhe o padding: ela ja esta
+   sobre um cartao, e duas sombras empilhadas sujam a borda */
+.cs-art.mini{ padding:16px; border-radius:13px; box-shadow:none; }
+</style>

@@ -1,0 +1,268 @@
+---
+/**
+ * PAGINA DE FERRAMENTA.
+ *
+ * Mesma estrutura da /ferramentas/seo-audit, que foi escrita a mao antes
+ * desta rota existir: breadcrumb, hero, campo de entrada, exemplo de saida, o
+ * que a ferramenta faz, como usar, ferramentas relacionadas, CTA e FAQ.
+ *
+ * O conteudo mora em data/ferramentas.ts. Esta pagina so desenha.
+ *
+ * O AVISO DE DEMONSTRACAO NAO E OPCIONAL
+ * Nenhuma destas ferramentas roda. O formulario e inerte e o resultado e
+ * exemplo estatico. O bloco `.demo-aviso`, logo abaixo do campo, diz isso com
+ * todas as letras, e o botao nasce `disabled` para nao existir clique que nao
+ * faz nada. Formulario que aceita o clique e nao devolve resposta e pior do
+ * que formulario declaradamente desligado.
+ *
+ * O JSON-LD traz SoftwareApplication junto com o FAQPage: a pagina descreve
+ * uma ferramenta, e declarar isso e mais preciso do que um WebPage generico.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/layout/Breadcrumb.astro';
+import FaqSection from '../../components/page/FaqSection.astro';
+import { abs, breadcrumbNode, faqNode } from '../../lib/schema';
+import { site } from '../../data/site';
+import { ferramentas, getFerramenta, type Ferramenta } from '../../data/ferramentas';
+
+import '../../styles/page-kit.css';
+import '../../styles/pages/ferramenta.css';
+
+export async function getStaticPaths() {
+  // a seo-audit esta na lista so para poder ser citada nos cards; a pagina
+  // dela e escrita a mao, e gerar rota aqui criaria duas paginas na mesma URL
+  return ferramentas
+    .filter((f) => !f.paginaPropria)
+    .map((f) => ({ params: { ferramenta: f.slug }, props: { ferramenta: f } }));
+}
+
+interface Props {
+  ferramenta: Ferramenta;
+}
+
+const { ferramenta: f } = Astro.props;
+const path = `/ferramentas/${f.slug}`;
+const campoId = `campo-${f.slug}`;
+
+const crumbs = [
+  { href: '/', label: 'Home' },
+  { href: '/ferramentas', label: 'Ferramentas' },
+  { label: f.nome },
+];
+
+/*
+ * Relacionadas.
+ *
+ * O filtro de undefined existe para o build nao quebrar com um slug errado,
+ * mas ele descarta em silencio, e silencio aqui produz fileira de dois cards
+ * com um buraco no lugar do terceiro. O aviso abaixo aparece no console do
+ * build quando algum slug nao resolve.
+ */
+const relacionadas = f.relacionadas
+  .map((slug) => {
+    const achada = getFerramenta(slug);
+    if (!achada) console.warn(`[ferramentas] ${f.slug}: relacionada "${slug}" nao existe em data/ferramentas.ts`);
+    return achada;
+  })
+  .filter((x): x is Ferramenta => Boolean(x));
+
+const { resultado: r } = f;
+---
+
+<BaseLayout
+  title={f.metaTitle}
+  description={f.metaDescription}
+  path={path}
+  ogDescription={f.sub}
+  schema={[
+    {
+      '@type': 'SoftwareApplication',
+      '@id': `${abs(path)}#app`,
+      name: f.nome,
+      description: f.metaDescription,
+      url: abs(path),
+      applicationCategory: 'BusinessApplication',
+      operatingSystem: 'Web',
+      inLanguage: site.lang,
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'BRL' },
+      publisher: { '@id': `${site.url}/#org` },
+    },
+    faqNode(path, f.faq),
+    breadcrumbNode(crumbs),
+  ]}
+>
+<div class="bg-field"></div>
+<main id="conteudo">
+<Breadcrumb items={crumbs} />
+
+<div class="eyebrow-wrap">
+  <span class="eyebrow">{f.eyebrow}</span>
+</div>
+
+<div class="hero">
+  <h1 class="hero-title">{f.h1[0]}<em>{f.h1[1]}</em>{f.h1[2]}</h1>
+  <p class="hero-sub">{f.sub}</p>
+  <div class="hero-meta">
+    {f.heroMeta.map((m) => <span><b>{m.valor}</b> {m.rotulo}</span>)}
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-box">
+    <form class="tool-form" onsubmit="return false;">
+      <label class="visually-hidden" for={campoId}>{f.form.label}</label>
+      {f.form.multilinha ? (
+        <input id={campoId} type="text" placeholder={f.form.placeholder} disabled />
+      ) : (
+        <input id={campoId} type="url" placeholder={f.form.placeholder} disabled />
+      )}
+      <button class="btn btn-primary" type="submit" disabled>{f.form.botao}</button>
+    </form>
+    <p class="demo-aviso" set:html={f.avisoDemo}></p>
+  </div>
+</div>
+
+<div class="section-head">
+  <h2>{r.titulo}</h2>
+  <p>{r.sub}</p>
+</div>
+
+<div class="panel">
+  <div class="panel-box result">
+    {r.score && (
+      <div class="result-head">
+        <div class="score"><span class="score-num">{r.score.num}</span><span class="score-lbl">{r.score.label}</span></div>
+        <div class="score-meta">
+          <p><span class="alvo">{r.score.alvo}</span>{r.score.meta}</p>
+        </div>
+      </div>
+    )}
+
+    {r.serp && (
+      <div class="resultado-bloco">
+        <div class="serp-preview">
+          <p class="s-url">{r.serp.url}</p>
+          <p class="s-title">{r.serp.title}</p>
+          <p class="s-desc">{r.serp.desc}</p>
+        </div>
+        <p class="serp-nota">{r.serp.nota}</p>
+      </div>
+    )}
+
+    {r.codigo && (
+      <div class="resultado-bloco">
+        <pre class="saida-codigo"><code>{r.codigo}</code></pre>
+      </div>
+    )}
+
+    {r.tabela && (
+      <div class="resultado-bloco">
+        <div class="table-wrap">
+          <table class="data">
+            <thead><tr>{r.tabela.head.map((h) => <th>{h}</th>)}</tr></thead>
+            <tbody>
+              {r.tabela.rows.map((linha) => (
+                <tr>
+                  {linha.map((celula, i) => (
+                    i === 0
+                      ? <td><b style="color:var(--text-primary)" set:html={celula}></b></td>
+                      : <td set:html={celula}></td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    )}
+
+    {r.achados && (
+      <ul class="findings resultado-bloco">
+        {r.achados.map((a) => (
+          <li class={a.sev}>
+            <span class="sev">{a.rotulo}</span>
+            <div><h4>{a.titulo}</h4><p>{a.texto}</p></div>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</div>
+
+<div class="section-head">
+  <h2>{f.oQueFaz.titulo}</h2>
+  <p>{f.oQueFaz.sub}</p>
+</div>
+
+<div class="panel">
+  <div class="panel-box">
+    <div class="table-wrap">
+      <table class="data">
+        <thead><tr>{f.oQueFaz.tabela.head.map((h) => <th>{h}</th>)}</tr></thead>
+        <tbody>
+          {f.oQueFaz.tabela.rows.map((linha) => (
+            <tr>
+              {linha.map((celula, i) => (
+                i === 0
+                  ? <td><b style="color:var(--text-primary)" set:html={celula}></b></td>
+                  : <td set:html={celula}></td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="section-head">
+  <h2>Como usar sem se enganar</h2>
+</div>
+
+<div class="steps">
+  {f.passos.map((p, i) => (
+    <div class="step">
+      <div class="step-num">{String(i + 1).padStart(2, '0')}</div>
+      <div class="step-body"><h3>{p.titulo}</h3><p>{p.texto}</p></div>
+    </div>
+  ))}
+</div>
+
+{relacionadas.length > 0 && (
+  <>
+    <div class="section-head">
+      <h2>Ferramentas que combinam com essa</h2>
+    </div>
+
+    <div class="card-grid trio">
+      {relacionadas.map((rel) => (
+        <a class="card" href={`/ferramentas/${rel.slug}`}>
+          <span class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={rel.icone}></svg></div>
+          <h3>{rel.nome}</h3>
+          <p>{rel.cardTexto}</p>
+          <div class="card-tags">
+            {rel.tags.map((t) => <span class:list={['tag', t.on && 'on']}>{t.label}</span>)}
+          </div>
+        </a>
+      ))}
+    </div>
+  </>
+)}
+
+<section class="cta-band">
+  <div class="cta-inner">
+    <h2>{f.cta.titulo}</h2>
+    <p>{f.cta.texto}</p>
+    <div class="hero-actions"><a class="btn btn-primary" href="/contato">Agendar um bate-papo</a><a class="btn btn-ghost" href="/ferramentas">Ver todas as ferramentas</a></div>
+  </div>
+</section>
+
+<FaqSection items={f.faq} />
+</main>
+</BaseLayout>
+
+<script>
+  import { initFaqAccordion } from '../../scripts/faq-accordion';
+  initFaqAccordion('.faq');
+</script>

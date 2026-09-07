@@ -143,4 +143,109 @@ const blog = defineCollection({
     }),
 });
 
-export const collections = { blog };
+/**
+ * ESTUDOS DE CASO.
+ *
+ * Collection separada do blog de proposito. Um case nao e um post com outra
+ * categoria: ele tem estrutura fixa (problema, diagnostico, hipotese,
+ * implementacao, resultado, aprendizados) e carrega numero verificavel. O
+ * schema abaixo obriga os dois.
+ *
+ * O CAMPO `metric` E O CORACAO DA PAGINA.
+ * Ele alimenta o card da listagem, o bloco de destaque do topo do case e o
+ * JSON-LD, os tres a partir da MESMA fonte. Numero na pagina que nao existe
+ * no frontmatter e numero que vai dessincronizar na primeira revisao.
+ *
+ * SOBRE `status: stub`
+ * Mesmo contrato do blog: nasce noindex e fora do sitemap, mas ja aparece na
+ * listagem. Case e prova de trabalho, entao publicar um com numero inventado
+ * seria mentir sobre a propria credencial. Enquanto o texto for rascunho, ele
+ * fica stub. So vira 'published' com dado real do projeto real.
+ */
+const cases = defineCollection({
+  loader: glob({ base: './src/content/cases', pattern: '**/*.{md,mdx}' }),
+  schema: ({ image }) =>
+    z.object({
+      /** H1 do case e titulo do card. O resultado, nao o nome do cliente. */
+      title: z.string(),
+      seoTitle: z.string().optional(),
+      description: z.string().max(160).optional(),
+
+      /** Resumo do card. O que estava quebrado e o que resolveu. */
+      excerpt: z.string().optional(),
+      /** linha fina do hero */
+      standfirst: z.string().optional(),
+
+      /**
+       * Etiqueta de contexto do card: "marketplace, 400 mil URLs".
+       * Segmento e porte, nunca o nome do cliente sem autorizacao escrita.
+       */
+      segment: z.string(),
+
+      /**
+       * O antes e o depois. `label` diz do que e o numero, porque "12% para
+       * 71%" sozinho nao significa nada fora da pagina, e e exatamente esse
+       * recorte que a IA cita.
+       */
+      metric: z.object({
+        label: z.string(),
+        before: z.string(),
+        after: z.string(),
+        /** contexto curto abaixo do numero: "em cinco meses" */
+        note: z.string().optional(),
+      }),
+
+      /** Metricas secundarias da ficha do projeto. Opcional. */
+      secondaryMetrics: z
+        .array(z.object({ label: z.string(), value: z.string() }))
+        .default([]),
+
+      /** Quanto tempo levou, em texto: "cinco meses". */
+      duration: z.string().optional(),
+      /** O que foi feito, em tres a seis chips. */
+      disciplines: z.array(z.string()).default([]),
+
+      author: z.enum(authorSlugs as [string, ...string[]]).default('victor-roque'),
+      publishDate: z.coerce.date(),
+      updatedDate: z.coerce.date().optional(),
+      readingTime: z.number().int().positive(),
+
+      coverArt: z.enum(artIds as unknown as [string, ...string[]]).default('art-tech'),
+
+      /**
+       * Cena da capa, desenhada em SVG por CaseHeroArt.astro. Uma por tipo de
+       * problema, porque capa de case tem que mostrar o que aconteceu.
+       * Ausente, o hero renderiza em uma coluna so.
+       */
+      heroArt: z.enum(['indexacao', 'poda', 'performance']).optional(),
+
+      image: image().optional(),
+      imageAlt: z.string().optional(),
+      ogImage: z.string().optional(),
+
+      /**
+       * 'stub' = a estrutura existe, o texto ainda e rascunho. Nasce noindex
+       * e fora do sitemap. Ver o comentario grande acima.
+       */
+      status: z.enum(['published', 'stub']).default('stub'),
+
+      /** O resumo executivo do topo, em tres a cinco linhas. */
+      keyPoints: z.array(z.string()).optional(),
+
+      /** Resposta direta para IA e trecho em destaque. */
+      aiSummary: z
+        .object({
+          question: z.string(),
+          answer: z.string(),
+          definitions: z.array(z.object({ term: z.string(), answer: z.string() })).default([]),
+        })
+        .optional(),
+
+      faq: z.array(z.object({ question: z.string(), answer: z.string() })).optional(),
+
+      /** slugs de outros cases relacionados. Vazio, o layout escolhe. */
+      related: z.array(z.string()).default([]),
+    }),
+});
+
+export const collections = { blog, cases };

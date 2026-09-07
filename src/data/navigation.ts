@@ -72,7 +72,6 @@ export const navItems: NavItem[] = [
       { href: '/cases/marketplace-indexacao', label: 'Marketplace, 400 mil URLs', hint: '12% para 71% de indexação' },
       { href: '/cases/saas-b2b-receita-organica', label: 'SaaS B2B, ticket alto', hint: 'menos tráfego, 2,3x mais receita' },
       { href: '/cases/editorial-core-web-vitals', label: 'Portal editorial', hint: 'LCP de 4,8s para 1,9s' },
-      { href: '/cases', label: 'Ver todos os cases', hint: 'problema, número e método aberto' },
     ],
   },
   { href: '/comunidade', label: 'Comunidade', icon: 'comunidade' },

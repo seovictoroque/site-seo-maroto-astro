@@ -1,0 +1,332 @@
+---
+/**
+ * PAGINA DE ESTUDO DE CASO.
+ *
+ * Reusa o template do post: mesmo BlogLayout (tema claro escopado em
+ * .blog-main), mesmos primitivos, mesma estrutura de duas colunas com indice
+ * grudado a direita, e a MESMA tipografia de .post-body.
+ *
+ * A casca compartilhada vem de styles/article.css, importado pelas duas
+ * paginas. Ela morava dentro do <style is:global> do post, e isso NAO
+ * funciona entre paginas: `is:global` tira o hash de escopo do seletor, mas o
+ * CSS continua sendo empacotado so na pagina que declara o bloco. O sintoma
+ * de esquecer disso foi a foto do autor em tamanho original, a assinatura
+ * emendada numa linha so e o texto sem tamanho nem margem.
+ *
+ * O QUE MUDA EM RELACAO AO POST, E POR QUE
+ * 1. O hero tem capa propria, desenhada por CaseHeroArt: uma cena por tipo
+ *    de problema, ilustrando o que aconteceu, nao decoracao generica.
+ * 2. O painel de resultado (metrica, ficha do projeto e disciplinas) fica no
+ *    corpo, logo depois dos pontos principais. Numero cru antes de qualquer
+ *    contexto e so numero grande; depois do resumo executivo ele vira
+ *    leitura, e ainda responde "isso se parece com o meu caso?".
+ * 3. O indice sai dos headings reais do texto, e o formato de seis secoes e
+ *    conferido no build pelo conferirFormato de lib/cases.ts. Escrever a
+ *    lista a mao parece mais controlado e nao e: o id gerado pelo rehype-slug
+ *    preserva acento, entao `#diagnostico` sem acento nao existe na pagina.
+ * 4. Sem sub-menu de categorias: case nao pertence a categoria de blog.
+ *
+ * O selo de rascunho no topo aparece enquanto `status: stub`. Ele nao e
+ * decoracao: publicar case com numero nao conferido e mentir sobre a propria
+ * credencial, e o selo mais o noindex existem para isso nao passar batido.
+ */
+import { render } from 'astro:content';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import Breadcrumb from '../../components/layout/Breadcrumb.astro';
+import CaseMetric from '../../components/case/CaseMetric.astro';
+import CaseHeroArt from '../../components/case/CaseHeroArt.astro';
+import CaseCard from '../../components/case/CaseCard.astro';
+import KeyPoints from '../../components/post/KeyPoints.astro';
+import AiSummary from '../../components/post/AiSummary.astro';
+import AiTools from '../../components/post/AiTools.astro';
+import Toc from '../../components/post/Toc.astro';
+import Faq from '../../components/post/Faq.astro';
+import AuthorBox from '../../components/post/AuthorBox.astro';
+import Icon from '../../components/layout/Icon.astro';
+import { getAuthor } from '../../data/authors';
+import { site } from '../../data/site';
+import { formatDate, isoDate } from '../../lib/posts';
+import { allCases, relatedCases, conferirFormato } from '../../lib/cases';
+import { breadcrumbNode, caseStudyNode, faqNode, personNode, abs } from '../../lib/schema';
+
+// assinatura, grade de duas colunas e tipografia do corpo: dividido com o post
+import '../../styles/article.css';
+
+export async function getStaticPaths() {
+  const casos = await allCases();
+  return casos.map((item) => ({ params: { slug: item.id }, props: { item } }));
+}
+
+const { item } = Astro.props;
+const { data } = item;
+const { Content, headings } = await render(item);
+
+const author = getAuthor(data.author)!;
+const path = `/cases/${item.id}`;
+const updated = data.updatedDate ?? data.publishDate;
+const rascunho = data.status === 'stub';
+const description = data.description ?? data.excerpt ?? data.title;
+
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Cases', href: '/cases' },
+  { label: data.title },
+];
+
+const todos = await allCases();
+const relacionados = relatedCases(todos, item, 2);
+
+/*
+ * O indice sai dos headings REAIS que o render() devolve, nunca de uma lista
+ * escrita a mao. O rehype-slug preserva acento no id ("Diagnóstico" vira
+ * `#diagnóstico`), entao qualquer lista digitada aqui nasce com metade das
+ * ancoras quebradas, e quebrada de um jeito silencioso: o link e clicavel e
+ * simplesmente nao rola.
+ *
+ * O contrato das seis secoes continua valendo, so que como conferencia: o
+ * conferirFormato avisa no build se um case fugir da estrutura.
+ */
+const secoes = headings.filter((h) => h.depth === 2);
+conferirFormato(item.id, secoes.map((h) => h.text));
+
+const tocItems = [
+  ...secoes.map((h) => ({ slug: h.slug, text: h.text })),
+  ...(data.faq?.length ? [{ slug: 'faq', text: 'Perguntas frequentes' }] : []),
+  ...(relacionados.length ? [{ slug: 'relacionados', text: 'Outros casos' }] : []),
+];
+
+const schema = [
+  caseStudyNode({
+    path,
+    headline: data.title,
+    description,
+    datePublished: data.publishDate,
+    dateModified: updated,
+    authorSlug: author.slug,
+    segment: data.segment,
+    metric: data.metric,
+    image: data.ogImage,
+  }),
+  personNode(author),
+  breadcrumbNode(crumbs),
+  ...(data.faq?.length ? [faqNode(path, data.faq)] : []),
+];
+---
+
+<BlogLayout
+  title={data.seoTitle ?? `${data.title} | ${site.name}`}
+  description={description}
+  path={path}
+  ogType="article"
+  ogTitle={data.title}
+  ogImage={data.ogImage}
+  noindex={rascunho}
+  publishedTime={data.publishDate.toISOString()}
+  modifiedTime={updated.toISOString()}
+  authorName={author.name}
+  authorUrl={`/autor/${author.slug}`}
+  section="Estudos de caso"
+  subnav={false}
+  schema={schema}
+>
+  <Breadcrumb items={crumbs} />
+
+  <section class="case-hero">
+    <div class:list={['wrap', 'cs-grid', !data.heroArt && 'cs-grid-solo']}>
+      <div>
+        <div class="cs-tags">
+          <span class="cat-tag">{data.segment}</span>
+          {rascunho && <span class="cs-draft">rascunho, número ainda não conferido</span>}
+        </div>
+
+        <h1>{data.title}</h1>
+        {data.standfirst && <p class="cs-standfirst">{data.standfirst}</p>}
+
+        <div class="byline">
+          <a class="byline-avatar" href={`/autor/${author.slug}`} tabindex="-1" aria-hidden="true">
+            <img
+              src={author.photo.src}
+              srcset={author.photo.srcset}
+              sizes="48px"
+              width={author.photo.width}
+              height={author.photo.height}
+              alt=""
+              decoding="async"
+            />
+          </a>
+          <div class="byline-text">
+            <span class="byline-name">Por <a href={`/autor/${author.slug}`} rel="author">{author.name}</a></span>
+            <span class="byline-meta">
+              <span>Atualizado em <time datetime={isoDate(updated)}>{formatDate(updated)}</time></span>
+              <span class="dot"></span>
+              <span>{data.readingTime} min de leitura</span>
+              <span class="dot"></span>
+              <span>número conferido na fonte</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* A capa. Uma cena por tipo de problema, nao arte generica: o titulo e
+          o desenho contam a mesma historia. O painel de resultado desceu para
+          logo depois dos pontos principais, onde o leitor ja tem contexto
+          para o numero significar alguma coisa. */}
+      {data.heroArt && (
+        <CaseHeroArt art={data.heroArt} before={data.metric.before} after={data.metric.after} />
+      )}
+    </div>
+  </section>
+
+  <div class="wrap post-shell">
+    <article class="post-body">
+      {data.keyPoints?.length && <KeyPoints items={data.keyPoints} />}
+
+      {/* O resultado, dentro do texto. Sai do MESMO campo `metric` que
+          alimenta o JSON-LD, entao o numero da tela e o numero marcado nao
+          tem como divergir. */}
+      <aside class="cs-result inline" aria-label="Resultado do caso">
+        <CaseMetric
+          label={data.metric.label}
+          before={data.metric.before}
+          after={data.metric.after}
+          note={data.metric.note}
+          size="hero"
+        />
+
+        <div class="cs-result-side">
+          <dl class="cs-sheet">
+            {data.duration && <div><dt>Duração</dt><dd>{data.duration}</dd></div>}
+            {data.secondaryMetrics.map((m) => <div><dt>{m.label}</dt><dd>{m.value}</dd></div>)}
+          </dl>
+
+          {data.disciplines.length > 0 && (
+            <ul class="cs-chips">
+              {data.disciplines.map((d) => <li>{d}</li>)}
+            </ul>
+          )}
+        </div>
+      </aside>
+
+      {data.aiSummary && <AiSummary {...data.aiSummary} />}
+
+      <Content />
+
+      <AiTools pageTitle={data.title} pageUrl={abs(path)} />
+    </article>
+
+    <div class="post-side">
+      <Toc items={tocItems} />
+
+      {/* CTA proprio, no lugar do SideCta da Escolinha SEO. Quem le um case
+          esta avaliando contratar, nao comecando a estudar. */}
+      <aside class="cs-side-cta">
+        <p class="cs-side-kicker">um caso parecido?</p>
+        <p class="cs-side-text">Se o seu problema se parece com este, meia hora de conversa resolve mais que uma troca longa de e-mail.</p>
+        <a class="btn btn-primary" href="/contato">Agendar um bate-papo</a>
+      </aside>
+    </div>
+  </div>
+
+  {data.faq?.length && <Faq items={data.faq} title="Perguntas frequentes sobre este caso" />}
+
+  <AuthorBox author={author} />
+
+  {relacionados.length > 0 && (
+    <section class="section" id="relacionados">
+      <div class="wrap">
+        <div class="head-row">
+          <div class="section-head">
+            <span class="eyebrow">outros casos</span>
+            <h2>Mais trabalho documentado</h2>
+          </div>
+          <a class="link-more" href="/cases">
+            Ver todos os cases
+            <Icon set="ui" name="arrow" strokeWidth={2.4} />
+          </a>
+        </div>
+        {/* mesmo formato da listagem /cases: coluna unica, capa a esquerda */}
+        <div class="cases-grid">
+          {relacionados.map((c) => <CaseCard item={c} cover />)}
+        </div>
+      </div>
+    </section>
+  )}
+</BlogLayout>
+
+<style is:global>
+/* HERO DO CASE ------------------------------------------------------------
+   Mesma altura visual do .post-hero, com a coluna da direita trocada de arte
+   por resultado. O .byline, o .post-shell e todo o .post-body sao herdados do
+   [slug].astro do blog, nao redefinidos aqui. */
+.case-hero{ padding:26px 0 52px; position:relative; overflow:hidden; }
+.case-hero::before{ content:''; position:absolute; top:-300px; right:-140px; width:760px; height:600px; background: radial-gradient(ellipse at center, rgba(217,164,65,0.26), transparent 66%); pointer-events:none; }
+.cs-grid{ position:relative; display:grid; grid-template-columns: 1.08fr 0.92fr; gap:52px; align-items:center; }
+.case-hero h1{ font-family: var(--serif); font-weight:400; font-style:italic; font-size: clamp(32px,4.4vw,48px); line-height:1.08; letter-spacing:-0.015em; margin:14px 0 18px; }
+.cs-standfirst{ font-size:16.5px; line-height:1.7; color: var(--text-secondary); max-width:520px; }
+
+.cs-tags{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.cs-draft{ font-family: var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:0.07em; color: var(--text-muted); border:1px dashed var(--border-strong); border-radius:6px; padding:5px 9px; }
+
+/* O PAINEL DE RESULTADO, agora dentro do texto.
+   Ele nasceu na coluna do hero e desceu para depois dos pontos principais: o
+   numero cru no topo, antes de qualquer contexto, e so numero grande. Depois
+   do resumo executivo ele vira leitura.
+   A variante .inline poe metrica e ficha lado a lado, porque na largura da
+   coluna de texto (720px) empilhar deixaria o bloco alto demais. */
+.cs-result{ background: var(--bg-elev); border:1px solid var(--border); border-radius:18px; padding:28px; box-shadow: 0 26px 60px rgba(60,40,14,0.10); }
+.cs-result.inline{ display:grid; grid-template-columns: minmax(0,0.85fr) minmax(0,1.15fr); gap:30px; align-items:start; margin:0 0 34px; }
+.cs-result-side{ min-width:0; }
+.cs-sheet{ display:flex; flex-direction:column; gap:0; margin-top:24px; border-top:1px solid var(--border); }
+.cs-result.inline .cs-sheet{ margin-top:0; border-top:none; }
+.cs-sheet > div{ display:flex; align-items:baseline; justify-content:space-between; gap:16px; padding:11px 0; border-bottom:1px solid var(--border); }
+.cs-sheet dt{ font-family: var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.07em; color: var(--text-muted); }
+.cs-sheet dd{ font-size:14px; font-weight:600; color: var(--text-primary); text-align:right; }
+.cs-chips{ display:flex; flex-wrap:wrap; gap:7px; margin-top:18px; }
+.cs-chips li{ font-family: var(--mono); font-size:11px; color: var(--text-muted); border:1px solid var(--border); border-radius:999px; padding:4px 10px; }
+
+/* O painel mora DENTRO de .post-body, entao os chips herdavam as regras de
+   lista do artigo: viravam uma coluna de pilulas de largura inteira, cada uma
+   com o marcador redondo do ul. Estas tres regras desfazem isso, e ganham por
+   especificidade (0,2,x contra 0,1,x) sem precisar de !important. */
+.post-body .cs-chips{ flex-direction:row; margin:18px 0 0; padding-left:0; gap:7px; }
+.post-body .cs-chips li{ display:inline-flex; gap:0; align-items:center; }
+.post-body .cs-chips > li::before{ content:none; }
+
+/* Respiro da secao de relacionados. O .section padrao usa 70px, que serve
+   para uma grade de cards pequenos; com card largo e capa dentro, o bloco
+   ficava colado no AuthorBox de cima e no rodape de baixo. */
+#relacionados{ padding:84px 0 96px; }
+#relacionados .head-row{ margin-bottom:40px; }
+
+/* CTA da coluna lateral --------------------------------------------------- */
+.cs-side-cta{ background: var(--bg-elev); border:1px solid var(--border); border-radius:15px; padding:22px; display:flex; flex-direction:column; gap:12px; }
+.cs-side-kicker{ font-family: var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.09em; color: var(--accent-ink); }
+.cs-side-text{ font-size:13.5px; line-height:1.62; color: var(--text-secondary); }
+.cs-side-cta .btn{ width:100%; justify-content:center; }
+
+.cs-grid-solo{ grid-template-columns:1fr; max-width:760px; }
+
+@media (max-width:1080px){
+  .cs-grid{ grid-template-columns:1fr; gap:36px; }
+  .cs-art{ max-width:560px; }
+  /* a inversao (indice antes do texto) vem do article.css; aqui so a ordem
+     do CTA proprio, que o article.css nao conhece */
+  .cs-side-cta{ order:3; }
+}
+@media (max-width:860px){
+  .cs-result.inline{ grid-template-columns:1fr; gap:22px; }
+  .cs-result.inline .cs-sheet{ margin-top:4px; }
+}
+@media (max-width:620px){
+  .case-hero{ padding:20px 0 40px; }
+  .cs-result{ padding:22px; }
+  .cs-art{ padding:16px; }
+  .cs-sheet > div{ flex-direction:column; gap:3px; }
+  .cs-sheet dd{ text-align:left; }
+}
+</style>
+
+<script>
+  import { initTocScrollspy } from '../../scripts/toc-scrollspy';
+  initTocScrollspy();
+</script>

@@ -1,0 +1,90 @@
+---
+/**
+ * ILUSTRACAO DO HERO DA /cases.
+ *
+ * Nao e enfeite: ela desenha a promessa que o texto ao lado faz. O mesmo
+ * conjunto de dados aparece duas vezes, primeiro com o eixo cortado, do jeito
+ * que quase todo case de agencia mostra, e depois com o eixo comecando em
+ * zero. A curva e identica nos dois; o que muda e a escala.
+ *
+ * Por isso as duas series saem do MESMO array. Desenhar dois conjuntos
+ * diferentes e fingir a demonstracao, o que seria ironico numa pagina que
+ * promete grafico honesto.
+ */
+const dados = [62, 64, 63, 67, 69, 71];
+
+/** normaliza a serie dentro de um intervalo de eixo e devolve os pontos */
+function serie(min: number, max: number, x0: number, larg: number, base: number, alt: number) {
+  return dados
+    .map((v, i) => {
+      const x = x0 + (i * larg) / (dados.length - 1);
+      const y = base - ((v - min) / (max - min)) * alt;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    })
+    .join(' ');
+}
+
+// esquerda: eixo comeca em 60, entao 9 pontos percentuais viram uma montanha
+const cortado = serie(60, 73, 52, 138, 196, 108);
+// direita: eixo inteiro, de 0 a 100. O mesmo ganho, no tamanho real
+const inteiro = serie(0, 100, 312, 138, 196, 108);
+---
+
+<figure class="cases-art">
+  {/* viewBox cortado no conteudo real, e nao no numero redondo: o desenho
+      vai de x=30 a x=452 e de y=26 a y=272. Com 0 0 520 300 sobrava uma
+      faixa vazia de 70px na direita, e o grafico encolhia dentro da moldura
+      para caber num espaco que ninguem estava usando. */}
+  <svg viewBox="30 26 424 250" role="img" aria-labelledby="chArtT chArtD">
+    <title id="chArtT">O mesmo dado em dois gráficos</title>
+    <desc id="chArtD">
+      À esquerda, a série de 62% a 71% num eixo que começa em 60, o que faz o ganho parecer
+      uma montanha. À direita, a mesma série num eixo de 0 a 100, no tamanho real.
+    </desc>
+
+    <g font-family="JetBrains Mono, monospace" font-size="9">
+      <text x="52" y="40" fill="#DD7A5C">COMO COSTUMAM MOSTRAR</text>
+      <text x="312" y="40" fill="#D9A441">COMO ESTÁ AQUI</text>
+    </g>
+
+    {/* eixos */}
+    <g stroke="rgba(216,182,138,0.26)" fill="none">
+      <path d="M52 88v108h138" />
+      <path d="M312 88v108h138" />
+    </g>
+    <g stroke="rgba(216,182,138,0.10)">
+      <path d="M52 142h138M312 142h138" />
+    </g>
+
+    {/* rotulos do eixo y: e neles que a diferenca mora */}
+    <g font-family="JetBrains Mono, monospace" font-size="8" fill="#6E5A42" text-anchor="end">
+      <text x="46" y="92">73</text>
+      <text x="46" y="199">60</text>
+      <text x="306" y="92">100</text>
+      <text x="306" y="199">0</text>
+    </g>
+
+    <polyline points={cortado} fill="none" stroke="#C1573A" stroke-width="2.6"
+              stroke-linecap="round" stroke-linejoin="round" />
+    <polyline points={inteiro} fill="none" stroke="#D9A441" stroke-width="2.6"
+              stroke-linecap="round" stroke-linejoin="round" />
+
+    <g font-family="JetBrains Mono, monospace" font-size="9" fill="#9A8260">
+      <text x="52" y="216">eixo começa em 60</text>
+      <text x="312" y="216">eixo começa em zero</text>
+    </g>
+
+    <path d="M52 240h398" stroke="rgba(216,182,138,0.16)" />
+    <g font-family="JetBrains Mono, monospace" font-size="10">
+      <text x="52" y="264" fill="#9A8260">a mesma série nos dois</text>
+      <text x="450" y="264" fill="#F0E4CF" text-anchor="end">de 62% para 71%</text>
+    </g>
+  </svg>
+</figure>
+
+<style is:global>
+/* mesma casca escura do .cs-art, para o hero da listagem e o do case terem o
+   mesmo peso visual no alto da pagina */
+.cases-art{ background:#14100A; border:1px solid rgba(216,182,138,0.20); border-radius:18px; padding:24px; box-shadow: 0 26px 60px rgba(60,40,14,0.18); }
+.cases-art svg{ width:100%; height:auto; display:block; }
+</style>

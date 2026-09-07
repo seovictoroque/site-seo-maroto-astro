@@ -30,15 +30,22 @@ type BaseProps = Parameters<typeof BaseLayout>[0];
 interface Props extends Omit<BaseProps, 'variant'> {
   /** slug da categoria ativa no sub-menu, ou 'tudo' em /blog */
   activeCategory?: string;
+  /**
+   * Faixa de categorias do blog. As paginas de /cases usam este layout pelo
+   * tema claro e pelos primitivos, mas nao pertencem ao blog: mostrar a
+   * faixa la marcaria uma categoria de blog como ativa numa pagina que nao e
+   * de nenhuma delas.
+   */
+  subnav?: boolean;
 }
 
-const { activeCategory = '', ...base } = Astro.props;
+const { activeCategory = '', subnav = true, ...base } = Astro.props;
 ---
 
 <BaseLayout {...base} variant="blog">
   <slot name="head" slot="head" />
   <CoverArtSprite />
-  <BlogSubnav active={activeCategory} />
+  {subnav && <BlogSubnav active={activeCategory} />}
   <main class="blog-main" id="conteudo">
     <slot />
   </main>

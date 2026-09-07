@@ -1,0 +1,85 @@
+/* ==========================================================================
+   PAGINAS DE FERRAMENTA: /ferramentas/seo-audit e /ferramentas/<slug>.
+
+   Campo de entrada, painel de resultado com nota e achados, e os blocos de
+   saida que cada ferramenta usa. Nasceu como seo-audit.css, exclusivo de uma
+   pagina; virou compartilhado quando as outras nove ganharam pagina, porque
+   copiar as mesmas regras dez vezes e como elas comecam a divergir.
+
+   O nucleo (.tool-form, .score, .findings) veio de
+   ferramentas-seo-audit.html sem alterar valor nenhum. O que vem depois do
+   divisor foi acrescentado para as ferramentas novas.
+   ========================================================================== */
+
+.visually-hidden{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+.tool-form{ display:flex; gap:10px; }
+.tool-form input{ flex:1; background: var(--bg-elev-2); border:1px solid var(--border-strong); border-radius:9px; padding:13px 15px; font-size:14px; color: var(--text-primary); font-family: var(--mono); }
+.tool-form input:focus{ outline:none; border-color: var(--accent); }
+.tool-hint{ font-size:12.5px; color: var(--text-muted); margin-top:12px; line-height:1.65; }
+@media (max-width:560px){ .tool-form{ flex-direction:column; } }
+
+.result-head{ display:flex; align-items:center; gap:22px; padding-bottom:20px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+.score{ display:flex; flex-direction:column; align-items:center; min-width:96px; }
+.score-num{ font-family: var(--serif); font-style:italic; font-size:46px; line-height:1; color: var(--accent); }
+.score-lbl{ font-family: var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color: var(--text-muted); margin-top:6px; }
+.score-meta{ flex:1; min-width:200px; }
+.score-meta p{ font-size:13.5px; color: var(--text-secondary); line-height:1.7; }
+.score-meta b{ color: var(--text-primary); font-family: var(--mono); font-size:13px; }
+.findings{ list-style:none; display:flex; flex-direction:column; }
+.findings li{ display:grid; grid-template-columns:88px 1fr; gap:16px; padding:18px 0; border-bottom:1px solid var(--border); }
+.findings li:last-child{ border-bottom:none; padding-bottom:0; }
+.sev{ font-family: var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; padding:5px 8px; border-radius:5px; height:fit-content; text-align:center; }
+.findings .crit .sev{ color: var(--rust); border:1px solid rgba(193,87,58,0.4); background: rgba(193,87,58,0.12); }
+.findings .warn .sev{ color: var(--accent); border:1px solid rgba(217,164,65,0.34); background: rgba(217,164,65,0.1); }
+.findings .info .sev{ color: var(--text-muted); border:1px solid var(--border); }
+.findings h4{ font-size:14.5px; font-weight:600; margin-bottom:6px; line-height:1.4; }
+.findings p{ font-size:13.5px; color: var(--text-secondary); line-height:1.7; }
+@media (max-width:560px){ .findings li{ grid-template-columns:1fr; gap:9px; } .sev{ justify-self:start; } }
+
+/* ==========================================================================
+   BLOCOS DE SAIDA DAS FERRAMENTAS NOVAS
+   ========================================================================== */
+
+/* aviso de demonstracao. Fica logo abaixo do formulario, com borda tracejada,
+   porque precisa parecer um aviso e nao mais um paragrafo de apoio. */
+.demo-aviso{ margin-top:14px; padding:12px 14px; border:1px dashed var(--border-strong); border-radius:9px; font-size:12.5px; line-height:1.65; color: var(--text-secondary); }
+.demo-aviso a{ color: var(--accent); text-decoration:underline; text-underline-offset:2px; }
+
+/* o alvo da analise, em mono, dentro do cabecalho do resultado */
+.score-meta .alvo{ color: var(--text-primary); font-family: var(--mono); font-size:13px; display:block; margin-bottom:4px; word-break:break-all; }
+
+/* saida de codigo, para o gerador de schema */
+.saida-codigo{ margin:0; padding:20px; background:#14100A; border:1px solid var(--border); border-radius:11px; overflow-x:auto; }
+.saida-codigo code{ font-family: var(--mono); font-size:12.5px; line-height:1.7; color:#D8C4A2; white-space:pre; }
+
+/* preview de resultado de busca, para o simulador de SERP */
+.serp-preview{ background:#FFFFFF; border-radius:11px; padding:20px 22px; max-width:600px; }
+.serp-preview .s-url{ font-family: Arial, sans-serif; font-size:12.5px; color:#4d5156; margin-bottom:4px; }
+.serp-preview .s-title{ font-family: Arial, sans-serif; font-size:19px; line-height:1.3; color:#1a0dab; margin-bottom:4px; }
+.serp-preview .s-desc{ font-family: Arial, sans-serif; font-size:13.5px; line-height:1.58; color:#4d5156; }
+.serp-nota{ font-size:12.5px; color: var(--text-muted); line-height:1.65; margin-top:14px; }
+
+/* espaco entre dois blocos de saida no mesmo painel */
+.resultado-bloco + .resultado-bloco{ margin-top:26px; padding-top:26px; border-top:1px solid var(--border); }
+
+/* GRADE DE RELACIONADAS: mesma calha do resto da pagina, tres colunas fixas.
+
+   Dois consertos numa regra so.
+
+   1. LARGURA. O .card-grid do kit tem max-width de 1120px, feito para a
+      listagem de dez ferramentas ocupar a tela. Dentro de uma pagina de
+      ferramenta, onde .panel, .steps, .cta-band e .faq usam 900px, ele saia
+      140px para cada lado e a pagina ganhava duas margens esquerdas
+      diferentes. Aqui ele acompanha os vizinhos.
+
+   2. COLUNAS. O auto-fill com minmax de 320px e o certo para dez cards, em
+      que a ultima fileira pode ficar incompleta sem estranhar. Aqui sao
+      sempre tres, e o auto-fill deixava um buraco no lugar do terceiro
+      quando um slug de `relacionadas` nao resolvia. Coluna fixa deixa o
+      defeito visivel na hora, em vez de disfarcar de layout. */
+.card-grid.trio{ max-width:900px; grid-template-columns:repeat(3,1fr); gap:14px; }
+.card-grid.trio .card{ padding:20px; }
+.card-grid.trio .card h3{ font-size:15.5px; }
+.card-grid.trio .card p{ font-size:13px; }
+@media (max-width:820px){ .card-grid.trio{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:560px){ .card-grid.trio{ grid-template-columns:1fr; } }

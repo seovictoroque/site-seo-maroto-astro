@@ -1,0 +1,214 @@
+---
+/**
+ * LISTAGEM DE ESTUDOS DE CASO.
+ *
+ * Parente da pagina de categoria do blog, com uma diferenca de proposito: a
+ * categoria e noindex porque nao tem conteudo proprio, e esta AQUI e
+ * indexavel. Ela tem: o hero resume o metodo, os numeros do topo sao reais e
+ * calculados da collection, e o conjunto dos cases e o conteudo.
+ *
+ * Por isso o JSON-LD traz CollectionPage COM ItemList, e nao so o
+ * BreadcrumbList da categoria. Anunciar uma colecao sem os itens dela nao
+ * diz nada a mais que um WebPage.
+ *
+ * O HERO E DE RESULTADO, NAO DE MANCHETE.
+ * Os tres numeros do topo saem de contagem sobre a collection, nunca escritos
+ * a mao. Numero cravado em template e numero que envelhece no primeiro case
+ * novo, e num site sobre SEO isso e o pior tipo de erro para deixar no ar.
+ */
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import Breadcrumb from '../../components/layout/Breadcrumb.astro';
+import CaseCard from '../../components/case/CaseCard.astro';
+import CasesHeroArt from '../../components/case/CasesHeroArt.astro';
+import NewsletterBanner from '../../components/blog/NewsletterBanner.astro';
+import Icon from '../../components/layout/Icon.astro';
+import { site } from '../../data/site';
+import { allCases } from '../../lib/cases';
+import { breadcrumbNode, collectionPageNode } from '../../lib/schema';
+
+const casos = await allCases();
+const publicados = casos.filter((c) => c.data.status === 'published');
+
+// numeros do hero, todos derivados da collection
+const total = casos.length;
+const disciplinas = new Set(casos.flatMap((c) => c.data.disciplines)).size;
+const segmentos = new Set(casos.map((c) => c.data.segment.split(',')[0].trim())).size;
+
+const crumbs = [{ label: 'Home', href: '/' }, { label: 'Cases' }];
+
+const descricao =
+  'Trabalho de SEO com número na mesa e método aberto: problema, diagnóstico, hipótese, implementação, resultado e o que deu errado no caminho.';
+
+const schema = [
+  collectionPageNode({
+    path: '/cases',
+    name: 'Estudos de caso de SEO',
+    description: descricao,
+    items: publicados.map((c) => ({ path: `/cases/${c.id}`, name: c.data.title })),
+  }),
+  breadcrumbNode(crumbs),
+];
+---
+
+<BlogLayout
+  title={`Estudos de caso de SEO: número na mesa e método aberto | ${site.name}`}
+  description={descricao}
+  path="/cases"
+  subnav={false}
+  schema={schema}
+>
+  <section class="cases-hero">
+    <Breadcrumb items={crumbs} />
+
+    <div class="wrap ch-inner">
+      <div class="cs-hero-grid">
+        <div>
+          <span class="eyebrow">estudos de caso</span>
+          <h1>Número na mesa, <em>método aberto</em></h1>
+          <p class="cs-desc">
+            Cada caso segue a mesma estrutura: qual era o problema, como eu diagnostiquei,
+            qual foi a aposta, o que foi implementado, o que aconteceu com o número e o que
+            eu faria diferente.
+          </p>
+          <p class="cs-desc">
+            Sem "aumentamos o tráfego em 300%" sem dizer de quanto para quanto, sem gráfico
+            cortado no eixo e sem caso que só deu certo. Se a hipótese estava errada, está
+            escrito que estava.
+          </p>
+
+          <div class="cs-stats">
+            <div><strong>{total}</strong><span>{total === 1 ? 'caso documentado' : 'casos documentados'}</span></div>
+            <div><strong>{segmentos}</strong><span>{segmentos === 1 ? 'segmento' : 'segmentos diferentes'}</span></div>
+            <div><strong>0</strong><span>gráfico com eixo cortado</span></div>
+          </div>
+        </div>
+
+        {/* A ilustracao desenha a promessa do texto ao lado: o mesmo dado
+            com o eixo cortado e com o eixo inteiro. */}
+        <CasesHeroArt />
+      </div>
+    </div>
+  </section>
+
+  {/* O FORMATO, em faixa propria.
+      Ele estava na coluna do hero, espremido em seis linhas empilhadas. Solto
+      e na horizontal ele volta a ler como o que e: uma sequencia. */}
+  {/* O FORMATO E O CONVITE, na mesma faixa.
+      O metodo explica por que os casos sao comparaveis, e o convite e a
+      resposta natural de quem acabou de ler isso. Separados por meia pagina
+      de cards, o segundo perdia o gancho do primeiro. */}
+  <section class="section tight" id="formato">
+    <div class="wrap">
+      <div class="cs-formato-grid">
+        <div class="cs-formato-main">
+          <div class="section-head">
+            <span class="eyebrow">o formato</span>
+            <h2>Todo caso segue os mesmos seis passos</h2>
+            <p>Sem exceção e sem pular a parte chata. É o que deixa dois casos diferentes comparáveis entre si.</p>
+          </div>
+
+          <ol class="cs-method-list">
+            <li><span>01</span><div><b>Problema</b><i>o estado inicial, medido</i></div></li>
+            <li><span>02</span><div><b>Diagnóstico</b><i>o dado que explicou a causa</i></div></li>
+            <li><span>03</span><div><b>Hipótese</b><i>a aposta, antes do resultado</i></div></li>
+            <li><span>04</span><div><b>Implementação</b><i>o que foi feito, na ordem</i></div></li>
+            <li><span>05</span><div><b>Resultado</b><i>o número e a fonte dele</i></div></li>
+            <li><span>06</span><div><b>Aprendizados</b><i>o que eu faria diferente</i></div></li>
+          </ol>
+        </div>
+
+        <aside class="cs-cta">
+          <h2>Seu caso se parece com algum destes?</h2>
+          <p>Meia hora de conversa, sem apresentação comercial. Você mostra o problema e eu digo o que faria no seu lugar.</p>
+          <a class="btn btn-primary" href="/contato">
+            Agendar um bate-papo
+            <Icon set="ui" name="arrow" strokeWidth={2.4} />
+          </a>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="casos">
+    <div class="wrap">
+      {casos.length === 0 ? (
+        <p class="cs-vazio">Nenhum caso publicado ainda.</p>
+      ) : (
+        <div class="cases-grid">
+          {casos.map((item) => <CaseCard item={item} cover />)}
+        </div>
+      )}
+    </div>
+  </section>
+
+  {/* Mesma casca da pagina de categoria: o .news-banner e um card arredondado,
+      nao uma faixa de borda a borda. Solto, ele perde a calha de 1180px e o
+      respiro, e o fim da pagina fica com um bloco escuro sangrando na tela. */}
+  <section class="section tight">
+    <div class="wrap">
+      <NewsletterBanner variant="band" />
+    </div>
+  </section>
+</BlogLayout>
+
+<style is:global>
+/* HERO DA LISTAGEM DE CASES --------------------------------------------- */
+.cases-hero{ background: var(--bg-elev); border-bottom:1px solid var(--border); padding-bottom:54px; }
+.cases-hero .ch-inner{ padding-top:10px; }
+.cs-hero-grid{ display:grid; grid-template-columns: 1.15fr 0.85fr; gap:56px; align-items:start; }
+.cases-hero h1{ font-family: var(--serif); font-weight:400; font-style:italic; font-size: clamp(36px,5vw,54px); line-height:1.06; letter-spacing:-0.015em; margin:14px 0 20px; }
+.cases-hero h1 em{ color: var(--accent-ink); }
+.cs-desc{ font-size:16px; line-height:1.72; color: var(--text-secondary); max-width:560px; margin-bottom:16px; }
+
+.cs-stats{ display:flex; gap:38px; flex-wrap:wrap; margin-top:30px; }
+.cs-stats div{ display:flex; flex-direction:column; gap:5px; }
+.cs-stats strong{ font-family: var(--serif); font-style:italic; font-weight:400; font-size:34px; line-height:1; color: var(--accent-ink); }
+.cs-stats span{ font-family: var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color: var(--text-muted); }
+
+/* O FORMATO E O CONVITE, lado a lado.
+   A proporcao 1,6 para 1 e o que faz os seis passos caberem em tres colunas
+   confortaveis a esquerda e o card do convite ficar largo o bastante para o
+   titulo nao quebrar em tres linhas a direita. */
+.cs-formato-grid{ display:grid; grid-template-columns: minmax(0,1.6fr) minmax(0,1fr); gap:52px; align-items:start; }
+.cs-formato-main{ min-width:0; }
+
+/* Seis passos sao uma sequencia, e sequencia se le na horizontal. Empilhados
+   na coluna do hero eles viravam um menu, que e outra coisa. */
+.cs-method-list{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px 22px; margin-top:34px; }
+.cs-method-list li{ display:flex; flex-direction:column; gap:10px; padding-top:16px; border-top:1px solid var(--border-strong); }
+.cs-method-list span{ font-family: var(--mono); font-size:11px; color: var(--accent-ink); background: rgba(217,164,65,0.16); border-radius:6px; width:28px; height:22px; display:flex; align-items:center; justify-content:center; }
+.cs-method-list div{ display:flex; flex-direction:column; gap:3px; }
+.cs-method-list b{ font-size:14.5px; font-weight:600; color: var(--text-primary); }
+.cs-method-list i{ font-style:normal; font-size:12.5px; line-height:1.55; color: var(--text-secondary); }
+
+/* A grade de cases (.cases-grid, coluna unica) vive em CaseCard.astro, junto
+   do componente, para acompanhar o card em qualquer pagina que o use. */
+.cs-vazio{ font-size:15px; color: var(--text-secondary); }
+
+/* o convite virou card vertical: numa coluna estreita, titulo, texto e botao
+   empilhados leem melhor que a faixa horizontal antiga */
+.cs-cta{ display:flex; flex-direction:column; align-items:flex-start; gap:14px; background: var(--bg-elev); border:1px solid var(--border); border-radius:16px; padding:30px 30px 28px; }
+.cs-cta h2{ font-family: var(--serif); font-weight:400; font-style:italic; font-size:26px; line-height:1.18; }
+.cs-cta p{ font-size:14.5px; line-height:1.65; color: var(--text-secondary); }
+.cs-cta .btn{ margin-top:6px; }
+
+@media (max-width:1080px){
+  .cs-hero-grid{ grid-template-columns:1fr; gap:36px; }
+  .cases-art{ max-width:620px; }
+  .cs-formato-grid{ grid-template-columns:1fr; gap:40px; }
+  .cs-cta{ max-width:620px; }
+}
+@media (max-width:720px){
+  .cs-method-list{ grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width:460px){
+  .cs-method-list{ grid-template-columns:1fr; }
+  .cs-cta{ padding:26px 22px; }
+  .cs-cta .btn{ width:100%; justify-content:center; }
+}
+@media (max-width:620px){
+  .cs-stats{ gap:26px; }
+  .cs-cta{ padding:26px 22px; }
+  .cs-cta .btn{ width:100%; justify-content:center; }
+}
+</style>

@@ -1,0 +1,129 @@
+---
+/**
+ * CARD DE CASE, o componente da listagem.
+ *
+ * Nao e o PostCard com outro href. A hierarquia e outra de proposito: o
+ * numero vem antes do titulo, porque quem abre uma pagina de estudos de caso
+ * esta procurando resultado, nao manchete. A capa some, e o espaco dela vira
+ * a metrica.
+ *
+ * O selo de rascunho aparece quando o case ainda e stub. Ele existe para o
+ * proprio Victor enxergar o que falta na listagem, e some sozinho quando o
+ * frontmatter virar published.
+ */
+import CaseMetric from './CaseMetric.astro';
+import CaseHeroArt from './CaseHeroArt.astro';
+import { formatDate, isoDate } from '../../lib/posts';
+import type { Case } from '../../lib/cases';
+
+interface Props {
+  item: Case;
+  /**
+   * Mostra a capa do case a esquerda, na coluna fixa de 264px.
+   *
+   * E o formato usado na listagem /cases e no bloco de relacionados do
+   * proprio case, os dois em coluna unica. Fica desligado por padrao para o
+   * card continuar servindo a um bloco estreito no futuro, onde a capa nao
+   * caberia: o CaseHeroArt em modo `mini` foi desenhado para 264px, e abaixo
+   * disso a legenda dele para de ser legivel.
+   *
+   * Case sem `heroArt` no frontmatter renderiza sem capa, mesmo com a prop
+   * ligada.
+   */
+  cover?: boolean;
+}
+
+const { item, cover = false } = Astro.props;
+const { data } = item;
+const href = `/cases/${item.id}`;
+const rascunho = data.status === 'stub';
+---
+
+<article class:list={['case-card', cover && item.data.heroArt && 'with-cover']}>
+  {cover && item.data.heroArt && (
+    <a class="cc-cover" href={href} tabindex="-1" aria-hidden="true">
+      <CaseHeroArt art={item.data.heroArt} before={data.metric.before} after={data.metric.after} mini />
+    </a>
+  )}
+
+  <div class="cc-main">
+  <div class="cc-top">
+    <span class="cc-segment">{data.segment}</span>
+    {rascunho && <span class="cc-draft">rascunho</span>}
+  </div>
+
+  <CaseMetric label={data.metric.label} before={data.metric.before} after={data.metric.after} note={data.metric.note} />
+
+  <h3 class="cc-title"><a href={href}>{data.title}</a></h3>
+  {data.excerpt && <p class="cc-excerpt">{data.excerpt}</p>}
+
+  {data.disciplines.length > 0 && (
+    <ul class="cc-chips">
+      {data.disciplines.slice(0, 4).map((d) => <li>{d}</li>)}
+    </ul>
+  )}
+
+  <div class="cc-foot">
+    <span class="cc-meta">
+      {data.duration && <>
+        <span>{data.duration}</span>
+        <span class="dot"></span>
+      </>}
+      <time datetime={isoDate(data.publishDate)}>{formatDate(data.publishDate)}</time>
+    </span>
+    <a class="cc-link" href={href}>
+      ler o caso
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+  </div>
+</article>
+
+<style is:global>
+/* A GRADE VIVE AQUI, junto do card, e nao na pagina de listagem.
+   Ela nasceu no <style is:global> de pages/cases/index.astro e a secao de
+   relacionados do case ficou sem nenhuma regra: os cards viraram blocos
+   soltos, empilhados e sem gap. `is:global` nao atravessa pagina, so tira o
+   hash de escopo do seletor. Morando com o componente, a grade acompanha o
+   card em qualquer pagina que o use. */
+.cases-grid{ display:grid; grid-template-columns:1fr; gap:34px; }
+
+.case-card{ display:flex; flex-direction:column; gap:18px; background: var(--bg-elev); border:1px solid var(--border); border-radius:15px; padding:26px 26px 20px; transition: border-color .16s ease, transform .16s ease, box-shadow .16s ease; }
+.case-card:hover{ border-color: var(--border-strong); transform: translateY(-3px); box-shadow: 0 16px 38px rgba(60,40,14,0.10); }
+.cc-main{ display:flex; flex-direction:column; gap:18px; min-width:0; }
+
+/* CARD LARGO, COM A CAPA A ESQUERDA.
+   A coluna e fixa em 264px, o tamanho para o qual a cena reduzida do
+   CaseHeroArt foi desenhada: o viewBox dela tem 260 de largura, entao 1
+   unidade vale 1px e o texto que sobrou sai no tamanho em que sera lido.
+   Coluna fluida aqui foi erro: em tela larga a capa virava meio card e o
+   desenho dominava o bloco. */
+.case-card.with-cover{ display:grid; grid-template-columns: 264px minmax(0,1fr); gap:26px; align-items:start; padding:24px; }
+.cc-cover{ display:block; min-width:0; }
+
+.cc-top{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.cc-segment{ font-family: var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color: var(--accent-ink); background: rgba(217,164,65,0.16); border-radius:6px; padding:5px 9px; }
+.cc-draft{ font-family: var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em; color: var(--text-muted); border:1px dashed var(--border-strong); border-radius:6px; padding:4px 8px; }
+
+.cc-title{ font-size:19px; font-weight:600; line-height:1.34; letter-spacing:-0.006em; }
+.cc-title a:hover{ color: var(--accent-ink); }
+.cc-excerpt{ font-size:14px; line-height:1.65; color: var(--text-secondary); }
+
+.cc-chips{ display:flex; flex-wrap:wrap; gap:7px; }
+.cc-chips li{ font-family: var(--mono); font-size:11px; color: var(--text-muted); border:1px solid var(--border); border-radius:999px; padding:4px 10px; }
+
+.cc-foot{ display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-top:auto; padding-top:16px; border-top:1px solid var(--border); }
+.cc-meta{ display:flex; align-items:center; gap:8px; font-family: var(--mono); font-size:11px; color: var(--text-muted); }
+.cc-meta .dot{ width:3px; height:3px; border-radius:50%; background: var(--text-muted); flex-shrink:0; }
+.cc-link{ display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color: var(--accent-ink); }
+.cc-link svg{ width:15px; height:15px; transition: transform .16s ease; }
+.case-card:hover .cc-link svg{ transform: translateX(3px); }
+
+/* a capa so empilha quando nao cabem 264px mais texto legivel ao lado.
+   Em 1080px ela ainda cabia folgada, e empilhar cedo demais foi o que
+   deixou o desenho gigante no topo do card. */
+@media (max-width:680px){
+  .case-card.with-cover{ grid-template-columns:1fr; gap:20px; padding:22px 22px 18px; }
+  .cc-cover{ max-width:300px; }
+}
+</style>

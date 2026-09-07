@@ -133,3 +133,73 @@ export function webPageNode(opts: {
     isPartOf: { '@id': websiteId },
   };
 }
+
+/**
+ * ESTUDO DE CASO.
+ *
+ * Sai como Article, nao BlogPosting: um case nao e uma entrada de blog, e um
+ * relato de trabalho executado. O `about` carrega o resultado em texto para
+ * o buscador e a IA lerem o numero sem depender de entender o layout.
+ */
+export function caseStudyNode(opts: {
+  path: string;
+  headline: string;
+  description: string;
+  datePublished: Date;
+  dateModified: Date;
+  authorSlug: string;
+  segment: string;
+  metric: { label: string; before: string; after: string };
+  image?: string;
+}): Record<string, unknown> {
+  return {
+    '@type': 'Article',
+    '@id': `${abs(opts.path)}#article`,
+    headline: opts.headline,
+    description: opts.description,
+    inLanguage: site.lang,
+    datePublished: opts.datePublished.toISOString(),
+    dateModified: opts.dateModified.toISOString(),
+    articleSection: 'Estudos de caso',
+    about: `${opts.metric.label}: de ${opts.metric.before} para ${opts.metric.after}. Contexto: ${opts.segment}.`,
+    image: abs(opts.image ?? site.defaultOgImage),
+    mainEntityOfPage: { '@type': 'WebPage', '@id': abs(opts.path) },
+    author: { '@id': personId(opts.authorSlug) },
+    publisher: { '@id': orgId },
+  };
+}
+
+/**
+ * Colecao com os itens listados.
+ *
+ * O ItemList vai DENTRO do CollectionPage, com a ordem que a pagina mostra.
+ * Foi a lacuna que a varredura de conteudo apontou em /ferramentas e /blog:
+ * declarar CollectionPage sem os itens nao diz nada a mais que um WebPage.
+ */
+export function collectionPageNode(opts: {
+  path: string;
+  name: string;
+  description: string;
+  items: { path: string; name: string }[];
+}): Record<string, unknown> {
+  return {
+    '@type': 'CollectionPage',
+    '@id': `${abs(opts.path)}#page`,
+    url: abs(opts.path),
+    name: opts.name,
+    description: opts.description,
+    inLanguage: site.lang,
+    isPartOf: { '@id': websiteId },
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListOrder: 'https://schema.org/ItemListOrderDescending',
+      numberOfItems: opts.items.length,
+      itemListElement: opts.items.map((item, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: abs(item.path),
+        name: item.name,
+      })),
+    },
+  };
+}

@@ -20,7 +20,7 @@ const { SITE_INDEXAVEL } = loadEnv(process.env.NODE_ENV ?? 'production', process
 const indexavel = SITE_INDEXAVEL !== 'false';
 
 /**
- * Slugs dos posts com status 'stub', lidos direto do frontmatter.
+ * Caminhos dos posts E dos cases com status 'stub', lidos do frontmatter.
  *
  * Eles nascem noindex, entao nao podem entrar no sitemap: anunciar para o
  * robo uma pagina que manda ele nao indexar e um sinal contraditorio, e vira
@@ -29,11 +29,18 @@ const indexavel = SITE_INDEXAVEL !== 'false';
  * A leitura e por regex de proposito. O astro.config roda antes do pipeline
  * de conteudo, entao aqui nao existe getCollection.
  */
-const POSTS = './src/content/blog';
-const stubs = readdirSync(POSTS)
-  .filter((f) => f.endsWith('.md') || f.endsWith('.mdx'))
-  .filter((f) => /^status:\s*["']?stub["']?\s*$/m.test(readFileSync(`${POSTS}/${f}`, 'utf-8')))
-  .map((f) => f.replace(/\.mdx?$/, ''));
+function slugsStub(dir, base) {
+  return readdirSync(dir)
+    .filter((f) => f.endsWith('.md') || f.endsWith('.mdx'))
+    .filter((f) => /^status:\s*["']?stub["']?\s*$/m.test(readFileSync(`${dir}/${f}`, 'utf-8')))
+    .map((f) => `${base}/${f.replace(/\.mdx?$/, '')}`);
+}
+
+// caminhos completos, para o filtro do sitemap comparar sem montar prefixo
+const stubs = [
+  ...slugsStub('./src/content/blog', '/blog'),
+  ...slugsStub('./src/content/cases', '/cases'),
+];
 
 /**
  * Com a indexacao desligada, acrescenta um X-Robots-Tag ao .htaccess e avisa
@@ -111,6 +118,32 @@ export default defineConfig({
   build: {
     format: 'directory',
   },
+  /**
+   * WATCHER POR POLLING, so afeta o `npm run dev`.
+   *
+   * Os arquivos deste projeto sao editados de fora do Windows, pelo mount do
+   * Cowork. Escrita por esse caminho nem sempre dispara os eventos de sistema
+   * de arquivos em que o watcher do Vite se apoia, e o sintoma nao e o dev
+   * server ficar parado no tempo, que seria facil de perceber: ele passa a
+   * servir DUAS versoes do mesmo bloco de estilo ao mesmo tempo, a antiga e a
+   * nova, e a antiga continua ganhando em algumas regras.
+   *
+   * Foi assim que a /cases apareceu com o grid de duas colunas antigo e o
+   * card de capa novo na mesma tela, um layout que nao existia nem no codigo
+   * nem no build.
+   *
+   * Polling verifica os arquivos em intervalo fixo em vez de esperar aviso do
+   * sistema. Custa um pouco de CPU e torna a deteccao confiavel. O `dist` nao
+   * muda por causa disso: build nao usa watcher.
+   */
+  vite: {
+    server: {
+      watch: {
+        usePolling: true,
+        interval: 400,
+      },
+    },
+  },
   integrations: [
     mdx(),
     ...(indexavel
@@ -122,7 +155,7 @@ export default defineConfig({
               !page.includes('/design-system') &&
               !page.includes('/404') &&
               !page.includes('/pagina/') &&
-              !stubs.some((slug) => page.replace(/\/$/, '').endsWith(`/blog/${slug}`)),
+              !stubs.some((caminho) => page.replace(/\/$/, '').endsWith(caminho)),
           }),
         ]
       : []),

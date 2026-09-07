@@ -1,0 +1,144 @@
+---
+/**
+ * PAGINA DE TRILHA DA ESCOLINHA SEO.
+ *
+ * Mesma casca da /escolinha-seo: tema escuro, campo radial de fundo, hero
+ * centralizado com barra de progresso, roteiro em espinha com conectores
+ * pontilhados e FAQ. Todo o CSS vem de styles/escolinha.css, importado pelas
+ * duas paginas.
+ *
+ * O QUE MUDA
+ * O roteiro e um recorte, com etapas proprias e numeracao propria. Forcar a
+ * numeracao do roteiro grande num recorte produziria uma trilha que comeca na
+ * etapa 5, o que nao faz sentido para quem entra por ela.
+ *
+ * O conteudo mora em data/trilhas.ts. Esta pagina so desenha: acrescentar uma
+ * trilha nova e acrescentar um objeto la, sem tocar aqui.
+ *
+ * O breadcrumb e o FAQPage saem das MESMAS listas que a pagina renderiza,
+ * mesmo contrato do resto do site.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { faqNode, breadcrumbNode } from '../../lib/schema';
+import { trilhas, type Trilha } from '../../data/trilhas';
+
+import '../../styles/escolinha.css';
+
+export async function getStaticPaths() {
+  return trilhas.map((trilha) => ({ params: { trilha: trilha.slug }, props: { trilha } }));
+}
+
+interface Props {
+  trilha: Trilha;
+}
+
+const { trilha } = Astro.props;
+const path = `/escolinha-seo/${trilha.slug}`;
+const total = trilha.etapas.length;
+
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Escolinha SEO', href: '/escolinha-seo' },
+  { label: trilha.nome },
+];
+
+// a coluna esquerda de uma etapa pode ser vazia: nesse caso o conector daquele
+// lado some, senao sobra um traco pontilhado apontando para o nada
+const temEsquerda = (e: Trilha['etapas'][number]) => e.esquerda.length > 0;
+---
+
+<BaseLayout
+  title={trilha.metaTitle}
+  description={trilha.metaDescription}
+  path={path}
+  ogDescription={trilha.sub}
+  schema={[faqNode(path, trilha.faq), breadcrumbNode(crumbs)]}
+>
+<div class="bg-field"></div>
+<main id="conteudo">
+
+<div class="eyebrow-wrap">
+  <span class="eyebrow">{trilha.kicker}</span>
+</div>
+
+<div class="hero">
+  <h1 class="hero-title">{trilha.h1}<br><em>{trilha.h1Destaque}</em></h1>
+  <p class="hero-sub">{trilha.sub}</p>
+  <div class="hero-meta">
+    <span><b>{total}</b> etapas</span>
+    <span><b>{trilha.etapas.reduce((n, e) => n + e.esquerda.length + e.direita.length, 0)}</b> itens de ação</span>
+    <span><b>0%</b> concluído</span>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-top"><span>Seu progresso</span><span>0 / {total} etapas</span></div>
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+  </div>
+</div>
+
+<div class="about">
+  {trilha.intro.map((p) => <p>{p}</p>)}
+</div>
+
+<div class="section-head">
+  <h2>O roteiro da trilha</h2>
+  <p>{total} etapas, na ordem. Cada uma depende da anterior.</p>
+</div>
+
+<div class="canvas">
+  <div class="flow">
+    <div class="spine-line"></div>
+
+    {trilha.etapas.map((etapa) => (
+      <div class="row">
+        <div class="col-left">
+          {etapa.esquerda.map((no) => (
+            <a class:list={['node', 'wide', trilha.rust && 'rust']} href={no.href ?? '#'}>{no.label}</a>
+          ))}
+        </div>
+        <div class:list={['conn', !temEsquerda(etapa) && 'none']}></div>
+        <a class="label boxed" href="#">{etapa.numero}. {etapa.titulo}</a>
+        <div class="conn"></div>
+        <div class="col-right">
+          {etapa.direita.map((no) => (
+            <a class:list={['node', 'wide', trilha.rust && 'rust']} href={no.href ?? '#'}>{no.label}</a>
+          ))}
+        </div>
+      </div>
+    ))}
+
+    <div class="dotted-down"></div>
+    <div class="keep-learning">
+      <p>Terminou a trilha? Continue por aqui</p>
+      <div class="links">
+        {trilha.continuar.map((l) => <a href={l.href}>{l.label}</a>)}
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="faq" id="perguntas-frequentes" aria-labelledby="faq-title">
+  <h2 id="faq-title">Perguntas frequentes</h2>
+  <div class="faq-list">
+    {trilha.faq.map((item, i) => (
+      <div class="faq-item" data-open="false">
+        <button class="faq-q" type="button" id={`faq-q${i}`} aria-expanded="false" aria-controls={`faq-a${i}`}>
+          {item.question}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-a" id={`faq-a${i}`} role="region" aria-labelledby={`faq-q${i}`}>
+          <div class="faq-a-inner">
+            <p>{item.answer}</p>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+</main>
+</BaseLayout>
+
+<script>
+  import { initFaqAccordion } from '../../scripts/faq-accordion';
+  initFaqAccordion('.faq');
+</script>
